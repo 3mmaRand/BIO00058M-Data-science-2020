@@ -21,6 +21,12 @@ knitr::opts_chunk$set(echo = TRUE,
 options(htmltools.dir.version = FALSE)
 ```
 
+```{r style-share-again, echo=FALSE}
+xaringanExtra::style_share_again(
+  share_buttons = c("twitter", "linkedin", "pocket")
+)
+```
+
 # Module Index
 .font70[
 **Preparation**  
