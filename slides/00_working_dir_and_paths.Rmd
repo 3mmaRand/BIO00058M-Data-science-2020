@@ -1,0 +1,186 @@
+---
+title: "Working directories, relative paths and absolute paths."
+subtitle: "Data Science option of BIO00058M Data Analysis."
+author: "Emma Rand"
+institute: "University of York, UK"
+output:
+  xaringan::moon_reader:
+    css: [default, ../css_files/emma.css, ../css_files/emma-fonts.css]
+    lib_dir: libs
+    seal: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE,	
+                      warning = FALSE,
+                      fig.width = 4, 
+                      fig.height = 4, 
+                      fig.retina = 3)
+options(htmltools.dir.version = FALSE)
+```
+
+```{r packages, include=FALSE}
+library(RefManageR)
+library(kableExtra)
+library(tidyverse)
+```
+
+
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = TRUE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
+
+
+# Introduction
+
+## Aims
+
+The aim of this section is to show you what is meant by a working directory and a path.
+
+## Learning outcomes 
+
+The successful student will be able to:
+
+* understand what is meant by working directory, absolute and relative paths
+* find and change their current working directory
+* list files in their current working directory
+
+### `r emo::ji("clapper")` An instruction to do something!!
+
+---
+class: inverse
+
+#  Example to look at
+
+
+
+---
+
+class: inverse
+
+#  What is a path?
+
+
+---
+# What is a path?
+
+A path gives the location of a filesystem object (i.e., a file, directory or link).
+
+A path can be **absolute** or **relative**
+
+--
+
+## Absolute paths
+
+An Absolute path is given from the root directory of the object. 
+
+For example the absolute path for a file, `beewing.txt` can be:  
+  * windows: `M:/web/58M_BDS_2019/data/beewing.txt`  <sup>1</sup>
+
+.footnote[
+1. this appears as `M:\web\58M_BDS_2019\data\beewing.txt` in Windows Explorer because Microsoft DOS didn't have directories in 1981 when it was released. It then used the `/` character for 'switches' (instead of the unix convention `-`)
+]
+--
+
+  * unix systems: `/users/er13/web/58M_BDS_2019/data/beewing.txt`  
+--
+
+  * web: `http://www-users.york.ac.uk/~er13/58M_BDS_2019/data/beewing.txt`  
+
+---
+# What is a path?
+
+## Relative paths
+
+A relative path gives the location of a filesystem object relative to the working directory.
+
+A working directory is where a program thinks you are and is returned by `getwd()` in R.
+
+--
+
+For example when `beewing.txt` is in:  
+  * the working directory (wd):  `beewing.txt`  
+--
+
+  * a directory called 'data' which is in the wd: `data/beewing.txt`  
+--
+
+  * the directory above the wd: `../beewing.txt`  
+--
+
+  * a directory called 'data' which is in the directory above the wd: `../data/beewing.txt`  
+
+---
+# What is a path?
+
+
+## Demonstration
+
+```
+-- thursday
+   |__beewing.txt
+   |__below_thursday
+   |__data
+      |__pigeon.txt
+```
+
+
+--
+
+More if you need it: [What do we mean by paths?](https://youtu.be/oZblx36rqq0) 
+
+
+---
+# Summary
+
+.font150[
+* ... 
+
+* ...
+
+* ...
+
+* ..  
+]
+
+
+---
+# References
+.footnote[
+Slides made with with xaringan `r Cite(myBib, "xaringan")`
+
+]
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)
+```
+
+
+
+---
+
+class: inverse
+
+# `r emo::ji("party")` Congratulations! Keep practising! `r emo::ji("party")` 
+
+---
+
+## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+<br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Data Science strand of BIO00058M</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Emma Rand</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+
+
+
+
