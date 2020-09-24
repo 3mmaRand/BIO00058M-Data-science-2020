@@ -30,7 +30,7 @@ xaringanExtra::style_share_again(
 xaringanExtra::use_clipboard()
 xaringanExtra::use_extra_styles(
   hover_code_line = TRUE,         
-  mute_unhighlighted_code = TRUE)
+  mute_unhighlighted_code = TRUE  )
 ```
 
 ```{r packages, include=FALSE}
@@ -215,12 +215,12 @@ And if it is in a folder called `data-raw` which is in the directory above the w
 ---
 # What's in my directory?
 
-You can list the contents of a directory using the `dir()` command
+<!-- You can list the contents of a directory using the `dir()` command -->
 
-* `dir()` list the contents of the working directory
-* `dir("..")` list the contents of the directory above the working directory
-* `dir(../..)` list the contents of the directory two directories above the working directory
-* `dir("data-raw")` list the contents of a folder call data-raw which is in the working directory.
+<!-- * `dir()` list the contents of the working directory -->
+<!-- * `dir("..")` list the contents of the directory above the working directory -->
+<!-- * `dir(../..)` list the contents of the directory two directories above the working directory -->
+<!-- * `dir("data-raw")` list the contents of a folder call data-raw which is in the working directory. -->
 
 ---
 # Relative or absolute
