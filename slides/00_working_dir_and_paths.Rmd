@@ -134,9 +134,6 @@ Your working directory *can* be the same as the location of the script file you 
 --
 When using RStudio projects the working directory is the project directory and you will rarely, if ever, use `setwd()`.
 
---
-
-You will learn about using RStudio projects in week 4.
 
 ---
 class: inverse
@@ -232,7 +229,7 @@ You only need to use absolute paths when you are referring to filesystem outside
 
 --
 
-In week 4 you will learn about the `here` package `r Cite(myBib, "R-here")` to construct file paths relative to your RStudio project.
+58M students will learn about the `here` package `r Cite(myBib, "R-here")` to construct file paths relative to your RStudio project.
 
 
 ---
