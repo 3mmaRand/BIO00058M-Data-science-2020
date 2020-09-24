@@ -1,6 +1,5 @@
 ---
 title: "Working directories, relative paths and absolute paths."
-subtitle: "Data Science option of BIO00058M Data Analysis."
 author: "Emma Rand"
 institute: "University of York, UK"
 output:
