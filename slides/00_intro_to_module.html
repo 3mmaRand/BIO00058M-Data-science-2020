@@ -41,9 +41,13 @@ class: center, middle, inverse, title-slide
 
 
 
-# Overview
 
-This slideshow covers:
+&lt;style&gt;
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+&lt;/style&gt;
+
+# Overview
 
 * Aims and learning objectives of 58M
 * Pre-module survey results!
@@ -52,11 +56,8 @@ This slideshow covers:
   * reproducibility
   * a rationale for scripting
 * Module overview
-  * topic rationale
-  * topic list
-  * my objectives
-  * approach
-  * assessment and the learning objectives
+  * topic list and rationale
+  * approach and assessment 
   * relationship between topics and assessment
 
 ---
@@ -64,11 +65,16 @@ This slideshow covers:
 
 The aim of 58M overall is to enable you to to develop skills in some specific types of ‘data analysis’ by providing supported practice in workshops and opportunities to apply them independently in ‘projects’. This will help you become independent researchers and highly employable.
 
+--
+
 At the end of this module the successful student will be able to:
 1. Demonstrate the acquisition of skills in experimental design and data analysis, related to the option chosen within the module.
 2. Apply the skills learned to address novel bioscience problems.
 
-For Data Science, 1. means: 
+---
+# Learning Outcomes of Data Science
+
+For Data Science, the first object means:
 
 Produce a reproducible data analysis and report. The analysis can emphasise data import, processing, statistical analysis, visualisation or any combination of these.
 
@@ -76,7 +82,281 @@ Produce a reproducible data analysis and report. The analysis can emphasise data
 # Survey results
 
 
+The distribution of ratings you (n = 31) gave in the survey were:
+&lt;img src="00_intro_to_module_files/figure-html/unnamed-chunk-2-1.png" width="576" /&gt;
+---
+# Survey results
 
+to be added
+
+
+---
+# What is Data Science?
+
+The development, and application, of reproducible workflows for the simulation, collection, organisation, processing, analysis and presentation of data in order to extract knowledge or insight.
+
+Data science underlies open and reproducible research.
+
+## How much of data science is using statistics?
+
+Less than you probably think
+
+~80% of your time on getting data, cleaning data, aggregating data, reshaping data, and exploring data using exploratory data analysis and data visualization.
+
+
+---
+# Reproducibility is key!
+
+ definition
+ 
+ refs
+
+changes to science
+
+reports in ukri info
+---
+background-image: url(../pics/rationale1.png)
+background-position: 50% 35%
+background-size: 600px
+
+# Rationale for scripting analysis
+Science is the generation of ideas, designing work to test them and reporting the results.
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.pull-left[
+Generating the results
+]
+
+.pull-right[
+Analysing and reporting them
+]
+---
+background-image: url(../pics/rationale2.png)
+background-position: 50% 35%
+background-size: 600px
+
+# Rationale for scripting analysis
+We ensure reproducibility of laboratory and field work by planning and recording in lab books and using standard protocols. 
+--
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+Even so replicating results can be hard.
+---
+background-image: url(../pics/rationale3.png)
+background-position: 50% 35%
+background-size: 600px
+
+# Rationale for scripting analysis
+We ensure reproducibility of laboratory and field work by planning and recording in lab books and using standard protocols. 
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+Even so replicating results can be hard.
+
+Workflows for computational projects and the data analysis and reporting of other work can, and should, be 100% reproducible! Scripting is the way to achieve this.
+
+---
+background-image: url(../pics/rationale5.png)
+background-position: 80% 35%
+background-size: 800px
+
+# Rationale for scripting analysis
+
+That reproducibility applies to all aspects of the data workflow.
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+--
+From importing or collecting the data, processing it for analysis, building statistical models and communicating the methods and results.
+
+--
+
+These are usually iterative and that process of iteration (the development of the analysis) should also be captured.
+---
+# Why R?
+
+Open source and free
+
+--
+ .......But so is Python
+  
+--
+
+R has reputation for catering to users who do not see themselves as programmers, and  allowing them to slide gradually into programming.
+
+![biologists](../pics/biologist1.png)
+
+--
+
+It was also designed for data analysis and graphics - it is a 'domain specific' programming language - which means it is usually easier to achieve those tasks in R than a general purpose programming language.
+
+---
+background-image: url(../pics/welcome_to_rstats_twitter.png)
+background-position: 95% 75%
+background-size: 350px
+# Why R?
+
+The R community is one of R's greatest assets, being vibrant, inclusive and supportive of users at all levels.
+
+* [#rstats](https://twitter.com/hashtag/rstats?lang=en) on twitter is very active
+* [RForwards](https://forwards.github.io/about/) the widening participation task force &lt;sup&gt;1&lt;/sup&gt;
+* [RLadies](https://rladies.org/) gender diversity promotion 
+* [Hey! You there! You are welcome here](https://ropensci.org/blog/2017/06/23/community/)  
+
+.font70[
+.footnote[
+Artwork by @allison_horst "welcome to rstats on twitter"
+1. I am member of the Core Team for Forwards
+]
+]
+
+---
+background-image: url(../pics/rmarkdown_wizards.png)
+background-position: 10% 50%
+background-size: 500px
+# Why R?
+
+R Markdown is sometimes called R's "killer feature". It turns your analyses into fully reproducible high quality documents, reports, presentations and dashboards.
+
+.font70[
+.footnote[
+Artwork by @allison_horst "Be an Rmarkdown knitting wizard."
+]
+]
+
+---
+# Module overview
+
+Chosen topics are: foundational, follow stages 1 and 2 well, are widely applicable (in this module and beyond) and transferable conceptually:
+
+* Using RStudio projects and an emphasis on good practice in code and project documentation and organisation including version control and collaboration.
+* More advanced data tidying.
+* An emphasis on reproducibility and reproducible reporting using R Markdown.
+* Some machine learning concepts and methods that are very commonly applied independent of the data domain.
+
+You will also have the time and opportunity to independently develop skills particular to your interests and the assessment undertaken with support.
+
+---
+# Week plan 
+.font80[
+* Week 2: Preparation 1 - Update your R and RStudio, revise previously taught material.
+* Week 3: Preparation 2 - Introduction to the module. Installing git and getting a GitHub account.
+* Week 4: Topic 1 - Project organisation. Tools for version control and collaborating. *
+* Week 5: Topic 2 - Tidying data and the tidyverse.*
+* Week 6: Topic 3 - Reproducibility and an introduction to R Markdown.*
+* Week 7: Topic 4 - Advanced R Markdown.*
+* Week 8: Topic 5 - An introduction to Machine Learning: Overview and Unsupervised methods.*
+* Week 9: Topic 6 - An introduction to Machine Learning: Supervised Methods.*
+* Week 10: Project consultation. *
+* Spring Weeks 1 - 5: Project work. Drop-ins TBC
+
+\* week includes a timetabled online session
+]
+
+---
+# Approach and Assessment
+
+I wanted you to
+* learn essential skills for reproducible and open research but otherwise..
+* be able to work on problems you are interested in and/or that are related to project or module work
+* have time to develop the skills for that, with support
+* be assessed on what you can do (not what you can't do)
+
+Thus there is choice and flexibility in the assessment. You can chose your own data set and problem. Two highly scoring submissions could look completely different.
+
+---
+# The options
+
+1. Reproducible analysis related to your project/module work
+   * Analysis of existing or simulated data including images
+   * Conversion of existing lab tools (eg excel files) to reproducible pipelines
+   * Analysis of literature (text analysis)
+2. Reproducible analysis of previous work undertaken unreproducibly
+   * 58I Bioscience Techniques - almost all of the analyses undertaken (use of excel, Summit, ImageJ etc) can be coded reproducibly.
+3. Reproducible analysis of a provided project - because not everyone enjoys choosing their own
+
+---
+# Topics and assessment
+.font70[
+* &lt;div class = "blue"&gt;Week 4: Topic 1 - Project organisation.&lt;/div&gt; Tools for version control and collaborating. 
+* Week 5: Topic 2 - Tidying data and the tidyverse.
+* &lt;div class = "blue"&gt;Week 6: Topic 3 - Reproducibility and an introduction to R Markdown.&lt;/div&gt;
+* &lt;div class = "blue"&gt;Week 7: Topic 4 - Advanced R Markdown.&lt;/div&gt;
+* Week 8: Topic 5 - An introduction to Machine Learning: Overview and Unsupervised methods.
+* Week 9: Topic 6 - An introduction to Machine Learning: Supervised Methods.
+]
+In your assessment you **must** use RStudio projects and rmarkdown, organise your analyses for reproducibility and follow good practice.
+
+---
+# Topics and assessment
+.font70[
+* &lt;div class = "blue"&gt;Week 4: Topic 1 - Project organisation.&lt;/div&gt; Tools for version control and collaborating. 
+* Week 5: Topic 2 - Tidying data and the tidyverse.
+* &lt;div class = "blue"&gt;Week 6: Topic 3 - Reproducibility and an introduction to R Markdown.&lt;/div&gt;
+* &lt;div class = "blue"&gt;Week 7: Topic 4 - Advanced R Markdown.&lt;/div&gt;
+* Week 8: Topic 5 - An introduction to Machine Learning: Overview and Unsupervised methods.
+* Week 9: Topic 6 - An introduction to Machine Learning: Supervised Methods.
+]
+
+The extent of data tidying and processing and machine learning methods will vary depending on your project. 
+
+Version control is not required - it's taught only to help you collaborate online.
+
+---
+# Topics and assessment
+.font70[
+* &lt;div class = "blue"&gt;Week 4: Topic 1 - Project organisation.&lt;/div&gt; Tools for version control and collaborating. 
+* Week 5: Topic 2 - Tidying data and the tidyverse.
+* &lt;div class = "blue"&gt;Week 6: Topic 3 - Reproducibility and an introduction to R Markdown.&lt;/div&gt;
+* &lt;div class = "blue"&gt;Week 7: Topic 4 - Advanced R Markdown.&lt;/div&gt;
+* Week 8: Topic 5 - An introduction to Machine Learning: Overview and Unsupervised methods.
+* Week 9: Topic 6 - An introduction to Machine Learning: Supervised Methods.
+]
+
+You can learn something completely different as long as your work is reproducible and uses an [RMarkdown format](https://rmarkdown.rstudio.com/). This includes shiny applications.
+
+---
+# Assessment
+
+Everyone will have the opportunity for a one-to-one meeting to discuss the remit and scoping of their project during the Autumn term. [Book 58M Project one-to-one](https://calendar.google.com/calendar/selfsched?sstoken=UUQxaU5lQ1V5RXNUfGRlZmF1bHR8OGY2NDQzZmVjMDQyODc3ZGY5OTdkYzQzZWFlYWFmNjU)
+
+Everyone will have the opportunity for a one-to-one meeting for formative feedback on their project during the Spring term.
+
+---
+# Questions
+
+You can ask any questions about taught materials or the assessment in the Blackboard Collaborate workshop chat. 
+
+You can also ask any questions [here](https://docs.google.com/document/d/1MgGCLlStDq_MSNmroyVkbrJCMjs9wuQViPQ2z8U5VXA/edit#heading=h.sicwyys1xx47) 
+
+&lt;div class="tenor-gif-embed" data-postid="11365139" data-share-method="host" data-width="50%" data-aspect-ratio="1.4310344827586208"&gt;&lt;a href="https://tenor.com/view/hadley-wickham-rstats-typing-rcode-gif-11365139"&gt;Hadley Wickham GIF&lt;/a&gt; from &lt;a href="https://tenor.com/search/hadley-gifs"&gt;Hadley GIFs&lt;/a&gt;&lt;/div&gt;&lt;script type="text/javascript" async src="https://tenor.com/embed.js"&gt;&lt;/script&gt;
 ---
 # References
 .footnote[

@@ -28,9 +28,10 @@ xaringanExtra::style_share_again(
 ```
 
 # Module Index
-.font70[
+.font50[
 **Preparation**  
 [Working directories, relative paths and absolute paths.](slides/00_working_dir_and_paths.html)  
+[Introduction to the module.](slides/00_intro_to_module.html)  
 
 **Topic 1 Project organisation. Tools for version control and collaborating**  
 [Independent Study](slides/00_working_dir_and_paths.html)  
