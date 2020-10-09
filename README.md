@@ -41,3 +41,5 @@ Please cite as:
 ...
 
 You can obtain all the workshop materials by using the green 'Clone or download' button above.
+
+Emma
