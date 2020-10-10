@@ -78,9 +78,9 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
   * relationship between topics and assessment
 
 ---
-# Aims and Learning Outcomes of 58M
+# Aims & Learning Outcomes
 
-The aim of 58M overall is to enable you to to develop skills in some specific types of ‘data analysis’ by providing supported practice in workshops and opportunities to apply them independently in ‘projects’. This will help you become independent researchers and highly employable.
+The aim of 58M *overall* is to enable you to to develop skills in some specific types of ‘data analysis’ by providing supported practice in workshops and opportunities to apply them independently in ‘projects’. This will help you become independent researchers and highly employable.
 
 --
 
@@ -91,12 +91,12 @@ At the end of this module the successful student will be able to:
 ---
 # Learning Outcomes of Data Science
 
-For Data Science, the first object means:
+For Data Science, the first objective means:
 
 Produce a reproducible data analysis and report. The analysis can emphasise data import, processing, statistical analysis, visualisation or any combination of these.
 
 ---
-# Survey results
+# Survey results 1/3
 
 ```{r echo=FALSE}
 # gs4_auth() run interactively
@@ -114,7 +114,7 @@ rateqs <- c("Experience with R",
             "Comfort or enthusiasm for data analysis",
             "Comfort or enthusiasm for computing environments")
 
-anno <- data.frame(Question = rateqs, x = .75, y = 15)
+anno <- data.frame(Question = rateqs, x = .75, y = 20)
 survey %>%
    select(rateqs_orig) %>% 
    rename_at(vars(rateqs_orig), ~ rateqs) %>% 
@@ -126,8 +126,8 @@ survey %>%
    scale_x_discrete(name = "Rating") +
    scale_y_continuous(name = "Number of people",
                       expand = c(0, 0),
-                      breaks = c(0, 5, 10, 15),
-                      limits = c(0, 20)) +
+                      breaks = c(0, 5, 10, 15, 20, 25),
+                      limits = c(0, 30)) +
    geom_text(data = anno, 
              aes(x = x, y = y, label = Question),
              hjust = 0, 
@@ -145,28 +145,90 @@ survey %>%
 
 ```
 ---
-# Survey results
+# Survey results 2/3
 
-to be added
-```{r echo=FALSE, fig.width = 8, fig.height=7}
+Please rate your level of comfort with...
 
-# topics <- survey %>%
-#    select(starts_with("Please rate your level of comfort with the following in R")) %>% 
-#    data.frame(.,check.names = FALSE)
-# 
-# names(topics) <- names(topics) %>% 
-#   sub(pattern = "Please rate your level of comfort with the following in R \\[*", 
-#       replacement = "") %>% 
-#   sub(pattern = "\\]", replacement = "")
-# my_levels <- c("I don't understand what this involves",
-#                "I would recognise this but don't really use it",
-#                "I've used a bit but am not comfortable with it",
-#                "Fairly comfortable in some aspects",
-#                "Comfortable most of the time",
-#                "Confident")
+```{r echo=FALSE, fig.width = 12, fig.height=7}
 
+topics <- survey %>%
+   select(starts_with("Please rate your level of comfort with the following in R")) %>%
+   data.frame(.,check.names = FALSE)
+
+names(topics) <- names(topics) %>%
+  sub(pattern = "Please rate your level of comfort with the following in R \\[*",
+      replacement = "") %>%
+  sub(pattern = "\\]", replacement = "")
+my_levels <- c("I don't understand what this involves",
+               "I would recognise this but don't really use it",
+               "I've used a bit but am not comfortable with it",
+               "Fairly comfortable in some aspects",
+               "Comfortable most of the time",
+               "Confident")
+
+
+topics1 <- topics %>% 
+   select(1:8) %>% 
+   pivot_longer(names_to = "Topic",
+                values_to = "Rating",
+                cols = everything())
+topics1$Rating <- factor(topics1$Rating, levels = my_levels)
+
+topics1 %>% 
+   ggplot(aes(x = Rating)) +
+   geom_bar(fill = "#9d5e78") +
+   scale_x_discrete(name = "") +
+   scale_y_continuous(name = "Number of people",
+                      expand = c(0, 0),
+                      breaks = c(0, 5, 10, 15, 20, 25, 30, 35),
+                      limits = c(0, 37)) +
+    facet_wrap(.~ Topic, nrow = 3,  strip.position = "top",
+              labeller = label_wrap_gen(width = 38)) + 
+   coord_flip() +
+   theme_classic() +
+   theme(axis.title = element_text(size = 25),
+         axis.text.x = element_text(size = 25),
+         axis.text.y = element_text(size = 25),
+         strip.text.x = element_text(size = 25, lineheight = 0.5,
+                                     margin = margin(b = 0)),
+         strip.background = element_rect(fill = "#f6fafd", colour = "#f6fafd"),
+         plot.background = element_rect(fill = "#f6fafd"),
+         panel.background = element_rect(fill = "#f6fafd"))
 ```
+---
+# Survey results 3/3
 
+Please rate your level of comfort with...
+
+```{r echo=FALSE, fig.width = 12, fig.height=7}
+topics2 <- topics %>% 
+   select(9:17) %>% 
+   pivot_longer(names_to = "Topic",
+                values_to = "Rating",
+                cols = everything())
+topics2$Rating <- factor(topics2$Rating, levels = my_levels)
+
+topics2 %>% 
+   ggplot(aes(x = Rating)) +
+   geom_bar(fill = "#9d5e78") +
+   scale_x_discrete(name = "") +
+   scale_y_continuous(name = "Number of people",
+                      expand = c(0, 0),
+                      breaks = c(0, 5, 10, 15, 20, 25, 30, 35),
+                      limits = c(0, 37)) +
+   facet_wrap(.~ Topic, nrow = 3,  strip.position = "top",
+              labeller = label_wrap_gen(width = 38)) + 
+   coord_flip() +
+   theme_classic() +
+   theme(axis.title = element_text(size = 25),
+         axis.text.x = element_text(size = 25),
+         axis.text.y = element_text(size = 25),
+         strip.text.x = element_text(size = 25, lineheight = 0.5,
+                                     margin = margin(b = 0)),
+         strip.background = element_rect(fill = "#f6fafd", colour = "#f6fafd"),
+         plot.background = element_rect(fill = "#f6fafd"),
+         panel.background = element_rect(fill = "#f6fafd"))
+```
 ---
 # What is Data Science?
 
