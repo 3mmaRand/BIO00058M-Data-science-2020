@@ -246,13 +246,37 @@ Less than you probably think
 ---
 # Reproducibility is key!
 
- definition
- 
- refs
+One definition
+*"... obtaining consistent results using the same input data; computational steps, methods, and code; and conditions of analysis. This definition is synonymous with “computational reproducibility"*. `r Cite(myBib, "National_Academies_of_Sciences_Engineering2019-sb")`
 
-changes to science
+Also see National Science Foundation `r Cite(myBib, "K_Bollen2015-un")`
 
-reports in ukri info
+
+---
+# Who cares?
+
+* Many high profile cases of work which did not reproduce e.g. Anil Potti unravelled by `r Citet(myBib, "Baggerly2009-pw")` 
+
+* Five selfish reasons to work reproducibly `r Cite(myBib, "Markowetz2015")`. Alternatively, see the [talk](https://youtu.be/yVT07Sukv9Q)
+
+
+* Will become standard in Science and publishing e.g OECD Global Science Forum Building digital workforce capacity and skills for data-intensive science `r Cite(myBib, "OECD_Global_Science_Forum2020-cp")`
+
+---
+# Open Science
+
+```{r foster-fig, echo = FALSE}
+knitr::include_graphics("../pics/Foster.png")
+```
+.font60[
+By Petr Knoth and Nancy Pontika - https://en.wikipedia.org/wiki/Open_science#/media/File:Os_taxonomy.png, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=61125075
+]
+
+FAIR - Findable, Accessible, Interoperable, Reusable `r Cite(myBib, "Wilkinson2016-pu")`
+
+
+
+
 ---
 background-image: url(../pics/rationale1.png)
 background-position: 50% 35%
@@ -498,15 +522,29 @@ You can also ask any questions [here](https://docs.google.com/document/d/1MgGCLl
 <div class="tenor-gif-embed" data-postid="11365139" data-share-method="host" data-width="50%" data-aspect-ratio="1.4310344827586208"><a href="https://tenor.com/view/hadley-wickham-rstats-typing-rcode-gif-11365139">Hadley Wickham GIF</a> from <a href="https://tenor.com/search/hadley-gifs">Hadley GIFs</a></div><script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 ---
 # References
-.footnote[
-Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
 
-]
-```{r refs, echo=FALSE, results="asis"}
-PrintBibliography(myBib)
+```{r refs1, echo=FALSE, results="asis"}
+PrintBibliography(myBib,start = 1, end = 4)
 ```
 
+---
+# References
+.footnote[
+Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
+]
 
+```{r refs2, echo=FALSE, results="asis"}
+PrintBibliography(myBib, start = 6)
+```
+
+---
+# Organisations
+
+* [The Alan Turing Institute](https://www.turing.ac.uk/)  
+* [Software Sustainability Institute](https://www.software.ac.uk/)  
+* [UK Reproducibility Network](https://www.ukrn.org/)  
+* [FOSTER Plus](https://www.fosteropenscience.eu/)  
+* [Center for Open Science](https://www.cos.io/)  
 ---
 
 ## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
