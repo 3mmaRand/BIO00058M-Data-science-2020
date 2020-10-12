@@ -176,8 +176,6 @@ You don't have to use RStudio to use git and GitHub. [Git Handbook from GitHub G
 PrintBibliography(myBib)
 ```
 
----
-# References
 .footnote[
 Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
 ]
