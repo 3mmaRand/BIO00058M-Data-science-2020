@@ -30,8 +30,9 @@ xaringanExtra::style_share_again(
 # Module Index
 .font50[
 **Preparation**  
-[Working directories, relative paths and absolute paths.](slides/00_working_dir_and_paths.html)  
-[Introduction to the module.](slides/00_intro_to_module.html)  
+[Working directories, relative paths and absolute paths](slides/00_working_dir_and_paths.html)  
+[Introduction to the module](slides/00_intro_to_module.html)  
+[Introduction to git and GitHub](slides/00_intro_to_git_and_github.html)  
 
 **Topic 1 Project organisation. Tools for version control and collaborating**  
 [Independent Study](slides/00_working_dir_and_paths.html)  

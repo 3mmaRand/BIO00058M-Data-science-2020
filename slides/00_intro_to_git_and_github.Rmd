@@ -1,0 +1,194 @@
+---
+title: "Introduction to git and GitHub"
+subtitle: "Data Science option of BIO00058M Data Analysis."
+author: "Emma Rand"
+institute: "University of York, UK"
+output:
+  xaringan::moon_reader:
+    css: [default, ../css_files/emma.css, ../css_files/emma-fonts.css]
+    lib_dir: libs
+    seal: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE,	
+                      warning = FALSE,
+                      fig.width = 4, 
+                      fig.height = 4, 
+                      fig.retina = 3)
+options(htmltools.dir.version = FALSE)
+```
+
+```{r style-share-again, echo=FALSE}
+xaringanExtra::use_share_again()
+xaringanExtra::style_share_again(
+  share_buttons = "all")
+xaringanExtra::use_clipboard()
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE)
+```
+
+```{r packages, include=FALSE}
+library(RefManageR)
+library(kableExtra)
+library(tidyverse)
+```
+
+
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = TRUE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
+
+<style>
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+</style>
+
+# Aims & Learning Outcomes
+
+The aim of these slides is to introduce you to git and GitHub
+
+--
+
+At the end of this presentation the successful student will be able to:
+1. explain the purpose of using git and GitHub and understand the relationship between them.  
+2. recognise common terminology in git and GitHub use
+3. reassure themselves that git is not assessed `r emo::ji("relieved_face")`
+
+---
+# What is git?
+
+```{r echo = FALSE, out.width="30%"}
+knitr::include_graphics("../pics/Git-Logo-2Color.png")
+```
+Git is a Version Control System (VCS).
+
+A VCS monitors and records the changes made to a set of files. It allows you to:  
+* revert selected edits, files or entire projects back to a previous state
+* collaborate on coding projects with any number of people
+* compare versions, integrate and merge different versions
+* resolve conflicts between versions  
+* contribute to open software/analysis projects in small (and big!) ways
+* allows communication and collaboration to be a embedded in the workflow
+
+---
+# You already use version control!
+
+Or try to...
+
+```{r echo = FALSE, out.width="40%"}
+knitr::include_graphics("../pics/vc_monalisa.jpeg")
+```
+
+Think of it as like MS Word's Track changes or Googledoc's editing history but better!
+
+---
+# What is GitHub?
+
+```{r echo = FALSE}
+knitr::include_graphics("../pics/GitHub-Mark-120px-plus.png")
+```
+
+GitHub is a website that hosts git projects. It can also be used as a webserver for your project. Most of my git projects include a website.
+
+
+Think of it as DropBox or googledrive but better.
+
+--
+
+Bitbucket and GitLab are alternative git hosting services.
+
+
+---
+# Git terminology
+
+A set of files managed by git is called a **repository** or commonly **repo**
+
+A repo would usually be all the files associated with a particular project.
+
+You can look at my repos on GitHub here: [https://github.com/3mmaRand?tab=repositories](https://github.com/3mmaRand?tab=repositories)
+
+To **clone** a repo is to make a local copy of those files and their history.
+
+---
+# Git terminology
+
+Instead of just saving files as you go about your work, you make a **commit** every so often. A commit is a snapshot of the entire project. That snapshot of the repo is stored locally.
+
+Every so often you **push** your commits to Github.
+
+If you are collaborating you would probably first **pull** from Github to incorporate any changes made to the GitHub repo in to your local repo.
+
+Git will automatically **merge** versions and alert you if there are any **conflicts** to **resolve**. 
+
+
+---
+# Git and GitHub terminology
+
+To fork a repo is also to make a copy but the link between the original and the forked copy remains. 
+
+You can experiment with your forked copy without affecting the original. 
+
+If you want your changes to be incorporated in to the original you use a **Pull Request**
+
+
+---
+# In this module
+
+The use of git and GitHub in this module is a "bare bones" introduction that will give you a workflow for using git and GitHub through RStudio.
+
+--
+
+Becoming fully proficient in git is a long, and often painful, process and its use in this module is designed to help you make the first steps and aid  collaboration. It is not assessed.
+
+--
+
+The workflow taught is limited and confined but works. You are not expected to use git/GitHub for the assessment - please do not become stressed about git.
+
+Think of it as a chance to take some risk free steps to learning an extremely valuable skill.
+
+---
+# Reading
+
+A more thorough coverage of git and GitHub through RStudio is [Happy git and GitHub for the useR](https://happygitwithr.com/) `r Cite(myBib, "Bryan_Happy_Git")`. I recommend reading Chapter 1 Why Git? Why GitHub.
+
+[RStudio's Version Control with git and SVN](https://support.rstudio.com/hc/en-us/articles/200532077-Version-Control-with-Git-and-SVN)
+
+You don't have to use RStudio to use git and GitHub. [Git Handbook from GitHub Guides](https://guides.github.com/introduction/git-handbook/)
+
+---
+# References
+
+```{r refs1, echo=FALSE, results="asis"}
+PrintBibliography(myBib)
+```
+
+---
+# References
+.footnote[
+Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
+]
+
+---
+
+## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+<br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Data Science strand of BIO00058M</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Emma Rand</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+
+
+
+

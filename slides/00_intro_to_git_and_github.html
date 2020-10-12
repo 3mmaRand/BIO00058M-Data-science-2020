@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Index of materials.</title>
+    <title>Introduction to git and GitHub</title>
     <meta charset="utf-8" />
     <meta name="author" content="Emma Rand" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
     <script src="libs/anchor-sections/anchor-sections.js"></script>
-    <link rel="stylesheet" href="css_files/emma.css" type="text/css" />
-    <link rel="stylesheet" href="css_files/emma-fonts.css" type="text/css" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css_files/emma.css" type="text/css" />
+    <link rel="stylesheet" href="../css_files/emma-fonts.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Index of materials.
-## Data Science option of BIO00058M Data Analysis
+# Introduction to git and GitHub
+## Data Science option of BIO00058M Data Analysis.
 ### Emma Rand
 ### University of York, UK
 
@@ -26,45 +35,138 @@ class: center, middle, inverse, title-slide
 <style>.shareagain-bar {
 --shareagain-foreground: rgb(255, 255, 255);
 --shareagain-background: rgba(0, 0, 0, 0.5);
---shareagain-facebook: none;
---shareagain-pinterest: none;
---shareagain-reddit: none;
 }</style>
 
-# Module Index
-.font50[
-**Preparation**  
-[Working directories, relative paths and absolute paths](slides/00_working_dir_and_paths.html)  
-[Introduction to the module](slides/00_intro_to_module.html)  
-[Introduction to git and GitHub](slides/00_intro_to_git_and_github.html)  
 
-**Topic 1 Project organisation. Tools for version control and collaborating**  
-[Independent Study](slides/00_working_dir_and_paths.html)  
-[Workshop](workshops/)  
 
-**Topic 2 Tidying data and the tidyverse.**  
-[Independent Study](slides/)  
-[Workshop](workshops/)  
 
-**Topic 3 Reproducibility and an introduction to R Markdown.**  
-[Independent Study](slides/)  
-[Workshop](workshops/)  
 
-**Topic 4 Advanced R Markdown.**  
-[Independent Study](slides/)  
-[Workshop](workshops/)  
 
-**Topic 5 An introduction to Machine Learning: Overview and Unsupervised methods**  
-[Independent Study](slides/)  
-[Workshop](workshops/)  
+&lt;style&gt;
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+&lt;/style&gt;
 
-**Topic 6 An introduction to Machine Learning: Supervised Methods**  
-[Independent Study](slides/)  
-[Workshop](workshops/)  
+# Aims &amp; Learning Outcomes
+
+The aim of these slides is to introduce you to git and GitHub
+
+--
+
+At the end of this presentation the successful student will be able to:
+1. explain the purpose of using git and GitHub and understand the relationship between them.  
+2. recognise common terminology in git and GitHub use
+3. reassure themselves that git is not assessed 😌
+
+---
+# What is git?
+
+&lt;img src="../pics/Git-Logo-2Color.png" width="30%" /&gt;
+Git is a Version Control System (VCS).
+
+A VCS monitors and records the changes made to a set of files. It allows you to:  
+* revert selected edits, files or entire projects back to a previous state
+* collaborate on coding projects with any number of people
+* compare versions, integrate and merge different versions
+* resolve conflicts between versions  
+* contribute to open software/analysis projects in small (and big!) ways
+* allows communication and collaboration to be a embedded in the workflow
+
+---
+# You already use version control!
+
+Or try to...
+
+&lt;img src="../pics/vc_monalisa.jpeg" width="40%" /&gt;
+
+Think of it as like MS Word's Track changes or Googledoc's editing history but better!
+
+---
+# What is GitHub?
+
+&lt;img src="../pics/GitHub-Mark-120px-plus.png" width="53" /&gt;
+
+GitHub is a website that hosts git projects. It can also be used as a webserver for your project. Most of my git projects include a website.
+
+
+Think of it as DropBox or googledrive but better.
+
+--
+
+Bitbucket and GitLab are alternative git hosting services.
+
+
+---
+# Git terminology
+
+A set of files managed by git is called a **repository** or commonly **repo**
+
+A repo would usually be all the files associated with a particular project.
+
+You can look at my repos on GitHub here: [https://github.com/3mmaRand?tab=repositories](https://github.com/3mmaRand?tab=repositories)
+
+To **clone** a repo is to make a local copy of those files and their history.
+
+---
+# Git terminology
+
+Instead of just saving files as you go about your work, you make a **commit** every so often. A commit is a snapshot of the entire project. That snapshot of the repo is stored locally.
+
+Every so often you **push** your commits to Github.
+
+If you are collaborating you would probably first **pull** from Github to incorporate any changes made to the GitHub repo in to your local repo.
+
+Git will automatically **merge** versions and alert you if there are any **conflicts** to **resolve**. 
+
+
+---
+# Git and GitHub terminology
+
+To fork a repo is also to make a copy but the link between the original and the forked copy remains. 
+
+You can experiment with your forked copy without affecting the original. 
+
+If you want your changes to be incorporated in to the original you use a **Pull Request**
+
+
+---
+# In this module
+
+The use of git and GitHub in this module is a "bare bones" introduction that will give you a workflow for using git and GitHub through RStudio.
+
+--
+
+Becoming fully proficient in git is a long, and often painful, process and its use in this module is designed to help you make the first steps and aid  collaboration. It is not assessed.
+
+--
+
+The workflow taught is limited and confined but works. You are not expected to use git/GitHub for the assessment - please do not become stressed about git.
+
+Think of it as a chance to take some risk free steps to learning an extremely valuable skill.
+
+---
+# Reading
+
+A more thorough coverage of git and GitHub through RStudio is [Happy git and GitHub for the useR](https://happygitwithr.com/) &lt;a name=cite-Bryan_Happy_Git&gt;&lt;/a&gt;([Bryan and Hester, a](#bib-Bryan_Happy_Git)). I recommend reading Chapter 1 Why Git? Why GitHub.
+
+[RStudio's Version Control with git and SVN](https://support.rstudio.com/hc/en-us/articles/200532077-Version-Control-with-Git-and-SVN)
+
+You don't have to use RStudio to use git and GitHub. [Git Handbook from GitHub Guides](https://guides.github.com/introduction/git-handbook/)
+
+---
+# References
+
+&lt;a name=bib-Bryan_Happy_Git&gt;&lt;/a&gt;[Bryan, J. and J.
+Hester](#cite-Bryan_Happy_Git) _Happy Git and GitHub for the useR_.
+&lt;URL: https://happygitwithr.com/&gt;. Accessed: 2019-11-22.
+
+---
+# References
+.footnote[
+Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
 ]
 
 ---
-
 
 ## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
 &lt;br&gt;
