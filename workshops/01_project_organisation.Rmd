@@ -1,0 +1,114 @@
+---
+title: "Topic 1: Project organisation. Tools for version control and collaborating"
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: spacelab
+  word_document: default
+bibliography: "refs.bib")`'
+---
+
+
+![](`r here::here("pics", "58M.png")`)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkgs, include=FALSE}
+library(tidyverse)
+
+```
+# Introduction
+
+You will work in a BB Collaborate room with one other person.
+
+The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. It is organised in to two columns, `males` and `females` a format which is not normally ideal. Your task is to organise a version controlled analysis of these data, exchange it with your partner and make and accept changes to each others
+You need to: 
+
+* use an Rstudio Project, set up an appropriate directory structure and decide on some naming and style elements that you will use consistently.
+* read in the data.  
+```{r include=FALSE}
+file <- here::here("data", "chaff.txt")
+chaff <- read.table(file, header = TRUE)
+```
+
+* reformat the data into 'tidy' form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file. 
+```{r include=FALSE}
+# there are several ways to achieve this
+# here is method you'll use in the next session
+chaff2 <- chaff %>% 
+  gather(key = sex, value = mass)
+file <- here::here("data", "processed", "chaff2.txt")
+write.table(chaff2, file)
+```
+
+* Write your own function for calculating the sums of squares of the whole dataset. SS(x) is the sum of the squared deviations from the mean given by:  
+    $\sum (x_i- \bar{x})^2$  
+```{r include=FALSE}
+my_ss <- function(v) {sum((v - mean(v))^2)}
+```
+
+  Put the code for the function in its own script and call it from your main script. 
+```{r include=FALSE}
+file <- here::here("functions", "my_ss.R")
+source(file)
+my_ss(chaff2$mass)
+```
+
+* carry out a statistical test on the data and record the result in comments.  
+```{r include=FALSE}
+# the most obvious test here is an independent samples t
+# ie., a linear model
+# either
+t.test(data = chaff2, mass ~ sex, var.equal = TRUE)
+# or
+mod <- lm(data = chaff2, mass ~ sex)
+```
+
+* create and save a figure to accompany the statistical result.
+```{r include=FALSE}
+# one suitable option...
+chaffsum <- Rmisc::summarySE(data = chaff2,
+                             measurevar = "mass",
+                             groupvars = "sex")
+ggplot(data = chaff2, aes(x = sex, y = mass)) +
+  geom_jitter(width = 0.3, colour = "gray") +
+  geom_errorbar(data = chaffsum, 
+                aes(ymin = mass, ymax = mass),
+                width = 0.1) +
+  geom_errorbar(data = chaffsum, 
+                aes(ymin = mass - se, ymax = mass + se),
+                width = 0.3) +
+  ylim(0, 30) +
+  theme_classic()
+# I havent bothered improving the axis labelling
+```
+* can you format the figure using your own ggplot theme? You can achieve this by:  
+  * examining the code for theme_gray() (the default) by typing `theme_gray` without the brackets  
+  * copying and saving the code theme_gray in its own script called, for example, theme_emma.R  
+  * changing theme elements as you wish  
+  * sourcing your theme script and applying  
+
+
+# The Rmd file
+
+[Rmd file](01_project_organisation.Rmd)
+
+
+# Packages
+
+* R [@R-base]  
+* tidyverse [@R-tidyverse]  
+* here [@R-here]
+
+![](`r here::here("pics", "58Mend.png")`)
+
+
