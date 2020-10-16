@@ -278,14 +278,16 @@ When you are using an version controlled RStudio Project you will have a Git tab
 knitr::include_graphics("../pics/git_tab.png")
 ```
 
+The process is stage, commit, push or pull, stage, commit, push
 
-staging
+---
+# Version controlled RStudio Project
 
-committing
-
-commit message
-
-pushing
+```{r echo = FALSE, out.width="60%", fig.cap="the review changes window in RStudio"}
+knitr::include_graphics("../pics/git_tab.png")
+```
+* top left is the list of files with changes since the last commit. A means added, D means deleted  
+* bottom pane shows the 'diffs' - the difference between the currect file and the file at the last commit
 
 ---
 class: inverse
