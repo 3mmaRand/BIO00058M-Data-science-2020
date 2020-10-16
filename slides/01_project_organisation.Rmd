@@ -193,9 +193,11 @@ When you use an RStudio Project you do not need to use `setwd()`
 .font150[
 `r emo::ji("exploding_head")`
 ]
+
 --
 
 And your whole project is portable!
+
 
 --
 
@@ -247,6 +249,17 @@ For *this* module assessment you need only have:
 
 The README is part of the 2000 word count
 ---
+# License
+
+A license tells others what they can and can't do with your source code.
+
+[choosealicense.com](https://choosealicense.com/) is a useful explainer.
+
+I typically use:
+
+* [MIT License](https://choosealicense.com/licenses/mit/) for software
+* [CC-BY-SA-4.0](https://choosealicense.com/licenses/cc-by-sa-4.0/) for other work
+---
 class: inverse
 
 # Naming things
@@ -283,11 +296,28 @@ The process is stage, commit, push or pull, stage, commit, push
 ---
 # Version controlled RStudio Project
 
-```{r echo = FALSE, out.width="60%", fig.cap="the review changes window in RStudio"}
-knitr::include_graphics("../pics/git_tab.png")
+```{r echo = FALSE, out.width="70%", fig.cap="the review changes window in RStudio showing files that have been added or deleted since the last commit"}
+knitr::include_graphics("../pics/stage.png")
 ```
-* top left is the list of files with changes since the last commit. A means added, D means deleted  
-* bottom pane shows the 'diffs' - the difference between the currect file and the file at the last commit
+
+Top left is the list of files with changes since the last commit. 4 files have been added [A] and three deleted [D]
+
+Bottom pane shows the 'diffs' - the differences between the current file and the file at the last commit. "slides/01_project_organisation.Rmd" is entirely new so it is all green
+
+
+---
+# Version controlled RStudio Project
+
+```{r echo = FALSE, out.width="70%", fig.cap="the review changes window in RStudio showing files that have been modified since the last commit"}
+knitr::include_graphics("../pics/stage2.png")
+```
+
+In this example, 2 files have been modified [M] since the last commit.
+
+The "diffs" shows text that has been added (green) or deleted (red).
+
+Each commit is accompanied by a Commit message which concisely summarises the changes you have made.
+ 
 
 ---
 class: inverse
@@ -297,17 +327,108 @@ class: inverse
 ---
 # A workflow
 
-specific workflow github as remote
-set up github credentials in rstudio
-github first
-create repo
-clone
+In this module, we are covering a specific workflow which uses GitHub as remote a remote server.
 
-make changes
+--
 
-not you have use VC/git without having a remote
-you can use a remotie other than github
+It is the [New project, GitHub first](https://happygitwithr.com/new-github-first.html) workflow from Happy git and GitHub for the useR `r Cite(myBib, "Bryan_Happy_Git")`
 
+--
+
+This workflow is demonstrated in "Project Organisation - demo"
+
+---
+# A workflow
+
+The first step is to introduce yourself to git. You only have to do this once.
+
+Start RStudio and with your own name and email do:
+```{r eval=FALSE}
+usethis::use_git_config(user.name = "Emma Rand",
+                        user.email = "emma.rand@york.ac.uk")
+```
+
+Name: It can be, but does not have to be, your GitHub username. It will be used to label your commits so make it recognisable for future you and potential collaborators.
+
+Email: has to be the one used for your GitHub account.
+ 
+ 
+---
+# A workflow
+
+The second step is to do the [New project, GitHub first](https://happygitwithr.com/new-github-first.html) workflow. You have to do this each time you start a new version controlled RStudio project with a remote repo.
+
+* Make a new repo on GitHub
+  * initialise with a README  and license
+  * allow public
+* Copy the HTTPS to the clipboard
+
+---
+# A workflow
+
+Go to RStudio
+
+* File | New Project choose version control
+* Choose where to create the Project directory
+* Paste the URL that you copied to the clipboard
+* Create Project
+
+RStudio will restart and your working directory will be the Project directory
+
+---
+# A workflow
+You are now set up.
+
+* Do some work
+* Stage and commit changes including a commit message
+* Push to GitHub
+
+Better
+* Pull
+* Do some work
+* Stage and commit changes including a commit message
+* Pull
+* Push to GitHub
+
+---
+# What now?
+
+You may be able to create a version controlled RStudio Project with a remote on GitHub from these slides alone but watching the demo is recommended.
+
+--
+
+Do I have to use version control? Not for the assessment, no. It is included to help you work with others in an online workshop and because it is a highly employable skill with a steep learning curve. Starting that process with a limited workflow will help.
+
+If your level of anxiety over git/GitHub is outweighing any possible benefits, **don't use it**.
+
+---
+# RStudio projects without version control
+
+An [RStudio project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) is associated with a directory. 
+
+You create a new project with File | New Project...
+
+---
+# RStudio projects without version control
+
+When a new project is created RStudio:
+
+1. Creates a project file (with an .Rproj extension) within the project directory.  
+2. Creates a hidden directory (named .Rproj.user) where project-specific temporary files are stored.  
+3. Loads the project into RStudio and display its name in the Projects toolbar (far right on the menu bar).
+
+Using a Project helps you manage file paths. The working directory is the Project directory (i.e., the location of the .Rproj file).
+
+---
+# RStudio projects without version control
+
+You can open a project with:
+
+1. File | Open Project or  File | Recent Projects  
+2. Double-clicking the .Rproj file  
+3. Using the option on the far right of the tool bar  
+
+When you open project, a new R session starts and various settings are restored to their condition when the project was closed.
 
 ---
 # Reading
