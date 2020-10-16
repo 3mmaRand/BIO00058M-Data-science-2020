@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Project Organisation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emma Rand" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+    <script src="libs/anchor-sections/anchor-sections.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css_files/emma.css" type="text/css" />
+    <link rel="stylesheet" href="../css_files/emma-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Project Organisation
+## Data Science option of BIO00058M Data Analysis.
+### Emma Rand
+### University of York, UK
+
+---
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+}</style>
+
+
+
+
+
+
+&lt;style&gt;
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+&lt;/style&gt;
+
+# Outline
+
+This slide show introduces a workflow for project organisation using RStudio Projects.
+
+It covers structured directories, naming conventions, READMEs, Licenses and version control.
+
+---
+class: inverse
+
+# What is a project?
+
+---
+# What is a project?
+
+A project is a discrete piece of work which has a number of files associated with it such as the data and scripts for an analysis and the production reports.
+
+--
+
+One science project might have several organisational projects associated with it, for example:
+
+* data files and metadata (which may be made into a package)  
+* analysis and reporting  
+* a package developed for the analysis
+* an app for allowing data to be explored by others
+
+---
+# Organising a project
+
+* Use an RStudio Project or similar (most IDEs have them)  
+* Use directory structure 
+* Have naming conventions   
+* Document
+  * README
+  * License
+  * Comprehensive commenting
+* Use version control  
+
+---
+class: inverse
+
+# RStudio Projects
+
+---
+# RStudio Projects
+
+Project is obviously a commonly used word. When I am referring to an [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) I will use the capitalised words 'RStudio Project' or 'Project'.
+
+In other cases, I will use 'project'.
+
+An RStudio Project is a directory with an .Rproj file in it. 
+
+The name of the RStudio Project is the same as the name of the top level directory which is referred to as the Project directory.
+
+---
+# RStudio Projects
+
+For example, if you create an RStudio Project `stem_cell_rna` your folder structure would look something like this:
+
+.pull-left[
+```
+-- stem_cell_rna
+   |__stem_cell_rna.Rproj
+   |__raw_ data
+      |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
+   |__README.md
+   |__analyses
+      |__01_data_processing.R
+      |__02_exploratory.R
+ 
+```
+]
+
+
+---
+# RStudio Projects
+
+.pull-left[
+```
+*-- stem_cell_rna
+   |__stem_cell_rna.Rproj
+   |__raw_ data
+      |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
+   |__README.md
+   |__analyses
+      |__01_data_processing.R
+      |__02_exploratory.R
+ 
+```
+]
+
+.pull-right[
+the Project directory
+]
+---
+# RStudio Projects
+.pull-left[
+```
+-- stem_cell_rna
+*  |__stem_cell_rna.Rproj
+   |__raw_ data
+      |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
+   |__README.md
+   |__analyses
+      |__01_data_processing.R
+      |__02_exploratory.R
+ 
+```
+]
+
+.pull-right[
+  
+the .RProj file which is the defining feature of an RStudio Project
+]
+
+---
+# RStudio Projects
+
+When you open an RStudio Project, the working directory is set to the Project directory (i.e., the location of the .Rproj file).  
+
+When you use an RStudio Project you do not need to use `setwd()`
+
+--
+
+.font150[
+🤯
+]
+--
+
+And your whole project is portable!
+
+--
+
+When someone, including future you, opens the project on another machine, all the paths just work.
+
+.font150[
+🎂
+]
+---
+class: inverse
+
+# Directory structure
+
+---
+# Directory structure
+
+You are aiming for structured , systematic and repeatable. For example, the Project directory might contain:
+
+* .RProj file  
+* README - tell people what the project is and how to use it  
+* License - tell people what they are allowed to do with your project 
+* Directories
+  * data-raw/  
+  * images/  
+  * scripts/  
+  * functions/  
+  * figures/  
+
+---
+# README
+
+READMEs are a form of documentation which have been widely used for a long time. They contain all the information about the other files in a directory. They can be extensive.
+
+* Wikipedia [README page](https://en.wikipedia.org/wiki/README)  
+* GitHub Doc's [About READMEs
+](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/about-readmes)  
+
+---
+# README
+
+For *this* module assessment you need only have:
+
+* Title 
+* Description, 50 words or so on what the project is
+* Technical Description of the project
+  * What software and packages are needed including versions
+  * Any instructions needed to run the analysis/use the software
+  * Any issues that a user (me!) might face in running the analysis/using the software
+
+The README is part of the 2000 word count
+---
+class: inverse
+
+# Naming things
+
+---
+# Naming things
+
+Guiding principle - names of files and directories should be systematic and readable by humans and machines. Have a convention!
+
+I suggest
+  * no spaces in names
+  * use snake_case or kebab-case rather than CamelCase  or dot.case   
+  * use all lower case except very occasionally where convention is otherwise, e.g., README, LICENSE
+  * ordering: use left-padded numbers e.g., 01, 02....99 or 001, 002....999
+  * dates [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: 	2020-10-16
+
+
+---
+class: inverse
+
+# Version controlled RStudio Project
+
+---
+# Version controlled RStudio Project
+
+When you are using an version controlled RStudio Project you will have a Git tab
+
+&lt;img src="../pics/git_tab.png" title="the git tab in RStudio" alt="the git tab in RStudio" width="70%" /&gt;
+
+
+staging
+
+committing
+
+commit message
+
+pushing
+
+---
+class: inverse
+
+# A workflow
+
+---
+# A workflow
+
+specific workflow github as remote
+set up github credentials in rstudio
+github first
+create repo
+clone
+
+make changes
+
+not you have use VC/git without having a remote
+you can use a remotie other than github
+
+
+---
+# Reading
+
+## Strongly recommended
+* Chapter 2 Project-oriented workflow | What They Forgot to Teach You About R &lt;a name=cite-Bryan-Hester&gt;&lt;/a&gt;([Bryan and Hester, b](#bib-Bryan-Hester))
+
+## Further
+* Ten simple rules for reproducible computational research &lt;a name=cite-Sandve2013-nd&gt;&lt;/a&gt;([Sandve Nekrutenko, et al., 2013](#bib-Sandve2013-nd)) 
+* Good enough practices in scientific computing &lt;a name=cite-Wilson2017-cp&gt;&lt;/a&gt;([Wilson Bryan, et al., 2017](#bib-Wilson2017-cp))  
+* Excuse Me, Do You Have a Moment to Talk About Version Control? &lt;a name=cite-Bryan2018-hl&gt;&lt;/a&gt;([Bryan, 2018](#bib-Bryan2018-hl))  
+
+
+---
+# References
+
+&lt;a name=bib-Bryan2018-hl&gt;&lt;/a&gt;[Bryan, J.](#cite-Bryan2018-hl) (2018).
+"Excuse Me, Do You Have a Moment to Talk About Version Control?" In:
+_Am. Stat._ 72.1, pp. 20-27.
+
+&lt;a name=bib-Bryan-Hester&gt;&lt;/a&gt;[Bryan, J. and J.
+Hester](#cite-Bryan-Hester) _Chapter 2 Project-oriented workflow | What
+They Forgot to Teach You About R_. &lt;URL:
+https://whattheyforgot.org/project-oriented-workflow.html&gt;. Accessed:
+2019-9-26.
+
+&lt;a name=bib-Sandve2013-nd&gt;&lt;/a&gt;[Sandve, G. K, A. Nekrutenko, et
+al.](#cite-Sandve2013-nd) (2013). "Ten simple rules for reproducible
+computational research". En. In: _PLoS Comput. Biol._ 9.10, p.
+e1003285.
+
+
+---
+
+# References
+
+&lt;a name=bib-Wilson2017-cp&gt;&lt;/a&gt;[Wilson, G, J. Bryan, et
+al.](#cite-Wilson2017-cp) (2017). "Good enough practices in scientific
+computing". En. In: _PLoS Comput. Biol._ 13.6, p. e1005510.
+
+.footnote[
+Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
+]
+---
+
+## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

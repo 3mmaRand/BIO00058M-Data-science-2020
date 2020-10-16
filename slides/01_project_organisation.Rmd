@@ -1,0 +1,350 @@
+---
+title: "Project Organisation"
+subtitle: "Data Science option of BIO00058M Data Analysis."
+author: "Emma Rand"
+institute: "University of York, UK"
+output:
+  xaringan::moon_reader:
+    css: [default, ../css_files/emma.css, ../css_files/emma-fonts.css]
+    lib_dir: libs
+    seal: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    fig_caption: false
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE,	
+                      warning = FALSE,
+                      fig.width = 4, 
+                      fig.height = 4, 
+                      fig.retina = 3)
+options(htmltools.dir.version = FALSE)
+```
+
+```{r style-share-again, echo=FALSE}
+xaringanExtra::use_share_again()
+xaringanExtra::style_share_again(
+  share_buttons = "all")
+xaringanExtra::use_clipboard()
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE)
+```
+
+```{r packages, include=FALSE}
+library(RefManageR)
+library(kableExtra)
+library(tidyverse)
+```
+
+
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = TRUE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
+
+<style>
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+</style>
+
+# Outline
+
+This slide show introduces a workflow for project organisation using RStudio Projects.
+
+It covers structured directories, naming conventions, READMEs, Licenses and version control.
+
+---
+class: inverse
+
+# What is a project?
+
+---
+# What is a project?
+
+A project is a discrete piece of work which has a number of files associated with it such as the data and scripts for an analysis and the production reports.
+
+--
+
+One science project might have several organisational projects associated with it, for example:
+
+* data files and metadata (which may be made into a package)  
+* analysis and reporting  
+* a package developed for the analysis
+* an app for allowing data to be explored by others
+
+---
+# Organising a project
+
+* Use an RStudio Project or similar (most IDEs have them)  
+* Use directory structure 
+* Have naming conventions   
+* Document
+  * README
+  * License
+  * Comprehensive commenting
+* Use version control  
+
+---
+class: inverse
+
+# RStudio Projects
+
+---
+# RStudio Projects
+
+Project is obviously a commonly used word. When I am referring to an [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) I will use the capitalised words 'RStudio Project' or 'Project'.
+
+In other cases, I will use 'project'.
+
+An RStudio Project is a directory with an .Rproj file in it. 
+
+The name of the RStudio Project is the same as the name of the top level directory which is referred to as the Project directory.
+
+---
+# RStudio Projects
+
+For example, if you create an RStudio Project `stem_cell_rna` your folder structure would look something like this:
+
+.pull-left[
+```
+-- stem_cell_rna
+   |__stem_cell_rna.Rproj
+   |__raw_ data
+      |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
+   |__README.md
+   |__analyses
+      |__01_data_processing.R
+      |__02_exploratory.R
+ 
+```
+]
+
+
+---
+# RStudio Projects
+
+.pull-left[
+```
+*-- stem_cell_rna
+   |__stem_cell_rna.Rproj
+   |__raw_ data
+      |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
+   |__README.md
+   |__analyses
+      |__01_data_processing.R
+      |__02_exploratory.R
+ 
+```
+]
+
+.pull-right[
+the Project directory
+]
+---
+# RStudio Projects
+.pull-left[
+```
+-- stem_cell_rna
+*  |__stem_cell_rna.Rproj
+   |__raw_ data
+      |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
+   |__README.md
+   |__analyses
+      |__01_data_processing.R
+      |__02_exploratory.R
+ 
+```
+]
+
+.pull-right[
+  
+the .RProj file which is the defining feature of an RStudio Project
+]
+
+---
+# RStudio Projects
+
+When you open an RStudio Project, the working directory is set to the Project directory (i.e., the location of the .Rproj file).  
+
+When you use an RStudio Project you do not need to use `setwd()`
+
+--
+
+.font150[
+`r emo::ji("exploding_head")`
+]
+--
+
+And your whole project is portable!
+
+--
+
+When someone, including future you, opens the project on another machine, all the paths just work.
+
+.font150[
+`r emo::ji("party")`
+]
+---
+class: inverse
+
+# Directory structure
+
+---
+# Directory structure
+
+You are aiming for structured , systematic and repeatable. For example, the Project directory might contain:
+
+* .RProj file  
+* README - tell people what the project is and how to use it  
+* License - tell people what they are allowed to do with your project 
+* Directories
+  * data-raw/  
+  * images/  
+  * scripts/  
+  * functions/  
+  * figures/  
+
+---
+# README
+
+READMEs are a form of documentation which have been widely used for a long time. They contain all the information about the other files in a directory. They can be extensive.
+
+* Wikipedia [README page](https://en.wikipedia.org/wiki/README)  
+* GitHub Doc's [About READMEs
+](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/about-readmes)  
+
+---
+# README
+
+For *this* module assessment you need only have:
+
+* Title 
+* Description, 50 words or so on what the project is
+* Technical Description of the project
+  * What software and packages are needed including versions
+  * Any instructions needed to run the analysis/use the software
+  * Any issues that a user (me!) might face in running the analysis/using the software
+
+The README is part of the 2000 word count
+---
+class: inverse
+
+# Naming things
+
+---
+# Naming things
+
+Guiding principle - names of files and directories should be systematic and readable by humans and machines. Have a convention!
+
+I suggest
+  * no spaces in names
+  * use snake_case or kebab-case rather than CamelCase  or dot.case   
+  * use all lower case except very occasionally where convention is otherwise, e.g., README, LICENSE
+  * ordering: use left-padded numbers e.g., 01, 02....99 or 001, 002....999
+  * dates [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: 	2020-10-16
+
+
+---
+class: inverse
+
+# Version controlled RStudio Project
+
+---
+# Version controlled RStudio Project
+
+When you are using an version controlled RStudio Project you will have a Git tab
+
+```{r echo = FALSE, out.width="70%", fig.cap="the git tab in RStudio"}
+knitr::include_graphics("../pics/git_tab.png")
+```
+
+
+staging
+
+committing
+
+commit message
+
+pushing
+
+---
+class: inverse
+
+# A workflow
+
+---
+# A workflow
+
+specific workflow github as remote
+set up github credentials in rstudio
+github first
+create repo
+clone
+
+make changes
+
+not you have use VC/git without having a remote
+you can use a remotie other than github
+
+
+---
+# Reading
+
+## Strongly recommended
+* Chapter 2 Project-oriented workflow | What They Forgot to Teach You About R `r Cite(myBib, "Bryan-Hester")`
+
+## Further
+* Ten simple rules for reproducible computational research `r Cite(myBib, "Sandve2013-nd")` 
+* Good enough practices in scientific computing `r Cite(myBib, "Wilson2017-cp")`  
+* Excuse Me, Do You Have a Moment to Talk About Version Control? `r Cite(myBib, "Bryan2018-hl")`  
+
+
+---
+# References
+
+```{r refs1, echo=FALSE, results="asis"}
+PrintBibliography(myBib, start = 1, end = 3)
+```
+
+
+---
+
+# References
+
+```{r refs2, echo=FALSE, results="asis"}
+PrintBibliography(myBib, start = 4, )
+```
+
+.footnote[
+Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
+]
+---
+
+## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+<br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Data Science strand of BIO00058M</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Emma Rand</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+
+
+
+
