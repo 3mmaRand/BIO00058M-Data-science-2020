@@ -193,7 +193,7 @@ And your whole project is portable!
 When someone, including future you, opens the project on another machine, all the paths just work.
 
 .font150[
-🥳
+🎈
 ]
 ---
 class: inverse
@@ -264,7 +264,46 @@ I suggest
   * use all lower case except very occasionally where convention is otherwise, e.g., README, LICENSE
   * ordering: use left-padded numbers e.g., 01, 02....99 or 001, 002....999
   * dates [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: 	2020-10-16
+---
+# Naming things - example
 
+.code40[
+```
+-- stem_cell_rna
+   |__stem_cell_rna.Rproj
+   |__raw_ data
+      |__2019-03-21_donor_1.csv
+      |__2019-03-21_donor_2.csv
+      |__2019-03-21_donor_3.csv
+      |__2019-05-14_donor_1.csv
+      |__2019-05-14_donor_2.csv
+      |__2019-05-14_donor_3.csv
+   |__processed_data
+      |__all_long.txt
+      |__all_wide.txt
+   |__figures
+      |__01_volcano_donor_1_vs_donor_2.eps
+      |__02_volcano_donor_1_vs_donor_3.eps
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
+      |__theme_pca.R
+      |__theme_volcano.R
+   |__pics
+      |__01_image.png
+      |__01_image.png
+   |__README.md
+   |__refs
+      |__r_refs.bib
+      |__proj_refs.bib
+   |__analyses
+      |__01_data_processing.R
+      |__02_exploratory.R
+      |__03_modelling.R
+      |__04_figures.R
+      |__05_report.Rmd
+```
+]
 
 ---
 class: inverse
