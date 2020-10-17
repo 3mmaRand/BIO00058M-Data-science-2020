@@ -8,13 +8,13 @@ output:
     toc_float:
       collapsed: false
       smooth_scroll: false
-    theme: spacelab
+    theme: flatly
   word_document: default
-bibliography: "refs.bib")`'
+bibliography: "../refs.bib"
 ---
 
 
-![](`r here::here("pics", "58M.png")`)
+![](../pics/58M.png)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
@@ -22,93 +22,108 @@ knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE)
 ```
 
-```{r pkgs, include=FALSE}
-library(tidyverse)
-
-```
 # Introduction
 
-You will work in a BB Collaborate room with one other person.
+Work in pairs in BB Collaborate breakout to tackle the tasks
 
-The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. It is organised in to two columns, `males` and `females` a format which is not normally ideal. Your task is to organise a version controlled analysis of these data, exchange it with your partner and make and accept changes to each others
-You need to: 
+<font size = "4">
+`r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
+`r emo::ji("speech_balloon")` Communicate what you are doing and why  
+`r emo::ji("document")` Document and share your ideas and process   
+`r  emo::ji("team")` Consider having one person code and other documenting  
+`r emo::ji("heart")` Be kind, be understanding, be flexible   
+</font>
 
-* use an Rstudio Project, set up an appropriate directory structure and decide on some naming and style elements that you will use consistently.
-* read in the data.  
-```{r include=FALSE}
-file <- here::here("data", "chaff.txt")
-chaff <- read.table(file, header = TRUE)
+
+# Task 1 New project, without collaboration, GitHub first
+
+This exercise allows you to practice a workflow for a version controlled  RStudio Project which exists on your machine and on GitHub. It is suitable when you are the only person contributing to the project.
+
+The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. It is organised in to two columns, `males` and `females` a format which is not normally ideal. Your task is to organise a version controlled analysis of these data.
+
+You need to:
+
+1. Do the New project, GitHub first workflow
+   * Make a new repo on GitHub and initialise with a README and license  
+   * Clone the repo into a RStudio Project on your own machine  
+
+2. Paste the address of your GitHub repo to the chat.  
+
+3. Create a directory structure suitable for the analysis - you may wish to revise this later as you work.  
+
+4. Import and reformat the data into 'tidy' form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file.  A dataframe can be written to file using, for example:
+```{r eval=FALSE}
+file <-  "../daw-processed/chaff2.txt"
+write.table(chaff2, 
+            file, 
+            quote = FALSE,
+            row.names = FALSE)
 ```
 
-* reformat the data into 'tidy' form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file. 
-```{r include=FALSE}
-# there are several ways to achieve this
-# here is method you'll use in the next session
-chaff2 <- chaff %>% 
-  gather(key = sex, value = mass)
-file <- here::here("data", "processed", "chaff2.txt")
-write.table(chaff2, file)
+5. Summarise and analyse the data testing whether there is a difference in mass between male and female chaffinches
+
+6. Stage and commit all the changes you have made using an appropriate commit message. 
+
+7. Create a report-worthy figure for the analysis and write it to file. A useful function for saving **`ggplot2`** figures is [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). It has arguments for the size, resolution and device for the image. Since I often make more than one figure, I might set these argument values to variables first:
+
+```{r eval=FALSE}
+# figure saving settings
+units <- "in"  
+fig_w <- 3.5
+fig_h <- fig_w
+dpi <- 300
+device <- "tiff" 
+```
+Then write the figure to file using, for example:
+
+```{r eval=FALSE}
+ggsave("../figures/fig1.tiff",
+       plot = fig1,
+       device = device,
+       width = fig_w,
+       height = fig_h,
+       units = units,
+       dpi = dpi)
 ```
 
-* Write your own function for calculating the sums of squares of the whole dataset. SS(x) is the sum of the squared deviations from the mean given by:  
-    $\sum (x_i- \bar{x})^2$  
-```{r include=FALSE}
-my_ss <- function(v) {sum((v - mean(v))^2)}
-```
+8. Stage and commit all the changes you have made using an appropriate commit message. Push your changes to GitHub
 
-  Put the code for the function in its own script and call it from your main script. 
-```{r include=FALSE}
-file <- here::here("functions", "my_ss.R")
-source(file)
-my_ss(chaff2$mass)
-```
+9. Reconsider the organisation of your code and project.
+   * Would some pieces of code be better in their own script?  
+   * Is your code well commented? Are your variable names informative? See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
 
-* carry out a statistical test on the data and record the result in comments.  
-```{r include=FALSE}
-# the most obvious test here is an independent samples t
-# ie., a linear model
-# either
-t.test(data = chaff2, mass ~ sex, var.equal = TRUE)
-# or
-mod <- lm(data = chaff2, mass ~ sex)
-```
+10. Stage and commit any changes you have made using an appropriate commit message. Push your changes to GitHub
 
-* create and save a figure to accompany the statistical result.
-```{r include=FALSE}
-# one suitable option...
-chaffsum <- Rmisc::summarySE(data = chaff2,
-                             measurevar = "mass",
-                             groupvars = "sex")
-ggplot(data = chaff2, aes(x = sex, y = mass)) +
-  geom_jitter(width = 0.3, colour = "gray") +
-  geom_errorbar(data = chaffsum, 
-                aes(ymin = mass, ymax = mass),
-                width = 0.1) +
-  geom_errorbar(data = chaffsum, 
-                aes(ymin = mass - se, ymax = mass + se),
-                width = 0.3) +
-  ylim(0, 30) +
-  theme_classic()
-# I havent bothered improving the axis labelling
-```
-* can you format the figure using your own ggplot theme? You can achieve this by:  
-  * examining the code for theme_gray() (the default) by typing `theme_gray` without the brackets  
-  * copying and saving the code theme_gray in its own script called, for example, theme_emma.R  
-  * changing theme elements as you wish  
-  * sourcing your theme script and applying  
+11. Go to your GitHub repo, make some changes to the README and commit them.
+
+12. Go to back to your local repo and Pull the changes in.
+
+<font size = "4">
+`r emo::ji("exclamation_mark")` Start every work session with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early.
+</font>
+
+
+# Task 2 Contribute to your partner's repo
+
+To collaborate on someone else's project you 'fork' their repo, clone it, and submit and submit a 'pull request' (a PR) to propose a change
+
+1. Go to your partner's repo on GitHub and Fork it using the button in the top right. You now have a copy of their repo on your GitHub
+
+2. On your GitHub repo page, copy the url of the origin repo using the green Code button as you did previously. Then go to RStudio and do File | New Project | Version Control | Git, paste in the URL Create Project. This is the same process you used to clone your own repo
+
+3. Make some changes to the analysis. For example, you might add comments to the code, add a piece of code or alter a piece of code.
+
+4. Stage and commit the changes you have made using an appropriate commit message. Push your changes to GitHub
+
+5. Go to your forked copy of the repo in GitHub. You should see a message telling you "This branch is 1 commit ahead of....". Click on Pull request. Now you should be able to see the changes and also a message telling you whether the branches can be automatically merged. If they can Create a pull request. You will need to describe the changes you made.
+
+6. Your partner now needs accept (or not!) those changes by "merge the pull request".
 
 
 # The Rmd file
 
 [Rmd file](01_project_organisation.Rmd)
 
-
-# Packages
-
-* R [@R-base]  
-* tidyverse [@R-tidyverse]  
-* here [@R-here]
-
-![](`r here::here("pics", "58Mend.png")`)
+![](../pics/58Mend.png)
 
 
