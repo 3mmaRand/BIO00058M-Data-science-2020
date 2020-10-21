@@ -39,8 +39,8 @@ xaringanExtra::style_share_again(
 [Workshop](workshops/01_project_organisation.html)  
 
 **Topic 2 Tidying data and the tidyverse.**  
-[Independent Study](slides/)  
-[Workshop](workshops/)  
+[Independent Study](slides/04_tidying_data_and_the_tidyverse.html)  
+[Workshop](workshops/01_tidying_data.html)  
 
 **Topic 3 Reproducibility and an introduction to R Markdown.**  
 [Independent Study](slides/)  
