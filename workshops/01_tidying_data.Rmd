@@ -1,0 +1,166 @@
+---
+title: "Topic 2: Tidying data and the tidyverse"
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: flatly
+  word_document: default
+bibliography: "../refs.bib"
+---
+
+
+![](../pics/58M.png)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+# Introduction
+
+Work in pairs in BB Collaborate breakout to tackle the tasks
+
+<font size = "4">
+`r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
+`r emo::ji("speech_balloon")` Communicate what you are doing and why  
+`r emo::ji("document")` Document and share your ideas and process   
+`r  emo::ji("team")` Consider having one person code and other documenting  
+`r emo::ji("heart")` Be kind, be understanding, be flexible   
+</font>
+
+
+# Task 1 New project, without collaboration, GitHub first
+
+This exercise allows you to practice a workflow for a version controlled  RStudio Project which exists on your machine and on GitHub. It is suitable when you are the only person contributing to the project.
+
+The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. It is organised in to two columns, `males` and `females` a format which is not normally ideal. Your task is to organise a version controlled analysis of these data.
+
+You need to:
+
+1. Do the New project, GitHub first workflow
+   * Make a new repo on GitHub and initialise with a README and license  
+   * Clone the repo into a RStudio Project on your own machine  
+
+2. Paste the address of your GitHub repo to the chat.  
+
+3. Create a directory structure suitable for the analysis - you may wish to revise this later as you work.  
+
+4. Import and reformat the data into 'tidy' form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file.  A dataframe can be written to file using, for example:
+```{r eval=FALSE}
+file <-  "../daw-processed/chaff2.txt"
+write.table(chaff2, 
+            file, 
+            quote = FALSE,
+            row.names = FALSE)
+```
+
+5. Summarise and analyse the data testing whether there is a difference in mass between male and female chaffinches
+
+6. Stage and commit all the changes you have made using an appropriate commit message. 
+
+7. Create a report-worthy figure for the analysis and write it to file. A useful function for saving **`ggplot2`** figures is [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). It has arguments for the size, resolution and device for the image. Since I often make more than one figure, I might set these argument values to variables first:
+
+```{r eval=FALSE}
+# figure saving settings
+units <- "in"  
+fig_w <- 3.5
+fig_h <- fig_w
+dpi <- 300
+device <- "tiff" 
+```
+Then write the figure to file using, for example:
+
+```{r eval=FALSE}
+ggsave("../figures/fig1.tiff",
+       plot = fig1,
+       device = device,
+       width = fig_w,
+       height = fig_h,
+       units = units,
+       dpi = dpi)
+```
+
+8. Stage and commit all the changes you have made using an appropriate commit message. Push your changes to GitHub
+
+9. Reconsider the organisation of your code and project.
+   * Would some pieces of code be better in their own script?  
+   * Is your code well commented? Are your variable names informative? See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
+
+10. Stage and commit any changes you have made using an appropriate commit message. Push your changes to GitHub
+
+11. Go to your GitHub repo, make some changes to the README and commit them.
+
+12. Go to back to your local repo and Pull the changes in.
+
+<font size = "4">
+`r emo::ji("exclamation_mark")` Start every work session with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early.
+</font>
+
+
+use particular columns `select()`
+
+summarising data the tidyverse way
+
+# Task 2 
+
+Tidy the data given in [Human-development-index.csv](../data-raw/Human-development-index.csv) so that all the indices are in a single column with other columns giving the rank, country and year.
+
+
+
+# Task 3 Case study
+
+1. Add a column, `protid`, for the top protein identifier. This is the first Uniprot ID after the "1::" in the `accession` column. 
+
+```{r}
+# trying it out on one value
+accession <- sol$accession[2]
+str_extract(accession, "1::[^;]+") %>% 
+  str_replace("1::", "")
+
+# adding a new column 
+sol <- sol %>%
+  mutate(protid =  str_extract(accession, "1::[^;]+") %>% 
+           str_replace("1::", ""))
+
+            
+```
+
+
+
+2. Create a second dataframe, `sol2` in which the protein abundances are in a single column, `abundance` and the cell lineage and replicate, `lineage_rep`, is indicated in another. All the other variables should also be in the new data frame. 
+```{r}
+sol2 <- sol %>% pivot_longer(names_to = "lineage_rep",
+                             values_to = "abundance",
+                             cols = starts_with("y"))
+
+
+```
+
+
+3. Create separate columns in `sol2` for the cell lineage and the replicate.
+```{r}
+sol2 <- sol2 %>%
+  extract(lineage_rep,
+          c("line", "rep"),
+          "(y[0-9]{3,4})\\_([a-c])")
+```
+
+4. Write `sol2` to file
+```{r}
+
+```
+
+
+# The Rmd file
+
+[Rmd file](01_project_organisation.Rmd)
+
+![](../pics/58Mend.png)
+
+
