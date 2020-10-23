@@ -22,9 +22,14 @@ knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE)
 ```
 
+```{r pkg}
+library(tidyverse)
+```
+
+
 # Introduction
 
-Work in pairs in BB Collaborate breakout to tackle the tasks
+Work in pairs in BB Collaborate breakout to tackle the tasks.
 
 <font size = "4">
 `r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
@@ -35,106 +40,224 @@ Work in pairs in BB Collaborate breakout to tackle the tasks
 </font>
 
 
-# Task 1 New project, without collaboration, GitHub first
-
-This exercise allows you to practice a workflow for a version controlled  RStudio Project which exists on your machine and on GitHub. It is suitable when you are the only person contributing to the project.
-
-The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. It is organised in to two columns, `males` and `females` a format which is not normally ideal. Your task is to organise a version controlled analysis of these data.
-
-You need to:
+# Set up
 
 1. Do the New project, GitHub first workflow
    * Make a new repo on GitHub and initialise with a README and license  
    * Clone the repo into a RStudio Project on your own machine  
 
-2. Paste the address of your GitHub repo to the chat.  
+2. Paste the address of your GitHub repo to the chat.  `r emo::ji("speech_balloon")` This helps me see how you are getting on.
 
 3. Create a directory structure suitable for the analysis - you may wish to revise this later as you work.  
 
-4. Import and reformat the data into 'tidy' form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file.  A dataframe can be written to file using, for example:
-```{r eval=FALSE}
-file <-  "../daw-processed/chaff2.txt"
-write.table(chaff2, 
-            file, 
-            quote = FALSE,
-            row.names = FALSE)
-```
-
-5. Summarise and analyse the data testing whether there is a difference in mass between male and female chaffinches
-
-6. Stage and commit all the changes you have made using an appropriate commit message. 
-
-7. Create a report-worthy figure for the analysis and write it to file. A useful function for saving **`ggplot2`** figures is [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). It has arguments for the size, resolution and device for the image. Since I often make more than one figure, I might set these argument values to variables first:
-
-```{r eval=FALSE}
-# figure saving settings
-units <- "in"  
-fig_w <- 3.5
-fig_h <- fig_w
-dpi <- 300
-device <- "tiff" 
-```
-Then write the figure to file using, for example:
-
-```{r eval=FALSE}
-ggsave("../figures/fig1.tiff",
-       plot = fig1,
-       device = device,
-       width = fig_w,
-       height = fig_h,
-       units = units,
-       dpi = dpi)
-```
-
-8. Stage and commit all the changes you have made using an appropriate commit message. Push your changes to GitHub
-
-9. Reconsider the organisation of your code and project.
-   * Would some pieces of code be better in their own script?  
-   * Is your code well commented? Are your variable names informative? See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
-
-10. Stage and commit any changes you have made using an appropriate commit message. Push your changes to GitHub
-
-11. Go to your GitHub repo, make some changes to the README and commit them.
-
-12. Go to back to your local repo and Pull the changes in.
+4. As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub
 
 <font size = "4">
-`r emo::ji("exclamation_mark")` Start every work session with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early.
+`r emo::ji("exclamation_mark")` Start with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early.
 </font>
 
+# Task 1
 
-use particular columns `select()`
+The data given in [Human-development-index.csv](../data-raw/Human-development-index.csv) give the [Human Development Index](http://hdr.undp.org/en/content/human-development-index-hdi) (HDI) for different countries since 1990.
 
-summarising data the tidyverse way
+1. Using tidyverse functions, import these data and reformat them in to a more 'tidy' form.
+```{r task-1-import}
+# assumes you have loaded the tidyverse
+file <- "../data-raw/Human-development-index.csv"
+hdi <- read_csv(file) %>% 
+  janitor::clean_names()
+
+# I have used janitor::clean_names() to ensure the column names are lowercase without spaces and that the year columns have an x in front of them. both these mean I will not need to use backticks around column names such as hdi$`HDI Rank (2018)` and hdi$`1990`  
+```
+
+```{r task-1-tidy}
+# the format of the data would be improved by having a single observation (i.e., index) per row with other columns giving the country, year and 2018 rank.
+# this can be done using pivot_longer()  
+hdi <- hdi %>%
+  pivot_longer(names_to = "year", 
+         values_to = "index",
+         cols = -c(hdi_rank_2018, country)) 
+# remove the x from the year and make it numeric
+hdi <- hdi %>%
+  mutate(year =  str_replace(year, "x", "") %>% as.numeric())
+```
+You should end up with a dataframe that has `r dim(hdi)[1]` rows. I used the name `hdi` for this.
+
+2. Not all countries have an index for all years. Filter the dataset to exclude the missing observations. You'll probably need to google here. Hint: the `is.na()` function may be useful.
+```{r task-1-filter}
+hdi_no_na <-  hdi %>%  
+  filter(!is.na(index))
+```
+You should end up with a dataframe that has `r dim(hdi_no_na)[1]` rows. I used the name `hdi_no_na` for this.
+
+The tidyverse way of summarising data is to combine the `group_by()` function with the `summarise()` function. For example, to get the mean index by country we would use:
+```{r echo=TRUE, task-1-summarise-1}
+hdi_summary <- hdi_no_na %>% 
+  group_by(country) %>% 
+  summarise(mean_index = mean(index))
+```
+
+We can add summary columns by adding the code needed to create them in to the `summarise()` function. So for example, to add the number of indices available to each column we use:
+```{r echo=TRUE, task-1-summarise-2}
+hdi_summary <- hdi_no_na %>% 
+  group_by(country) %>% 
+  summarise(mean_index = mean(index),
+            n = length(index))
+```
+
+3. Add columns for the standard deviation and the standard error ($S.E. = \frac{s.d.}{\sqrt{n}}$) to the `hdi_summary` dataframe. It will look like this:
+
+```{r task-1-summarise-3}
+hdi_summary <- hdi_no_na %>% 
+  group_by(country) %>% 
+  summarise(mean_index = mean(index),
+            n = length(index),
+            sd_index = sd(index),
+            se_index = sd_index/sqrt(n))
+
+hdi_summary
+```
+
+We could filter the summary to get just the ten countries with the lowest mean HDI using:
+```{r task-1-filter-2, echo=TRUE}
+hdi_summary_low <- hdi_summary %>% 
+  filter(rank(mean_index) < 11)
+
+hdi_summary_low
+```
+And then plot them with:
+```{r task-1-plot, echo=TRUE}
+hdi_summary_low %>% 
+  ggplot() +
+  geom_point(aes(x = country,
+                 y = mean_index)) +
+  geom_errorbar(aes(x = country,
+                    ymin = mean_index - se_index,
+                    ymax = mean_index + se_index)) +
+  scale_y_continuous(limits = c(0, 0.5),
+                     expand = c(0, 0),
+                     name = "HDI") +
+  scale_x_discrete(expand = c(0, 0),
+                   name = "") +
+  theme_classic() +
+  coord_flip()
+```
+
+4. Build a pipeline that takes the `hdi` dataframe (the one with `r dim(hdi)[1]` rows) through to the plot above, without creating any intermediate data structures.
+
+```{r task-1-pipeline, include=FALSE}
+hdi %>%  
+  filter(!is.na(index)) %>% 
+  group_by(country) %>% 
+  summarise(mean_index = mean(index),
+            se_index = sd(index)/sqrt(length(index))) %>% 
+  filter(rank(mean_index) < 11) %>% 
+  ggplot() +
+  geom_point(aes(x = country,
+                 y = mean_index)) +
+  geom_errorbar(aes(x = country,
+                    ymin = mean_index - se_index,
+                    ymax = mean_index + se_index)) +
+  scale_y_continuous(limits = c(0, 0.5),
+                     expand = c(0, 0),
+                     name = "HDI") +
+  scale_x_discrete(expand = c(0, 0),
+                   name = "") +
+  theme_classic() +
+  coord_flip()
+  
+```
 
 # Task 2 
+These data are from a buoy (buoy #44025) off the coast of New Jersey: [buoy data](http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/).
 
-Tidy the data given in [Human-development-index.csv](../data-raw/Human-development-index.csv) so that all the indices are in a single column with other columns giving the rank, country and year.
+We can use the `readLines()` function to view the first few lines of the line and help us decide how to read it in:
+```{r task-2-examine, echo= TRUE}
+file <- "http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/"
+readLines(file, n = 4)
+```
+The first line gives the column name, the second line gives units and the data themselves begin on line 3. We can read them in with:
 
+```{r task-2-import, echo= TRUE}
+buoy44025 <- read_table(file, 
+                        col_names = FALSE,
+                        skip = 2)
+```
 
+1. Make sure you understand why we have used `read_table()` rather than `read_table2()` or `reas_csv()` (use `?read_table`)
 
-# Task 3 Case study
+2. Use `scan()` to read in the appropriate lines then tidy the results and name the columns `measure_units`. Hint 1: Look up `scan()` using `?scan`. Hint 2. The functions I used were `str_remove()`, `str_replace()` and `paste()`.
+```{r task-2-colnames}
+# read in the variable names from the first line, removing the hash
+measure <- scan(file, 
+                nlines = 1,
+                what = character()) %>%
+  str_remove("#")
+# read in the units from the second line, removing the hash and
+# replacing the / with _per_ as / is a special character
+units <- scan(file, 
+              skip = 1,
+              nlines = 1, 
+              what = character()) %>% 
+  str_remove("#") %>% 
+  str_replace("/", "_per_")
+# paste the variable name and its units together for the column names
+names(buoy44025) <- paste(measure, units, sep = "_") 
+``` 
+You are aiming for the names to look like this:
+```{r echo=TRUE}
+names(buoy44025)
+```
 
-1. Add a column, `protid`, for the top protein identifier. This is the first Uniprot ID after the "1::" in the `accession` column. 
+# Task 3
+In this task you will continue working with proteomic data from five immortalised mesenchymal stromal cell (MSC) lines.  [Y101_Y102_Y201_Y202_Y101-5.csv](../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv)
 
-```{r}
+1. You may wish to close the RStudio Project you are currently working in and open the one used while coding along with the slides. Alternatively, continue in this project and copy in the code used to:  
+
+* import the data
+* filter out the bovine proteins and those proteins identified from fewer than 2 peptides
+* Extract the genename from the description and put it in a column.
+
+```{r task-3-import}
+# define file name
+filesol <- "../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv"
+
+# skip first two lines
+sol <- read_csv(filesol, skip = 2) %>% 
+  janitor::clean_names()
+
+```
+
+```{r task-3-filter}
+# filter out the bovine proteins and those proteins identified from fewer than 2 peptides
+sol <- sol %>% 
+  filter(str_detect(description, "OS=Homo sapiens")) %>% 
+  filter(x1pep == "x")
+```
+
+```{r task-3-extract-genename}
+# Extract the genename from the description and put it in a column.
+sol <- sol %>%
+  mutate(genename =  str_extract(description,"GN=[^\\s]+") %>% 
+           str_replace("GN=", ""))
+```
+
+2. Extract the top protein identifier from the `accession` column and put it in a column called `protid`. The top protein identifier is the first Uniprot ID after the "1::" in the `accession` column. 
+
+```{r task-3-extract-protid}
 # trying it out on one value
 accession <- sol$accession[2]
-str_extract(accession, "1::[^;]+") %>% 
+protid <- str_extract(accession, "1::[^;]+") %>% 
   str_replace("1::", "")
 
 # adding a new column 
 sol <- sol %>%
   mutate(protid =  str_extract(accession, "1::[^;]+") %>% 
            str_replace("1::", ""))
-
-            
 ```
 
-
-
-2. Create a second dataframe, `sol2` in which the protein abundances are in a single column, `abundance` and the cell lineage and replicate, `lineage_rep`, is indicated in another. All the other variables should also be in the new data frame. 
-```{r}
+3. Create a second dataframe, `sol2` in which the protein abundances are in a single column, `abundance` and the cell lineage and replicate, `lineage_rep`, is indicated in another. All the other variables should also be in the new data frame. 
+```{r task-3-pivot}
 sol2 <- sol %>% pivot_longer(names_to = "lineage_rep",
                              values_to = "abundance",
                              cols = starts_with("y"))
@@ -142,9 +265,8 @@ sol2 <- sol %>% pivot_longer(names_to = "lineage_rep",
 
 ```
 
-
-3. Create separate columns in `sol2` for the cell lineage and the replicate.
-```{r}
+4. Create separate columns in `sol2` for the cell lineage and the replicate.
+```{r task-3-extract-cols}
 sol2 <- sol2 %>%
   extract(lineage_rep,
           c("line", "rep"),
@@ -152,8 +274,12 @@ sol2 <- sol2 %>%
 ```
 
 4. Write `sol2` to file
-```{r}
-
+```{r task-3-write}
+file <-  "../data-processed/sol2.txt"
+write.table(sol2, 
+            file, 
+            quote = FALSE,
+            row.names = FALSE)
 ```
 
 
