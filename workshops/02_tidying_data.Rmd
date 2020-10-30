@@ -174,7 +174,7 @@ These data are from a buoy (buoy #44025) off the coast of New Jersey: [buoy data
 We can use the `readLines()` function to view the first few lines of the line and help us decide how to read it in:
 ```{r task-2-examine, echo= TRUE}
 file <- "http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/"
-readLines(file, n = 4)
+readLines(file, n = 1)
 ```
 The first line gives the column name, the second line gives units and the data themselves begin on line 3. We can read them in with:
 
@@ -184,7 +184,7 @@ buoy44025 <- read_table(file,
                         skip = 2)
 ```
 
-1. Make sure you understand why we have used `read_table()` rather than `read_table2()` or `reas_csv()` (use `?read_table`)
+1. Make sure you understand why we have used `read_table()` rather than `read_table2()` or `read_csv()` (use `?read_table`)
 
 2. Use `scan()` to read in the appropriate lines then tidy the results and name the columns `measure_units`. Hint 1: Look up `scan()` using `?scan`. Hint 2. The functions I used were `str_remove()`, `str_replace()` and `paste()`.
 ```{r task-2-colnames}
@@ -285,7 +285,7 @@ write.table(sol2,
 
 # The Rmd file
 
-[Rmd file](01_project_organisation.Rmd)
+[Rmd file](02_tidying_data.Rmd)
 
 ![](../pics/58Mend.png)
 
