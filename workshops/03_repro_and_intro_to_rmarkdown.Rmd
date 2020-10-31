@@ -59,15 +59,6 @@ Work in pairs in BB Collaborate breakout to tackle the tasks.
 # Task 1
 
 Coming soon!
-<pre>  
-
-              .        .' '.            _
-              .        .   .           (_\
-               .         .         . -{{((|8<
-                 ' .  . ' ' .  . '     (_/
-
-
-</pre>  
 
 # The Rmd file
 
