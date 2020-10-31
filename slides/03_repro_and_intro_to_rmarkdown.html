@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Reproducibility and an introduction to R Markdown</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emma Rand" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <script src="libs/twitter-widget/widgets.js"></script>
+    <link rel="stylesheet" href="../css_files/emma.css" type="text/css" />
+    <link rel="stylesheet" href="../css_files/emma-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Reproducibility and an introduction to R Markdown
+## Data Science option of BIO00058M Data Analysis.
+### Emma Rand
+### University of York, UK
+
+---
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+}</style>
+
+
+
+
+
+
+&lt;style&gt;
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+&lt;/style&gt;
+
+# Outline
+
+The aim of this topic is to introduce to good programming practices such as styling and organising your code and writing your own functions as well as the use of R Markdown  &lt;a name=cite-markdown1&gt;&lt;/a&gt;&lt;a name=cite-markdown2&gt;&lt;/a&gt;([Allaire Xie, et al., 2019a](#bib-markdown1); [Xie Allaire, et al., 2018a](#bib-markdown2)) for creating reproducible analyses. 
+
+
+---
+class: inverse
+
+# Reproducibility is just good scientific practice
+
+---
+#  Good scientific practice
+
+Analysis workflows should conform to the same standards as lab projects and lab books&lt;sup&gt;1&lt;/sup&gt;: structured and documented pipelines. 
+
+* Important in research collaboration and mandatory in many industry settings.   
+* Will likely become mandatory for science publication and funding. 
+* Will ultimately make your life much easier.  
+* Requires time, diligence and practice.  
+
+.font70[
+.footnote[
+Higher standards IMO, it can be 100% reproducible so it should be. Publication should be contingent on the supply of complete analytical pipelines because science is funded by taxes and donations.
+]
+]
+
+---
+# Reproducibility is a continuum
+
+Some is better than none!
+
+* Organise your project See [Topic 1 Project Organisation](01_project_organisation.html).  
+* Script **everything**.  
+* Organise code into sections.  
+* Code formatting and style.  
+* Code algorithmically / algebraically.
+* Document your project - code commenting, licenses, READMEs 
+* Modularise your code by writing functions. 
+* Use literate programming e.g., R Markdown
+* Version control, containerising
+
+---
+class: inverse
+
+# Code formatting and style
+
+---
+#  Code formatting and style
+
+*"Good coding style is like correct punctuation: you can manage without it, butitsuremakesthingseasiertoread. "*
+[The tidyverse style guide](https://style.tidyverse.org/) 
+
+
+We have all written code which is hard to read. We all improve over time.
+
+<blockquote class="twitter-tweet" data-width="550" data-lang="en" data-dnt="true" data-theme="light"><p lang="en" dir="ltr">The only way to write good code is to write tons of shitty code first. Feeling shame about bad code stops you from getting to good code</p>&mdash; Hadley Wickham (@hadleywickham) <a href="https://twitter.com/hadleywickham/status/589068687669243905?ref_src=twsrc%5Etfw">April 17, 2015</a></blockquote>
+
+
+
+---
+#  Code formatting and style
+Some keys points:
+
+* be consistent, emulate experienced coders  
+* use snake_case for variable names (not CamelCase, dot.case or kebab-case)  
+* use `&lt;-` not `=` for assignment  
+* use spacing around most operators and after commas  
+* use indentation  
+* avoid long lines, break up code blocks with new lines  
+* use `"` for quoting text (not `'`) unless the text contains double quotes  
+* do use kebab-case in rmarkdown code chunk names (see markdown later)  
+
+---
+class: inverse
+
+# 👺 Ugly code 👺
+
+---
+#  Ugly code
+
+.code50[
+
+```r
+data&lt;-read_csv('../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv',skip=2)
+library(janitor);sol&lt;-clean_names(data)
+data=data%&gt;%filter(str_detect(description,"OS=Homo sapiens"))%&gt;%filter(x1pep=='x')
+data=data%&gt;%
+mutate(g=str_extract(description,
+"GN=[^\\s]+")%&gt;%str_replace("GN=",''))
+data&lt;-data%&gt;%mutate(id=str_extract(accession,"1::[^;]+")%&gt;%str_replace("1::",""))
+```
+]
+
+--
+
+* no spacing or indentation
+* inconsistent splitting of code blocks over lines
+* inconsistent use of quote characters
+* no comments
+* variable names convey no meaning
+* use of `=` for assignment and inconsistently
+* multiple commands on a line
+* library statement in the middle of 'analysis'
+
+---
+class: inverse
+
+# 😎 Cool code 😎
+---
+#  Cool code
+
+.code50[
+
+```r
+########################### Data import ########################### 
+# define file name
+filesol &lt;- "../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv"
+
+# import: column headers and data are from row 3
+sol &lt;- read_csv(filesol, skip = 2) %&gt;% 
+  janitor::clean_names()
+
+
+############################ Tidy Data ############################ 
+# filter out the bovine proteins and those proteins 
+# identified from fewer than 2 peptides
+sol &lt;- sol %&gt;% 
+  filter(str_detect(description, "OS=Homo sapiens")) %&gt;% 
+  filter(x1pep == "x")
+
+# Extract the genename from description column to a column
+# of its own
+sol &lt;- sol %&gt;%
+  mutate(genename =  str_extract(description,"GN=[^\\s]+") %&gt;% 
+           str_replace("GN=", ""))
+
+# Extract the top protein identifier from accession column (first
+# Uniprot ID after "1::") to a column of its own
+sol &lt;- sol %&gt;%
+  mutate(protid =  str_extract(accession, "1::[^;]+") %&gt;% 
+           str_replace("1::", ""))
+```
+]
+
+---
+#  😎 Cool code Tips
+
+* to correct indentation &lt;div class = "blue"&gt;CONTROL+i&lt;/div&gt;
+* to reformat code &lt;div class = "blue"&gt;CONTROL+SHIFT+A&lt;/div&gt; Not perfect but corrects spacing, indentation, multiple commands on lines and assignment with `=`
+* to comment and uncomment lines &lt;div class = "blue"&gt;CONTROL+SHIFT+C&lt;/div&gt;
+
+---
+#  😎 Cool code Tips
+
+* show the margin Tools | Global Options | Code
+
+&lt;img src="../pics/code_margin.png" title="the Tools - Global Options - Code - tab where the box for show margin is highlighted" alt="the Tools - Global Options - Code - tab where the box for show margin is highlighted" width="60%" /&gt;
+
+---
+class: inverse
+
+# Code 'algorithmically'
+
+---
+#  Code 'algorithmically.'
+
+* Write code which expresses the structure of the problem/solution.
+* Avoid hard coding numbers if at all possible - declare variables instead
+* Declare frequently used values as variables at the start e.g., colour schemes, figure saving settings and chunk options (see R Markdown later)
+
+---
+#  Code 'algorithmically'
+
+👺 Hard coding numbers.
+
+Suppose we want to calculate `\(SS(x)\)` for the number of chicks in five nests. The formula is given by: `\(\sum (x_i- \bar{x})^2\)`  
+
+
+```r
+# calculating sum of squares for the number of 
+# chicks in nests
+sum(3, 5, 6, 7, 8) / 5
+```
+
+```
+## [1] 5.8
+```
+
+```r
+(3 - 5.8)^2 + (5 - 5.8)^2 + (6 - 5.8)^2 + (7 - 5.8)^2 + (8 - 5.8)^2
+```
+
+```
+## [1] 14.8
+```
+
+
+---
+#  Code 'algorithmically'
+
+👺 Hard coding numbers
+
+
+* if any of the sample numbers must be altered, all the code needs changing
+* it is hard to tell that the output of the first line is a mean
+* its hard to tell that the second number in each bracket comes from the first command
+* it is hard to tell that 5 is just the number of values
+* no way of know if numbers are the same by coincidence or they refer to the same thing
+
+
+
+---
+#  Code 'algorithmically'
+
+😎 Better
+
+
+```r
+# calculating sum of squares for the number of 
+# chicks in nests
+offspring &lt;- c(3, 5, 6, 7, 8)
+mean_offspring &lt;- sum(offspring) / length(offspring)
+sum((offspring - mean_offspring)^2)
+```
+
+```
+## [1] 14.8
+```
+---
+#  Code 'algorithmically'
+
+😎 Better
+* the commenting is the same but it is easy to follow
+* if any of the sample numbers must be altered, only that number needs changing
+* assigning a value you will later use to a variable with a meaningful name allows us to understand the first and second calculations.
+
+---
+#  Code 'algorithmically'
+
+😎 Even better - use existing functions where you can
+
+
+```r
+# calculating sum of squares for the number of 
+# chicks in nests
+offspring &lt;- c(3, 5, 6, 7, 8)
+mean_offspring &lt;- mean(offspring)
+sum((offspring - mean_offspring)^2)
+```
+
+```
+## [1] 14.8
+```
+
+
+---
+class: inverse
+
+# Writing functions
+
+---
+#  Writing functions
+
+Putting code that you will use more than once in a function is efficient and makes your code easier to read.
+
+Suppose we had two samples of the number of chicks in nests. We could do this:
+
+
+```r
+# calculating sum of squares for the number of 
+# chicks in nests
+offspring_1 &lt;- c(3, 5, 6, 7, 8)
+mean_offspring_1 &lt;- mean(offspring_1)
+ss_offspring_1 &lt;- sum((offspring - mean_offspring_1)^2)
+offspring_2 &lt;- c(4, 1, 6, 6, 3)
+mean_offspring_2 &lt;- mean(offspring_2)
+ss_offspring_2 &lt;- sum((offspring - mean_offspring_2)^2)
+```
+
+---
+#  Writing functions
+
+Instead, we can create a function for repeated use. Functions are useful because they generalise a process thus making it reproducible without copying and pasting.
+
+--
+
+A function is defined by an assignment of the form:
+
+
+```r
+functionname &lt;- function(arg1, arg2, ...) {
+  expression
+  }
+```
+
+--
+
+The `expression` is any R code that uses the arguments (arg1 etc) to calculate a value. In our case it will be the formula: `\(SS(x) = \sum (x_i- \bar{x})^2\)` 
+
+---
+#  Writing functions
+
+We define our `\(SS(x)\)` function like this:
+
+
+```r
+sum_sq &lt;- function(v) {
+  sum((v - mean(v))^2)
+  }
+```
+
+--
+
+I chose `v`, as a name, arbitrarily. It doesn't matter what you call it. It only exists inside the function when the function is called. It acts as a place holder for the thing that you pass in. 
+
+--
+
+Our function take one argument. The expression describes what the function should do with the argument passed. 
+
+---
+#  Writing functions
+
+When you run the code that defines the function, it will appear in your environment window.
+
+&lt;img src="../pics/env_window_function.png" title="the environment window" alt="the environment window" width="50%" /&gt;
+
+---
+#  Writing functions
+
+To call the function:
+
+
+```r
+sum_sq(offspring_1)
+```
+
+```
+## [1] 14.8
+```
+
+```r
+sum_sq(offspring_2)
+```
+
+```
+## [1] 18
+```
+
+---
+#  Writing functions
+
+You can put your functions in one of two places:
+
+1. at the beginning of your analysis in a section for defining functions.
+
+2. better: put the function in a file of its own then `source()` it before running it:
+
+```r
+source("functions/sum_sq.R")
+sum_sq(offspring_1)
+```
+
+```
+## [1] 14.8
+```
+
+---
+#  Writing functions
+
+Save the function in a file with the same name as the function.
+
+--
+
+Then put the `source()` command at the top of the script (like the package loading)
+
+
+---
+class: inverse
+
+# R Markdown
+
+---
+#  Reproducible Reports: R Markdown
+
+How do you work?
+
+* What program do you analyse your data in?  
+* What program do you plot your data in?  
+* What program do you use to write up the results to submit for assessment or to a journal?
+* What is your process for getting your summary data, statistical results, tables and figures in to your report?  
+* What do you do when you get additional data that increases your sample sizes?  
+* What do you do if you wrote in Word formatted for one journal and now have to submit in PDF formatted for another?
+
+---
+#  Reproducible Reports: R Markdown
+
+Typically people analyse, plot and write up in different programs. 
+
+Graphs are saved to files and copied and pasted into the final report. 
+
+This process relies on manual labour. 
+
+--
+
+If the data changes, or you want to add a table or figure, you must repeat the entire process to update the report and renumber all your figures and all the  references to figures.
+
+If you have ever had do this, you'll know it is time consuming but also very error prone.
+
+---
+background-image: url(../pics/rmarkdown.png)
+background-position: 85% 85%
+background-size: 180px
+
+# Reproducible Reports: R Markdown
+
+The brilliance of R Markdown ([Allaire Xie, et al., 2019a](#bib-markdown1)) is that you can use a **single R Markdown file** to:
+
+* save and execute code  
+
+--
+
+* do all your data processing, analysis and plotting  
+
+--
+
+* generate high quality reports that can be shared with an audience  
+
+--
+
+This is known as literate programming &lt;a name=cite-Knuth1984-ly&gt;&lt;/a&gt;([Knuth, 1984](#bib-Knuth1984-ly)). 
+
+
+😎
+
+---
+# Reproducible Reports: R Markdown
+
+## Many output formats are supported!
+
+.pull-left[
+&lt;img src="../pics/rmarkdownoutputformats.png" title="r markdown formats" alt="r markdown formats" width="100%" /&gt;
+
+]
+.pull-right[
+* Word, PDF, journal article formats for many journals
+* Webpages - many styles and themes
+* webslides
+* powerpoint
+* books
+* blogs
+* posters
+* web applications including interactivity
+
+]
+
+---
+# Reproducible Reports: R Markdown
+
+🎬 This might be a good time to watch the demo
+
+---
+# Reproducible Reports: R Markdown
+
+Key points from the demo. R Markdown.......
+
+* mixes text and code  
+* is human readable  
+* has a YAML header, containing "metadata", between the  \-\-\- 
+* code chunk options control whether the code and its output end up in your 'knitted' document  
+* comments   
+  * in a code chunk the `#` is used for comments as normal  
+  * in text comments are written like this:  `&lt;!-- a comment --&gt;`
+  * but Ctrl+Shift+C will do context-specific comments  
+* \# in the text indicate headings  
+* Formatting `**bold**`, `*italics*`
+
+
+
+---
+# Reproducible Reports: R Markdown
+
+Create your own R markdown file
+
+🎬 File | New File | R Markdown
+
+--
+
+🎬 Delete everything except the YAML header the first code chunk
+
+--
+
+🎬 Add your name, and a title 
+
+---
+
+# Reproducible Reports: R Markdown
+
+🎬 Edit the YAML. I recommend using the `bookdown` package &lt;a name=cite-bookdown&gt;&lt;/a&gt;([Xie, 2016](#bib-bookdown))  for output types which handle cross referencing well. We will do cross referencing in the next Topic.
+
+```
+---
+title: "My awesome title"
+author: "Emma Rand"
+output:
+  bookdown::pdf_document2: default
+  bookdown::word_document2: default
+  bookdown::html_document2: default
+---
+```
+
+---
+# Reproducible Reports: R Markdown
+
+🎬 Set some **default** code chunk options. I recommend these:
+
+.code80[
+
+````
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.retina = 3)
+```
+````
+]
+
+--
+
+`echo = FALSE` code will not be included in the output - normally what you want in a report.
+
+`warning = FALSE` and `message = FALSE` R messages and warnings will not be included
+
+`fig.retina = 3` for improving the appearance of R figures in HTML documents
+
+---
+# Reproducible Reports: R Markdown
+
+## Organise code into sections.
+
+Have separate named code chunks for each process: set up, package loading, data import, data tidying (maybe several chunks), different analyses, figures etc.
+
+The first two code chunks are usually for the default code chunk options (which I tend to call `setup`) and for package loading. 
+
+---
+# Reproducible Reports: R Markdown
+
+🎬 Use Insert | R to add a code chunk:
+
+.pull-left[
+````
+```{r packages}
+library(tidyverse)
+```
+````
+]
+.pull-right[
+* `r`indicates it is an R code chunk
+* `packages` is just a name for the chunk. Naming chunks makes debugging easier.
+
+]
+
+
+---
+# Summary
+
+
+.font90[
+* R Markdown interweaves analysis code and reporting and is human readable  
+* metadata about the document is given YAML header  
+* there are many formats for outputs and several packages available  
+* code chunk behaviour can be set 
+* `#` is a heading in the text
+* Use Ctrl+Shift+C for do context-specific comments
+* Formatting: `**bold**`, `*italics*`
+* Organise code into sections
+* Use a consistent style particularly in terms of indentation, spacing and variable names
+* Modularise your code by writing functions
+* Code algorithmically
+]
+
+---
+# Reading
+
+## Strongly recommended
+
+* Good enough practices in scientific computing &lt;a name=cite-Wilson2017-cp&gt;&lt;/a&gt;([Wilson Bryan, et al., 2017](#bib-Wilson2017-cp))
+* The tidyverse style guide &lt;a name=cite-Wickham-style&gt;&lt;/a&gt;([Wickham, ](#bib-Wickham-style)) Chapter 2 Syntax
+
+---
+# References
+
+.font90[
+&lt;a name=bib-markdown1&gt;&lt;/a&gt;[Allaire, J, Y. Xie, et al.](#cite-markdown1)
+(2019a). _rmarkdown: Dynamic Documents for R_. R package version 1.16.
+URL:
+[https://github.com/rstudio/rmarkdown](https://github.com/rstudio/rmarkdown).
+
+&lt;a name=bib-Knuth1984-ly&gt;&lt;/a&gt;[Knuth, D. E.](#cite-Knuth1984-ly) (1984).
+"Literate Programming". In: _Comput. J._ 27.2, pp. 97-111.
+
+&lt;a name=bib-Wickham-style&gt;&lt;/a&gt;[Wickham, H.](#cite-Wickham-style) "The
+tidyverse style guide". . Accessed: 2020-10-30.
+
+&lt;a name=bib-Wilson2017-cp&gt;&lt;/a&gt;[Wilson, G, J. Bryan, et
+al.](#cite-Wilson2017-cp) (2017). "Good enough practices in scientific
+computing". En. In: _PLoS Comput. Biol._ 13.6, p. e1005510.
+
+&lt;a name=bib-bookdown&gt;&lt;/a&gt;[Xie, Y.](#cite-bookdown) (2016). _bookdown:
+Authoring Books and Technical Documents with R Markdown_. ISBN
+978-1138700109. Boca Raton, Florida: Chapman and Hall/CRC. URL:
+[https://github.com/rstudio/bookdown](https://github.com/rstudio/bookdown).
+]
+---
+# References
+.font90[
+&lt;a name=bib-markdown2&gt;&lt;/a&gt;[Xie, Y, J. Allaire, et al.](#cite-markdown2)
+(2018a). _R Markdown: The Definitive Guide_. ISBN 9781138359338. Boca
+Raton, Florida: Chapman and Hall/CRC. URL:
+[https://bookdown.org/yihui/rmarkdown](https://bookdown.org/yihui/rmarkdown).
+]
+
+.font70[
+.footnote[
+Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
+]
+]
+---
+
+## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -497,8 +497,10 @@ PrintBibliography(myBib, start = 1, end = 3)
 PrintBibliography(myBib, start = 4, )
 ```
 
+.font70[
 .footnote[
 Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
+]
 ]
 ---
 

@@ -1,0 +1,1 @@
+sum_sq <- function(v) {sum((v - mean(v))^2)}
