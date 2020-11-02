@@ -1588,34 +1588,76 @@ div.tocify {
 <p>Work in pairs in BB Collaborate breakout to tackle the tasks.</p>
 <p><font size="4"> 👥 Work together to complete the task. Take it in turns to share your screens.<br />
 💬 Communicate what you are doing and why<br />
-📝 Document and share your ideas and process<br />
+📜 Document and share your ideas and process<br />
 👥 Consider having one person code and other documenting<br />
 ❤️ Be kind, be understanding, be flexible<br />
 </font></p>
 </div>
-<div id="set-up" class="section level1">
-<h1>Set up</h1>
+<div id="task-1" class="section level1">
+<h1>Task 1</h1>
+<p>This task will give you an opportunity to use R Markdown but also to practice organising your analyses and using the tidyverse.</p>
+<p>In the workshop for <a href="01_project_organisation.html">Topic 1: Project organisation</a> you worked with data in <a href="../data-raw/chaff.txt">chaff.txt</a> which are the masses of male and female chaffinches.</p>
 <ol style="list-style-type: decimal">
 <li><p>Do the New project, GitHub first workflow</p>
 <ul>
-<li>Make a new repo on GitHub and initialise with a README and license<br />
+<li>Make a new repo on GitHub called “chaff” and initialise with a README and license<br />
 </li>
 <li>Clone the repo into a RStudio Project on your own machine</li>
 </ul></li>
 <li><p>Paste the address of your GitHub repo to the chat. 💬 This helps me see how you are getting on.</p></li>
 <li><p>Create a directory structure suitable for the analysis - you may wish to revise this later as you work.</p></li>
 <li><p>As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub</p></li>
+<li><p>Create an R Markdown document for reporting on the data. I suggest calling it “main.Rmd”. You may want to refer to the <a href="../slides/03_repro_and_intro_to_rmarkdown.html">slides</a>.</p>
+<ul>
+<li>Delete everything except the YAML header the first code chunk called <code>setup</code></li>
+<li>Add your name, and a title<br />
+</li>
+<li>Edit the YAML. I recommend using the <strong><code>bookdown</code></strong> package <span class="citation">(Xie 2016)</span> for output types which handle cross referencing well. We will do cross referencing in the next Topic.</li>
+</ul></li>
+<li><p>Set some <strong>default</strong> code chunk options. I recommend these:</p>
+<pre><code>```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.retina = 3)
+```</code></pre></li>
+<li><p>Insert a code chuck for package loading:</p>
+<pre><code>```{r packages}
+library(tidyverse)
+```</code></pre></li>
+<li><p>Add headings for Introduction, Methods, Results and Discussion and add a sentence to each of the Introduction and Methods.</p></li>
+<li><p>Now add code chunks for importing and tidying the data. Make sure you follow the guidance in the <a href="../slides/03_repro_and_intro_to_rmarkdown.html">slides</a> for organising and styling your code.</p></li>
+<li><p>Add a code chunk to create function for calculating the <span class="math inline">\(SS(x)\)</span> of all the mass values. You should be able to call it with <code>sum_sq(chaff$mass)</code>.</p>
+<p>We can adapt that function so it can be used on a specifed column and allow tidyverse style syntax with a dataframe output using:</p>
+<pre class="r"><code>sum_sq &lt;- function(df, measure) {
+  df %&gt;% summarise(ss = sum(({{measure}} - mean({{measure}}))^2))
+}
+
+sum_sq(chaff, mass)</code></pre>
+<p>There are a couple of points to notice here. Firstly, I have defined the function with two arguments, a dataframe and the column in that dataframe for which the <span class="math inline">\(SS(x)\)</span> is desired. Secondly, in order the use that column name in a tidyverse pipeline we have to take account of the tidyverse’s use of “tidy-evaluation”, a particular form of “non-standard evaluation”. It is tidy evaluation that allows you to use <code>col_name</code> and not <code>df$col_name</code> amongst other things. This makes data exploration quick but adds a challenge when you need to refer use a variable indirectly in a loop or function. The way we take account of tidy evaluation is to use the double braces around the variable name: <code>{{ variable }}</code> The <a href="https://dplyr.tidyverse.org/articles/programming.html">Programming with dplyr</a> section in <strong><code>dplyr</code></strong> documentation gives a little more info about tidy evaluation. We can adapt our function to calculate the <span class="math inline">\(SS(x)\)</span> for each group like this:</p>
+<pre class="r"><code>sum_sq &lt;- function(df, measure, group) {
+  df %&gt;% group_by({{ group }}) %&gt;% 
+    summarise(ss = sum(({{measure}} - mean({{measure}}))^2))
+}
+
+sum_sq(chaff, mass, sex)</code></pre></li>
+<li><p>Add a code chunk for summarising the masses by sex - include the mean, standard deviation, sample size and the standard error. You might find it useful to refer to <a href="02_tidying_data.html#Task_1">Topic 2 Task 1</a> on the Human Development index for creating the summary.</p></li>
+<li><p>Can you create a function called <code>data_summary()</code> that carries out that summarising? You will need to use the double braces,<code>{{ }}</code></p></li>
 </ol>
-<p><font size="4"> ❗ Start with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early. </font></p>
 </div>
-<div id="task-1" class="section level1">
-<h1>Task 1</h1>
-<p>Coming soon!</p>
+<div id="task-2" class="section level1">
+<h1>Task 2</h1>
+<p>Turn your work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines into an Rmd. That was covered here <a href="02_tidying_data.html#Task_3">Task 3 Topic 2</a>.</p>
 </div>
 <div id="the-rmd-file" class="section level1">
 <h1>The Rmd file</h1>
 <p><a href="03_intro_to_rmarkdown.Rmd">Rmd file</a></p>
 <p><img src="data:image/png;base64,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" /></p>
+<div id="refs" class="references">
+<div id="ref-bookdown">
+<p>Xie, Yihui. 2016. <em>Bookdown: Authoring Books and Technical Documents with R Markdown</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://github.com/rstudio/bookdown">https://github.com/rstudio/bookdown</a>.</p>
+</div>
+</div>
 </div>
 
 

@@ -40,10 +40,14 @@ Work in pairs in BB Collaborate breakout to tackle the tasks.
 </font>
 
 
-# Set up
+# Task 1
+
+This task will give you an opportunity to use R Markdown but also to practice organising your analyses and using the tidyverse.
+
+In the workshop for [Topic 1: Project organisation](01_project_organisation.html) you worked with data in [chaff.txt](../data-raw/chaff.txt) which are the masses of male and female chaffinches.
 
 1. Do the New project, GitHub first workflow
-   * Make a new repo on GitHub and initialise with a README and license  
+   * Make a new repo on GitHub called "chaff" and initialise with a README and license  
    * Clone the repo into a RStudio Project on your own machine  
 
 2. Paste the address of your GitHub repo to the chat.  `r emo::ji("speech_balloon")` This helps me see how you are getting on.
@@ -52,13 +56,67 @@ Work in pairs in BB Collaborate breakout to tackle the tasks.
 
 4. As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub
 
-<font size = "4">
-`r emo::ji("exclamation_mark")` Start with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early.
-</font>
+5. Create an R Markdown document for reporting on the data. I suggest calling it "main.Rmd". You may want to refer to the [slides](../slides/03_repro_and_intro_to_rmarkdown.html).
+   * Delete everything except the YAML header the first code chunk called `setup` 
+   * Add your name, and a title  
+   * Edit the YAML. I recommend using the **`bookdown`** package [@bookdown]  for output types which handle cross referencing well. We will do cross referencing in the next Topic. 
+6. Set some **default** code chunk options. I recommend these:
 
-# Task 1
+     ````
+     ```{r setup, include=FALSE}`r ''`
+     knitr::opts_chunk$set(echo = FALSE, 
+                           warning = FALSE,
+                           message = FALSE,
+                           fig.retina = 3)
+     ```
+     ````
+7. Insert a code chuck for package loading:
 
-Coming soon!
+     ````
+     ```{r packages}`r ''`
+     library(tidyverse)
+     ```
+     ````
+8. Add headings for Introduction, Methods, Results and Discussion and add a sentence to each of the Introduction and Methods.
+
+9. Now add code chunks for importing and tidying the data. Make sure you follow the guidance in the [slides](../slides/03_repro_and_intro_to_rmarkdown.html) for organising and styling your code. 
+
+
+10. Add a code chunk to create function for calculating the $SS(x)$ of all the mass values. You should be able to call it with `sum_sq(chaff$mass)`.  
+
+     We can adapt that function so it can be used on a specifed column and allow tidyverse style syntax with a dataframe output using:  
+     
+     ```{r eval=FALSE, echo=TRUE}
+     sum_sq <- function(df, measure) {
+       df %>% summarise(ss = sum(({{measure}} - mean({{measure}}))^2))
+     }
+     
+     sum_sq(chaff, mass)
+     ```
+     
+     There are a couple of points to notice here. Firstly, I have defined the function with two arguments, a dataframe and the column in that dataframe for which the $SS(x)$ is desired. Secondly, in order the use that column name in a tidyverse pipeline we have to take account of the tidyverse's use of "tidy-evaluation", a particular form of "non-standard evaluation". It is tidy evaluation that allows you to use `col_name` and not `df$col_name` amongst other things. This makes data exploration quick but adds a challenge when you need to refer use a variable indirectly in a loop or function. The way we take account of tidy evaluation is to use the double braces around the variable name: `{{ variable }}`
+     The [Programming with dplyr](https://dplyr.tidyverse.org/articles/programming.html) section in **`dplyr`** documentation gives a little more info about tidy evaluation.
+     We can adapt our function to calculate the $SS(x)$ for each group like this:
+     
+     ```{r eval=FALSE, echo=TRUE}
+     sum_sq <- function(df, measure, group) {
+       df %>% group_by({{ group }}) %>% 
+         summarise(ss = sum(({{measure}} - mean({{measure}}))^2))
+     }
+     
+     sum_sq(chaff, mass, sex)
+     
+     ```
+     
+
+11. Add a code chunk for summarising the masses by sex - include the mean, standard deviation, sample size and the standard error. You might find it useful to refer to [Topic 2 Task 1](02_tidying_data.html#Task_1) on the Human Development index for creating the summary.
+
+12. Can you create a function called `data_summary()` that carries out that summarising? You will need to use the double braces,`{{ }}`
+
+# Task 2
+Turn your work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines into an Rmd.  That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3).
+
+
 
 # The Rmd file
 
