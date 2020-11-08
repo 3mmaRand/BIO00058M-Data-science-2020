@@ -1,0 +1,64 @@
+---
+title: "Topic 4: Advanced R Markdown"
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: flatly
+  word_document: default
+bibliography: "../refs.bib"
+---
+
+
+![](../pics/58M.png)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkg}
+library(tidyverse)
+```
+
+
+# Introduction
+
+Work in pairs in BB Collaborate breakout to tackle the tasks.
+
+<font size = "4">
+`r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
+`r emo::ji("speech_balloon")` Communicate what you are doing and why  
+`r emo::ji("document")` Document and share your ideas and process   
+`r  emo::ji("team")` Consider having one person code and other documenting  
+`r emo::ji("heart")` Be kind, be understanding, be flexible   
+</font>
+
+
+# Task 1  ** to be completed**
+
+In [Topic 3: Reproducibility and an introduction to R Markdown, Task 1 ](03_repro_and_intro_to_rmarkdown.html#Task_1) you worked with data in [chaff.txt](../data-raw/chaff.txt) which are the masses of male and female chaffinches.
+
+1. Open that project and the Rmd you made last topic
+2. Paste the address of your GitHub repo to the chat.  `r emo::ji("speech_balloon")` if you haven't already. This helps me see how you are getting on.
+3. As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub
+
+ ** to be completed**
+
+# Task 2
+Turn your work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines into an Rmd.  That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3).
+
+
+
+# The Rmd file
+
+[Rmd file](03_repro_and_intro_to_rmarkdown.html)
+
+![](../pics/58Mend.png)
+
+
