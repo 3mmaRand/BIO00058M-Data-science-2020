@@ -47,8 +47,8 @@ xaringanExtra::style_share_again(
 [Workshop](workshops/03_repro_and_intro_to_rmarkdown.html)  
 
 **Topic 4 Advanced R Markdown.**  
-[Independent Study](slides/)  
-[Workshop](workshops/)  
+[Independent Study](slides/04_advanced_rmarkdown.html)  
+[Workshop](workshops/04_advanced_rmarkdown.html)  
 
 **Topic 5 An introduction to Machine Learning: Overview and Unsupervised methods**  
 [Independent Study](slides/)  

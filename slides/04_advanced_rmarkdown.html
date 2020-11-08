@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Advanced R Markdown</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emma Rand" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css_files/emma.css" type="text/css" />
+    <link rel="stylesheet" href="../css_files/emma-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Advanced R Markdown
+## Data Science option of BIO00058M Data Analysis.
+### Emma Rand
+### University of York, UK
+
+---
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+}</style>
+
+
+
+
+
+
+&lt;style&gt;
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+&lt;/style&gt;
+
+# Outline
+
+The aim of this topic is to introduce more advanced use of R Markdown  &lt;a name=cite-markdown1&gt;&lt;/a&gt;&lt;a name=cite-markdown2&gt;&lt;/a&gt;([Allaire Xie, et al., 2019a](#bib-markdown1); [Xie Allaire, et al., 2018a](#bib-markdown2)) such as including special characters, images, figures and tables along with citations, referencing and cross referencing (with autonumbering).
+
+
+
+---
+class: inverse
+
+# Inline code
+
+---
+# Inline code
+
+Inline code is needed to place the output of R commands in a piece of text rather than in a separate section as the output of a code chunk.
+
+Inline code goes between ` `r` and ` ` ` within the text. 
+
+For example, by writing: 
+
+The square root of 2 is ` `r`  `sqrt(2)` ` ` ` in a text section of the Rmd....
+
+--
+
+....You will get: 
+
+&gt; The square root of 2 is  1.4142136
+
+in the knitted output. The inline code executes and the result is placed in the text.
+
+---
+# Inline code
+
+This is often needed to access and report analysis variables, such as a mean. 
+
+--
+
+For example, suppose you had a dataframe, `chaff_sum` like this:
+
+```
+## # A tibble: 2 x 5
+##   sex      mean     n    sd    se
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 females  20.5    20  2.14 0.478
+## 2 males    22.3    20  2.15 0.481
+```
+We might want to report the means and standard errors along with which was the highest.
+
+---
+# Inline code
+
+We could write something like this in the text of the Rmd: 
+
+The mean mass of males is ` `r`  `chaff_sum$mean[chaff_sum$sex == "males"]` ` ` ` g. 
+
+--
+
+To get: 
+
+&gt; The mean mass of males is  22.275 g.
+
+in the knitted output
+
+---
+# Inline code
+
+Long sections of inline code can make it difficult to read the Rmd text or understand what quantity is being calculated. 
+
+To improve readability, I usually add code chunks to calculate or extract the values I want to report.
+
+.code80[
+
+```r
+# extract values for inline reporting
+# highest mean, se and the sex to which they belongs
+highestmean &lt;- max(chaff_sum$mean) 
+highestse &lt;- chaff_sum$se[chaff_sum$mean == highestmean] 
+highestsex &lt;- chaff_sum$sex[chaff_sum$mean == highestmean]
+highestmean &lt;- round(highestmean, 2)
+highestse  &lt;- round(highestse, 2)
+```
+]
+
+---
+# Inline code
+
+We could write something like: 
+
+` `r`  `str_to_sentence(highestsex)` ` ` ` are the heavier at ` `r`  `highestmean` ` ` ` `\(\pm\)` ` `r`  `highestse` ` ` ` g in a text section of the Rmd
+
+--
+
+To get: 
+
+&gt; Males are the heavier at 22.27 `\(\pm\)` 0.48 g
+
+in the knitted output
+
+---
+class: inverse
+
+# Images and links
+
+---
+#  Images and links
+
+Links are created using the syntax `[text](link)`. For example: 
+
+`[R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/)` in the Rmd gives you:
+
+[R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) in the knitted output.
+
+
+The syntax for images is the same with an extra exclamation mark at the start: `![alt text or image title](path/to/image)`
+
+
+
+---
+#  Images and links
+
+So: `![R Markdown wizards by Allison Horst](../pics/rmarkdown_wizards.png)`.
+
+Gives you
+
+![R Markdown wizards by Allison Horst](../pics/rmarkdown_wizards.png)
+---
+#  Images
+
+My preferred way of including images is to use the **`knitr`** function `include_graphics` in a code chunk:
+
+.code70[
+````
+```{r out.width="30%", fig.cap="R Markdown wizards by Allison Horst."}
+knitr::include_graphics("../pics/rmarkdown_wizards.png")
+```
+````
+]
+
+&lt;img src="../pics/rmarkdown_wizards.png" title="R Markdown wizards by Allison Horst." alt="R Markdown wizards by Allison Horst." width="30%" /&gt;
+
+This partly for better control of the size and captioning but also to more easily use cross referencing (see later).
+---
+class: inverse
+# Tables
+
+---
+#  Tables
+
+There are several options for formatting tables. I tend to use
+`knitr::kable()` with the [**`kableExtra`**](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#table_styles) package &lt;a name=cite-kableExtra&gt;&lt;/a&gt;([Zhu, 2019a](#bib-kableExtra)) which work well with the pipe. 
+
+--
+
+The **`gt`** &lt;a name=cite-gt&gt;&lt;/a&gt;([Iannone Cheng, et al., 2020](#bib-gt)) and **`flextable`** packages &lt;a name=cite-flextable&gt;&lt;/a&gt;([Gohel, 2019](#bib-flextable)) are also good.
+
+---
+#  Tables
+
+`kable()` does a decent basic table with some options for formatting. For example
+.code60[
+
+```r
+chaff_sum %&gt;% 
+  knitr::kable(caption = "Summary statistics for Chaffinches",
+               digits = 2,
+               col.names = c("Sex", 
+                             "Mean", 
+                             "N",
+                             "Stdev",
+                             "Stder"))
+```
+
+&lt;table&gt;
+&lt;caption&gt;Summary statistics for Chaffinches&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Sex &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Mean &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; N &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Stdev &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Stder &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; females &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.48 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.48 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; males &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.27 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.48 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+
+---
+#  Tables
+
+[**`kableExtra`**](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#table_styles) package ([Zhu, 2019a](#bib-kableExtra)) gives you more formatting options which you can pipe onto your basic `kable()` table:
+
+.code60[
+
+```r
+chaff_sum %&gt;% 
+  knitr::kable(caption = "Summary statistics for Chaffinches",
+               digits = 2,
+               col.names = c("Sex", 
+                             "Mean", 
+                             "N",
+                             "Stdev",
+                             "Stder")) %&gt;%
+  kable_styling(font_size = 15) %&gt;% 
+  add_header_above(c(" " = 1, "Mass" = 4)) %&gt;% 
+  row_spec(row = 0, background = "#9d5e78") 
+```
+
+&lt;table class="table" style="font-size: 15px; margin-left: auto; margin-right: auto;"&gt;
+&lt;caption style="font-size: initial !important;"&gt;Summary statistics for Chaffinches&lt;/caption&gt;
+ &lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
+&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;Mass&lt;/div&gt;&lt;/th&gt;
+&lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;background-color: #9d5e78 !important;"&gt; Sex &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: #9d5e78 !important;"&gt; Mean &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: #9d5e78 !important;"&gt; N &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: #9d5e78 !important;"&gt; Stdev &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: #9d5e78 !important;"&gt; Stder &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; females &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.48 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.48 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; males &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.27 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.48 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+---
+class: inverse
+
+# Special characters
+
+---
+#  Special characters
+
+You can include special characters in a markdown document using LaTeX markup. 
+
+--
+
+This has $ signs on the outside and uses backslashes and curly braces to indicate that what follows should be interpreted as a special character with special formatting.
+
+--
+
+For example, to get `\(\bar{x} \pm s.e.\)` you write `$\bar{x} \pm s.e.$`
+
+---
+class: inverse
+
+# References and citations
+
+---
+#  References and citations
+
+These are added using .bib file and adding a line to the YAML header
+
+--
+
+A .bib file is a plain text file containing references in BibTeX format. An example is [here](https://github.com/3mmaRand/BIO00058M-Data-science-2020/blob/master/refs.bib)
+
+--
+
+The YAML line to be added is `bibliography: mybibfile.bib` 
+
+--
+
+`citation("package")` in the console will give packages references in BibTeX format.
+
+--
+
+BibTeX files can be downloaded from most referencing software (e.g., PaperPile).
+
+---
+#  References and citations
+
+Citations are added using:
+  *  blah blah blah `[@xaringan]` for blah blah blah &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)).    
+  *  Xie `[-@xaringan]` said blah blah blah for [Xie (2019)](#bib-xaringan) said blah blah blah.  
+
+--
+
+If you have installed the `citr` package there is an Addin to help with this.
+
+--
+
+Every citation used results in the reference being added to a list at the bottom of the output.
+
+
+---
+#  References and citations
+
+There are other ways of including references such as using `RefManageR` package which is what I am using in these slides.
+
+---
+class: inverse
+
+# Cross referencing
+
+---
+#  Cross referencing
+
+You can automatically number figures and tables without having to update the numbers if you add or move a figure or table. The cross references to tables and figures such as "See Table 1" will also update without your intervention.
+
+--
+
+The general syntax for cross-referencing in the text part of an Rmd is `\@ref(label)` where label can be:  
+
+`tab:name-of-chunk-that-makes-a-table` or  
+`fig:name-of-chunk-that-makes-a-figure`
+
+👀 Something to take note of here: You **cannot** use underscores in chunk names! Use hyphens or spaces instead. Yes, you can use spaces.
+
+---
+#  Cross referencing tables
+
+In order for tables to be automatically numbered, and to allow you to cross-reference them in the text, you need to ensure two things in the chunk that generates them:
+
+1. the chunk must be labelled. I've used `chaff-table` on the next page 
+2. the table must have a caption as set by the `caption` argument
+
+--
+
+❗ The caption does not have to include "Table 1." 
+
+---
+#  Cross referencing tables
+
+
+````
+```{r chaff-table}
+chaff_sum %&gt;% 
+  knitr::kable(caption = "Summary statistics for Chaffinches",
+               digits = 2,
+               col.names = c("Sex", 
+                             "Mean", 
+                             "N",
+                             "Stdev",
+                             "Stder"))
+```
+````
+
+To refer to this table in the text, we use: See Table `\@ref(tab:chaff-table)`
+
+
+
+
+---
+#  Cross referencing figures
+
+In order for figures to be automatically numbered, and to allow you to cross-reference them in the text, you need to ensure two things in the chunk:
+
+1. the chunk must be labelled. I'll used `chaff-fig`  
+2. the figure must have a caption *but* this time it is set in the code chunk options using `fig.cap` 
+
+--
+
+❗ The caption does not have to include "Figure 1."
+
+---
+#  Cross referencing figures
+
+````
+```{r chaff-fig, fig.cap="Mass of male and female Chaffinches"}
+ggplot() +
+  geom_violin(data = chaff, aes(x = sex, y = mass))
+```
+````
+
+--
+
+I have labelled the chunk `chaff-fig` and set the caption with `fig.cap`.
+
+To refer to this figure in the text, we use: See Figure `\@ref(fig:myo-fig)`
+
+---
+#  Cross referencing figures
+
+Figure legends can be very long and include special characters which don't work well in within `{r chaff-fig, fig.cap="Mass of male and female Chaffinches"} `
+
+Figures legends can instead be defined in the text part of the Rmd with: 
+
+(ref:chaff-fig) Mass of male and female Chaffinches
+
+And then use use that reference for the `fig.cap` argument in the chunk options:
+
+````
+```{r chaff-fig, fig.cap='(ref:chaff-fig)'}
+ggplot() +
+  geom_violin(data = chaff, aes(x = sex, y = mass))
+```
+````
+
+
+---
+# Summary
+
+.font90[
+
+* Inline code goes between ` `r` and ` ` ` within the text  
+* Avoid long inline commands by extracting the required values in code chunks  
+* `knitr::kable()` prints a dataframe/tibble as a well-formatted table which can be customised using `kableExtra`  
+* LaTeX can be used to format mathematical equations and include special characters  
+* references are held in a BibTeX file (.bib) given in the YAML header  
+* cross referencing relies on chunks being named and the use of captions  
+  * table captions are given in the` knitr::kable()` command
+  * figure cpations are given in the code chunk options  
+* the general syntax for cross-referencing in the text part of an Rmd is `\@ref(label)`
+
+
+]
+
+---
+# Reading
+
+Peruse and book mark these:
+
+* [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) ([Xie Allaire, et al., 2018a](#bib-markdown2)) by Yihui Xie, J. J. Allaire, Garrett Grolemund
+
+* [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/) &lt;a name=cite-rmarkdown_cookbook&gt;&lt;/a&gt;([Yihui Xie and Riederer, 2020](#bib-rmarkdown_cookbook)) by Yihui Xie, Christophe Dervieux, Emily Riederer. As a cookbook, this guide is recommended to new and intermediate R Markdown users who desire to enhance the efficiency of using R Markdown and also explore the power of R Markdown.
+
+* [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/) &lt;a name=cite-bookdown&gt;&lt;/a&gt;([Xie, 2016](#bib-bookdown))
+
+
+---
+# References
+
+.font90[
+&lt;a name=bib-markdown1&gt;&lt;/a&gt;[Allaire, J, Y. Xie, et al.](#cite-markdown1)
+(2019a). _rmarkdown: Dynamic Documents for R_. R package version 1.16.
+URL:
+[https://github.com/rstudio/rmarkdown](https://github.com/rstudio/rmarkdown).
+
+&lt;a name=bib-flextable&gt;&lt;/a&gt;[Gohel, D.](#cite-flextable) (2019).
+_flextable: Functions for Tabular Reporting_. R package version 0.5.5.
+URL:
+[https://CRAN.R-project.org/package=flextable](https://CRAN.R-project.org/package=flextable).
+
+&lt;a name=bib-gt&gt;&lt;/a&gt;[Iannone, R, J. Cheng, et al.](#cite-gt) (2020).
+_gt: Easily Create Presentation-Ready Display Tables_. R package
+version 0.2.2. URL:
+[https://CRAN.R-project.org/package=gt](https://CRAN.R-project.org/package=gt).
+
+&lt;a name=bib-bookdown&gt;&lt;/a&gt;[Xie, Y.](#cite-bookdown) (2016). _bookdown:
+Authoring Books and Technical Documents with R Markdown_. ISBN
+978-1138700109. Boca Raton, Florida: Chapman and Hall/CRC. URL:
+[https://github.com/rstudio/bookdown](https://github.com/rstudio/bookdown).
+]
+---
+# References
+.font90[
+&lt;a name=bib-xaringan&gt;&lt;/a&gt;[Xie, Y.](#cite-xaringan) (2019). _xaringan:
+Presentation Ninja_. R package version 0.12. URL:
+[https://CRAN.R-project.org/package=xaringan](https://CRAN.R-project.org/package=xaringan).
+
+&lt;a name=bib-markdown2&gt;&lt;/a&gt;[Xie, Y, J. Allaire, et al.](#cite-markdown2)
+(2018a). _R Markdown: The Definitive Guide_. ISBN 9781138359338. Boca
+Raton, Florida: Chapman and Hall/CRC. URL:
+[https://bookdown.org/yihui/rmarkdown](https://bookdown.org/yihui/rmarkdown).
+
+&lt;a name=bib-rmarkdown_cookbook&gt;&lt;/a&gt;[Yihui Xie, C. D. and E.
+Riederer](#cite-rmarkdown_cookbook) (2020). _R Markdown Cookbook_.
+"ISBN 9780367563837". Boca Raton, Florida: Chapman and Hall/CRC. URL:
+[https://bookdown.org/yihui/rmarkdown-cookbook](https://bookdown.org/yihui/rmarkdown-cookbook).
+
+&lt;a name=bib-kableExtra&gt;&lt;/a&gt;[Zhu, H.](#cite-kableExtra) (2019a).
+_kableExtra: Construct Complex Table with 'kable' and Pipe Syntax_. R
+package version 1.1.0. URL:
+[https://CRAN.R-project.org/package=kableExtra](https://CRAN.R-project.org/package=kableExtra).
+]
+
+.font70[
+.footnote[
+Slides made with with xaringan ([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
+]
+]
+---
+
+## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
