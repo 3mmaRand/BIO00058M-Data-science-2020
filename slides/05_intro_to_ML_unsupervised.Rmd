@@ -1,0 +1,529 @@
+---
+title: "An introduction to Machine Learning: Unsupervised methods"
+subtitle: "Data Science option of BIO00058M Data Analysis."
+author: "Emma Rand"
+institute: "University of York, UK"
+output:
+  xaringan::moon_reader:
+    css: [default, ../css_files/emma.css, ../css_files/emma-fonts.css]
+    lib_dir: libs
+    seal: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    fig_caption: false
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE,	
+                      warning = FALSE,
+                      fig.width = 4, 
+                      fig.height = 4, 
+                      fig.retina = 3)
+options(htmltools.dir.version = FALSE)
+```
+
+```{r style-share-again, echo=FALSE}
+xaringanExtra::use_share_again()
+xaringanExtra::style_share_again(
+  share_buttons = "all")
+xaringanExtra::use_clipboard()
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE)
+```
+
+```{r packages, include=FALSE}
+library(RefManageR)
+library(kableExtra)
+library(tidyverse)
+```
+
+
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = TRUE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
+
+<style>
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+</style>
+
+# Outline
+
+This slide show covers two commonly used unsupervised methods: Principal Components Analysis (PCA) and *t*-Distributed Stochastic Neighbour Embedding (*t*-SNE, pronounced tea-snee or tisne).
+
+--
+
+They are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations discernible.
+
+---
+# Outline: PCA
+
+PCA is used on continuous variables. It creates a new, smaller, set of variables - principal components - from linear combinations of the original variables. 
+
+--
+
+The first principal component, PC1, is chosen to capture the maximum variance in the data. The PC2 is orthogonal (uncorrelated) to PC1 and captures the maximum amount of the remaining variance.
+
+--
+
+PCA is a fast, linear, parametric method. It will not work well when there are polynomial relationships between variables.
+
+--
+
+Linear dimension reduction methods concentrate on putting dissimilar observations far apart.
+
+
+---
+# Outline: *t*-SNE
+
+*t*-SNE is a non-parametric, non-linear method that prioritises placing similar observations near each other.
+
+--
+
+It is a probabilistic method and is computational intensive.
+
+--
+
+It is fairly common to use PCA to reduce the number of dimensions and then carry out *t*-SNE on the top principal components.
+
+---
+# Outline
+
+In these slides show you will apply:
+
+* PCA to some penguin data which has relatively few variables. This will make it a bit easier to understand what PCA does.  
+
+--
+
+* PCA and *t*-SNE (separately) to some single-cell RNAseq data  
+
+--
+
+
+* PCA followed by *t*-SNE to some breast cancer data
+
+---
+# Outline
+
+You should be able to code along with the examples. When you see the film clapper it is ..
+
+
+`r emo::ji("clapper")` .. an instruction to do something!!
+
+
+I suggest having a different RStudio Project for each dataset we use. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
+
+--
+
+Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised. 
+
+--
+
+Load the tidyverse for each RStudio Project.
+
+---
+class: inverse
+
+#  Principal Components Analysis
+
+
+---
+background-image: url(../pics/lter_penguins.png)
+background-position: 50% 70%
+background-size: 400px
+
+# Principal Components Analysis
+
+We will first use PCA on a dataset with relatively few dimensions available in the  **`palmerpenguins`** `r Cite(myBib, "palmerpenguins")` package which is based on data in `r Cite(myBib, "Gorman2014")`
+
+
+---
+#  About Palmer penguins
+
+The Palmer penguins data contains size measurements for three penguin species observed on three islands in the Palmer Archipelago, Antarctica.
+
+You can read more about this dataset in the [Introduction to palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html)
+
+--
+
+`r emo::ji("clapper")` Load the package to get the data: 
+```{r}
+library(palmerpenguins)
+```
+
+--
+
+You will not yet see the dataframes in your workspace
+
+---
+# Tidy Penguins
+
+We will use the `penguins_raw` dataframe. 
+
+You can read the full set of variables [here](https://allisonhorst.github.io/palmerpenguins/reference/penguins_raw.html)
+
+--
+
+`r emo::ji("clapper")` Clean the variable names: 
+```{r}
+penguin <- penguins_raw %>%
+  janitor::clean_names()
+```
+
+--
+
+I cleaned the variable names so I didn't have to use backticks around variable names with spaces or special characters. 
+
+--
+
+Do `str(penguins_raw)` if you'd like to see the original names.
+
+---
+# Tidy Penguins
+
+`r emo::ji("clapper")` Take a look at our four variables: 
+
+.code70[
+```{r}
+penguin %>% 
+  select(body_mass_g,
+         ends_with("_mm")) %>% 
+  summary()
+```
+]
+
+--
+
+We have two missing values.
+---
+# Tidy Penguins
+
+`r emo::ji("clapper")` Filter out the rows with missing values: 
+
+```{r}
+penguin <- penguin %>% 
+  filter(!is.na(body_mass_g))
+```
+
+---
+# Tidy Penguins
+
+Our species variable contains the common name followed by the scientific name in brackets. As this is quite long, I will split into two columns.
+
+`r emo::ji("clapper")` Split `species` into `common_name` and `scientific_name`: 
+```{r}
+penguin <- penguin %>% 
+  extract(species, 
+          c("common_name", "scientific_name"),
+          "([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)")
+```
+
+
+---
+#  Explore Penguins
+
+**`GGally`** is a package which is very use for quickly getting an overview of a dataset. It has a function `ggpairs()` which outputs a matrix of pairwise plots of the variables.
+
+It works well for datasets with up to 15 or so variables but will be slow and less useful a higher number of dimensions.
+
+`r emo::ji("clapper")` Load the package: 
+
+```{r}
+library(GGally)
+```
+
+---
+#  Explore Penguins
+
+`r emo::ji("clapper")` Select variables of interest and pipe in to `ggpairs()`: 
+
+```{r peng-pairs, fig.show='hide', cache=TRUE}
+penguin %>%
+  select(common_name, 
+         sex, 
+         island,
+         body_mass_g,
+         ends_with("_mm")) %>%
+  ggpairs(aes(color = common_name)) 
+```
+
+--
+
+I have chosen the four variables that we will use in the PCA along with some categorical variables.
+---
+#  Explore Penguins
+```{r ref.label = 'peng-pairs', echo = FALSE, out.width="65%"} 
+```
+
+
+
+
+---
+# Principal Components Analysis
+
+Now to run the PCA. Remember, we can only include numeric variables.
+
+`r emo::ji("clapper")` Select the four variables and pipe into the `prcomp()` function which does the PCA:
+
+```{r}
+pca <- penguin %>% 
+  select(body_mass_g,
+         ends_with("_mm")) %>%
+  prcomp(scale. = TRUE)
+```
+
+**Scaling**: prevents the variables with the biggest values dominating the analysis.
+
+--
+
+We have saved the result to a list object called `pca`
+---
+# Principal Components Analysis
+
+`r emo::ji("clapper")` See the variance accounted for by each component
+
+```{r}
+summary(pca)
+```
+
+```{r echo=FALSE}
+res <- summary(pca)[["importance"]]
+
+percent1 <- res["Cumulative Proportion","PC1"] * 100
+percent2 <- res["Cumulative Proportion","PC2"] * 100
+
+```
+
+--
+
+`r percent1`% of the variation is captured in the first PC; `r percent2`% in the first 2 together.
+
+---
+# Principal Components Analysis
+
+`r emo::ji("clapper")` See the importance (loadings) of each variable in each component:
+.code80[
+```{r}
+pca$rotation 
+```
+]
+```{r echo=FALSE}
+a <- pca$rotation["body_mass_g", "PC1"]
+b <- pca$rotation["culmen_length_mm", "PC1"]
+c <- pca$rotation["culmen_depth_mm", "PC1"]
+d <- pca$rotation["flipper_length_mm", "PC1"]
+```
+
+
+$PC1=$ `r a` $body\_mass\_g +$ `r b` $culmen\_length\_mm +$ `r c` $culmen\_depth\_mm +$ `r d` $flipper\_length\_mm$
+
+--
+
+This what we mean when we say the PCs are linear combinations of the original variables
+
+---
+# Principal Components Analysis
+
+To plot, we might want to use the scores on each of the new axes and colour them by species. The scores are in a variable called `$x`
+
+`r emo::ji("clapper")` Extract the scores into a dataframe with the species names: 
+```{r}
+
+pca_labelled <- data.frame(pca$x, common_name = penguin$common_name)
+# a then to do a scatterplot
+```
+
+`r emo::ji("clapper")` Create a scatter plot: 
+
+```{r peng-pca, fig.show='hide', cache=TRUE}
+pca_labelled %>% 
+  ggplot(aes(x = PC1, y = PC2, color = common_name)) +
+  geom_point() 
+```
+
+---
+# Principal Components Analysis
+
+```{r ref.label = 'peng-pca', echo = FALSE, out.width="65%"} 
+```
+
+---
+# Principal Components Analysis
+
+Our species separate a little better on the first two PC than any pairwise comparison.
+
+Compare to the `ggpairs()` plot.
+
+--
+
+There's a recording with a demo of this PCA.
+
+---
+class: inverse
+
+#  PCA on single-cell RNASeq data
+
+
+---
+#  PCA on scRNASeq data
+
+The data in [scrna_data.csv](../data-raw/scrna_data.csv) are some scRNASeq data. Each row is a cell (an observation) and each column is a gene. The values are gene expression values.
+
+`r emo::ji("clapper")` Import the data: 
+```{r cache=TRUE, cache.extra = tools::md5sum('../data-raw/scrna_data.csv')}
+file <- "../data-raw/scrna_data.csv"
+rna <- read_csv(file)
+```
+
+--
+
+The expression of `r dim(rna)[2]` genes has been measured for `r dim(rna)[1]` cells.
+
+--
+
+You do **not** want to use GGally on this data!!
+
+---
+#  PCA on single-cell RNAseq data
+
+`r emo::ji("clapper")` Carry out a PCA: 
+```{r cache=TRUE}
+pca <- rna %>% 
+  prcomp(scale. = TRUE)
+```
+
+`r emo::ji("clapper")` Consider the variance in the first ten PC:
+
+.code60[
+```{r}
+summary(pca)[["importance"]][,1:10]
+```
+]
+
+---
+#  PCA on single-cell RNAseq data
+
+```{r echo=FALSE}
+ten <- summary(pca)[["importance"]]["Cumulative Proportion","PC10"] * 100
+hundred <- summary(pca)[["importance"]]["Cumulative Proportion","PC100"] * 100
+```
+
+The amount of variation in the first 10 components combined is still quite small (`r round(ten, 2)`%)
+
+--
+
+but as there are `r dim(rna)[2]` variables, perhaps not that small. There is `r round(hundred, 2)`% in the first 100.
+
+---
+#  PCA on single-cell RNAseq data
+
+Let's plot PC1 against PC2.
+
+`r emo::ji("clapper")` Put the PC scores in a dataframe:
+```{r}
+dat <-  data.frame(pca$x)
+```
+`r emo::ji("clapper")` Plot PC1 against PC2.
+```{r rna-pca-1v2, fig.show='hide', cache=TRUE}
+ggplot(dat, aes(x = PC1, y = PC2)) +
+  geom_point()
+```
+
+---
+#  PCA on single-cell RNAseq data
+
+```{r ref.label = 'rna-pca-1v2', echo = FALSE, out.width="50%"} 
+```
+
+It's difficult to discern and clusters of cell types from this figure. That PCA maximises the distance between dissimilar cells is clear here.
+
+---
+#  PCA on single-cell RNAseq data
+
+Since the first two components don't capture much of the variation in the cells, it's worth looking at some other pairwise comparisons. 
+
+--
+
+Any two will still only capture a small amount of variance but clusters may be seen better in some comparisons than others.
+
+`r emo::ji("clapper")` Select the first 10 PCs and pipe in to `ggpairs()`: 
+
+```{r rna-pca-pairs, fig.show='hide', cache=TRUE}
+dat %>%
+  select(PC1:PC10) %>% 
+  ggpairs()
+```
+
+
+---
+#  PCA on single-cell RNAseq data
+
+```{r ref.label = 'rna-pca-pairs', echo = FALSE, out.width="50%"} 
+```
+
+Some comparisons suggest we might have clusters of cell types but PCA isn't helping us much.
+
+---
+class: inverse
+
+#  *t*-SNE on single-cell RNASeq data
+
+
+---
+# Summary
+
+.font80[
+
+* 
+  
+
+]
+
+---
+# Reading
+
+## Strongly recommended
+
+* Identifying cell populations with scRNASeq `r Cite(myBib, "Andrews2018-cy")` A good overview of different experimental protocols for Single-cell RNASeq and the most popular methods for facilitating the computational analysis. The abstract, introduction and section 3 are essential reading
+
+## Further
+
+* Section 4, on clustering, is also worth reading.
+
+---
+# References
+
+.font90[
+```{r refs1, echo=FALSE, results="asis"}
+PrintBibliography(myBib, start = 1, end = 4)
+```
+]
+---
+# References
+.font90[
+```{r refs2, echo=FALSE, results="asis"}
+PrintBibliography(myBib, start = 5 )
+```
+]
+
+.font70[
+.footnote[
+Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
+]
+]
+---
+
+## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+<br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Data Science strand of BIO00058M</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Emma Rand</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
