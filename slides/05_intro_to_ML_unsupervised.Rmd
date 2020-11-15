@@ -248,7 +248,7 @@ library(GGally)
 
 `r emo::ji("clapper")` Select variables of interest and pipe in to `ggpairs()`: 
 
-```{r peng-pairs, fig.show='hide', cache=TRUE}
+```{r peng-pairs, fig.show='hide'}
 penguin %>%
   select(common_name, 
          sex, 
@@ -346,7 +346,7 @@ pca_labelled <- data.frame(pca$x, common_name = penguin$common_name)
 
 `r emo::ji("clapper")` Create a scatter plot: 
 
-```{r peng-pca, fig.show='hide', cache=TRUE}
+```{r peng-pca, fig.show='hide'}
 pca_labelled %>% 
   ggplot(aes(x = PC1, y = PC2, color = common_name)) +
   geom_point() 
@@ -381,7 +381,7 @@ class: inverse
 The data in [scrna_data.csv](../data-raw/scrna_data.csv) are some scRNASeq data. Each row is a cell (an observation) and each column is a gene. The values are gene expression values.
 
 `r emo::ji("clapper")` Import the data: 
-```{r cache=TRUE, cache.extra = tools::md5sum('../data-raw/scrna_data.csv')}
+```{r}
 file <- "../data-raw/scrna_data.csv"
 rna <- read_csv(file)
 ```
@@ -398,7 +398,7 @@ You do **not** want to use GGally on this data!!
 #  PCA on single-cell RNAseq data
 
 `r emo::ji("clapper")` Carry out a PCA: 
-```{r cache=TRUE}
+```{r}
 pca <- rna %>% 
   prcomp(scale. = TRUE)
 ```
@@ -435,7 +435,7 @@ Let's plot PC1 against PC2.
 dat <-  data.frame(pca$x)
 ```
 `r emo::ji("clapper")` Plot PC1 against PC2.
-```{r rna-pca-1v2, fig.show='hide', cache=TRUE}
+```{r rna-pca-1v2, fig.show='hide'}
 ggplot(dat, aes(x = PC1, y = PC2)) +
   geom_point()
 ```
@@ -459,7 +459,7 @@ Any two will still only capture a small amount of variance but clusters may be s
 
 `r emo::ji("clapper")` Select the first 10 PCs and pipe in to `ggpairs()`: 
 
-```{r rna-pca-pairs, fig.show='hide', cache=TRUE}
+```{r rna-pca-pairs, fig.show='hide'}
 dat %>%
   select(PC1:PC10) %>% 
   ggpairs()
