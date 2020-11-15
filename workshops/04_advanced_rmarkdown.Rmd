@@ -40,24 +40,33 @@ Work in pairs in BB Collaborate breakout to tackle the tasks.
 </font>
 
 
-# Task 1  ** to be completed**
+# Task 1
 
 In [Topic 3: Reproducibility and an introduction to R Markdown, Task 1 ](03_repro_and_intro_to_rmarkdown.html#Task_1) you worked with data in [chaff.txt](../data-raw/chaff.txt) which are the masses of male and female chaffinches.
 
-1. Open that project and the Rmd you made last topic
-2. Paste the address of your GitHub repo to the chat.  `r emo::ji("speech_balloon")` if you haven't already. This helps me see how you are getting on.
-3. As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub
-
- ** to be completed**
+1. Open that RStudio Project and the Rmd you made last topic. As you work, periodically knit your Rmd to html. If you did not previously create a separate version controlled RStudio Project for the chaffinch data analysis, do so now.
+2. For those that have not yet posted their GitHub page to the chat, please do that now.  
+3. As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub.  
+4. Search for one or two references that you could use in a short introduction. Obtain the references in BibTeX form, create a .bib file for your references and add it to your YAML header. Cite those references in the introduction and add a header `# References` to the end of your rmd.
+5. Add figures for photographs of male and female chaffinches that you reference in the introduction. Wikipedia is a good source of images. Ensure your figure is numbered and has a figure legend.
+6. Undertake an appropriate statistical analysis to determine if there is a significant difference between males and females in mass.
+7. Report summary information and test results in the knitted output.
+8. Add a figure to illustrate the results ensuring it is numbered and has a figure legend.
+9. Create your own ggplot theme. You can achieve this by:  
+    * examining the code for theme_gray() (the default) by typing `theme_gray` without the brackets  
+    * copying and saving the code theme_gray in its own script called, for example, theme_emma.R  
+    * changing theme elements as you wish  
+    * sourcing your theme script and applying in the same way as you would apply another ggplot theme. 
+10. Go through your Rmd checking your code is well-commented and formatted, and you have followed good practice from previous workshops.
+11. Great news, we've got data for another few individuals! They have been added to the data in [more_chaff.txt](../data-raw/more_chaff.txt). Update your output.
 
 # Task 2
-Turn your work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines into an Rmd.  That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3).
-
+Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines.  That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3).
 
 
 # The Rmd file
 
-[Rmd file](03_repro_and_intro_to_rmarkdown.html)
+[Rmd file](04_advanced_rmarkdown.html)
 
 ![](../pics/58Mend.png)
 
