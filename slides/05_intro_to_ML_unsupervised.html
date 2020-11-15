@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>An introduction to Machine Learning: Unsupervised methods</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emma Rand" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css_files/emma.css" type="text/css" />
+    <link rel="stylesheet" href="../css_files/emma-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# An introduction to Machine Learning: Unsupervised methods
+## Data Science option of BIO00058M Data Analysis.
+### Emma Rand
+### University of York, UK
+
+---
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+}</style>
+
+
+
+
+
+
+&lt;style&gt;
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+&lt;/style&gt;
+
+# Outline
+
+This slide show covers two commonly used unsupervised methods: Principal Components Analysis (PCA) and *t*-Distributed Stochastic Neighbour Embedding (*t*-SNE, pronounced tea-snee or tisne).
+
+--
+
+They are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations discernible.
+
+---
+# Outline: PCA
+
+PCA is used on continuous variables. It creates a new, smaller, set of variables - principal components - from linear combinations of the original variables. 
+
+--
+
+The first principal component, PC1, is chosen to capture the maximum variance in the data. The PC2 is orthogonal (uncorrelated) to PC1 and captures the maximum amount of the remaining variance.
+
+--
+
+PCA is a fast, linear, parametric method. It will not work well when there are polynomial relationships between variables.
+
+--
+
+Linear dimension reduction methods concentrate on putting dissimilar observations far apart.
+
+
+---
+# Outline: *t*-SNE
+
+*t*-SNE is a non-parametric, non-linear method that prioritises placing similar observations near each other.
+
+--
+
+It is a probabilistic method and is computational intensive.
+
+--
+
+It is fairly common to use PCA to reduce the number of dimensions and then carry out *t*-SNE on the top principal components.
+
+---
+# Outline
+
+In these slides show you will apply:
+
+* PCA to some penguin data which has relatively few variables. This will make it a bit easier to understand what PCA does.  
+
+--
+
+* PCA and *t*-SNE (separately) to some single-cell RNAseq data  
+
+--
+
+
+* PCA followed by *t*-SNE to some breast cancer data
+
+---
+# Outline
+
+You should be able to code along with the examples. When you see the film clapper it is ..
+
+
+🎬 .. an instruction to do something!!
+
+
+I suggest having a different RStudio Project for each dataset we use. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
+
+--
+
+Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised. 
+
+--
+
+Load the tidyverse for each RStudio Project.
+
+---
+class: inverse
+
+#  Principal Components Analysis
+
+
+---
+background-image: url(../pics/lter_penguins.png)
+background-position: 50% 70%
+background-size: 400px
+
+# Principal Components Analysis
+
+We will first use PCA on a dataset with relatively few dimensions available in the  **`palmerpenguins`** &lt;a name=cite-palmerpenguins&gt;&lt;/a&gt;([Horst Hill, et al., 2020](#bib-palmerpenguins)) package which is based on data in &lt;a name=cite-Gorman2014&gt;&lt;/a&gt;([Gorman Williams, et al., 2014](#bib-Gorman2014))
+
+
+---
+#  About Palmer penguins
+
+The Palmer penguins data contains size measurements for three penguin species observed on three islands in the Palmer Archipelago, Antarctica.
+
+You can read more about this dataset in the [Introduction to palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html)
+
+--
+
+🎬 Load the package to get the data: 
+
+```r
+library(palmerpenguins)
+```
+
+--
+
+You will not yet see the dataframes in your workspace
+
+---
+# Tidy Penguins
+
+We will use the `penguins_raw` dataframe. 
+
+You can read the full set of variables [here](https://allisonhorst.github.io/palmerpenguins/reference/penguins_raw.html)
+
+--
+
+🎬 Clean the variable names: 
+
+```r
+penguin &lt;- penguins_raw %&gt;%
+  janitor::clean_names()
+```
+
+--
+
+I cleaned the variable names so I didn't have to use backticks around variable names with spaces or special characters. 
+
+--
+
+Do `str(penguins_raw)` if you'd like to see the original names.
+
+---
+# Tidy Penguins
+
+🎬 Take a look at our four variables: 
+
+.code70[
+
+```r
+penguin %&gt;% 
+  select(body_mass_g,
+         ends_with("_mm")) %&gt;% 
+  summary()
+```
+
+```
+##   body_mass_g   culmen_length_mm culmen_depth_mm flipper_length_mm
+##  Min.   :2700   Min.   :32.10    Min.   :13.10   Min.   :172.0    
+##  1st Qu.:3550   1st Qu.:39.23    1st Qu.:15.60   1st Qu.:190.0    
+##  Median :4050   Median :44.45    Median :17.30   Median :197.0    
+##  Mean   :4202   Mean   :43.92    Mean   :17.15   Mean   :200.9    
+##  3rd Qu.:4750   3rd Qu.:48.50    3rd Qu.:18.70   3rd Qu.:213.0    
+##  Max.   :6300   Max.   :59.60    Max.   :21.50   Max.   :231.0    
+##  NA's   :2      NA's   :2        NA's   :2       NA's   :2
+```
+]
+
+--
+
+We have two missing values.
+---
+# Tidy Penguins
+
+🎬 Filter out the rows with missing values: 
+
+
+```r
+penguin &lt;- penguin %&gt;% 
+  filter(!is.na(body_mass_g))
+```
+
+---
+# Tidy Penguins
+
+Our species variable contains the common name followed by the scientific name in brackets. As this is quite long, I will split into two columns.
+
+🎬 Split `species` into `common_name` and `scientific_name`: 
+
+```r
+penguin &lt;- penguin %&gt;% 
+  extract(species, 
+          c("common_name", "scientific_name"),
+          "([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)")
+```
+
+
+---
+#  Explore Penguins
+
+**`GGally`** is a package which is very use for quickly getting an overview of a dataset. It has a function `ggpairs()` which outputs a matrix of pairwise plots of the variables.
+
+It works well for datasets with up to 15 or so variables but will be slow and less useful a higher number of dimensions.
+
+🎬 Load the package: 
+
+
+```r
+library(GGally)
+```
+
+---
+#  Explore Penguins
+
+🎬 Select variables of interest and pipe in to `ggpairs()`: 
+
+
+```r
+penguin %&gt;%
+  select(common_name, 
+         sex, 
+         island,
+         body_mass_g,
+         ends_with("_mm")) %&gt;%
+  ggpairs(aes(color = common_name)) 
+```
+
+--
+
+I have chosen the four variables that we will use in the PCA along with some categorical variables.
+---
+#  Explore Penguins
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-7-1.png" width="65%" /&gt;
+
+
+
+
+---
+# Principal Components Analysis
+
+Now to run the PCA. Remember, we can only include numeric variables.
+
+🎬 Select the four variables and pipe into the `prcomp()` function which does the PCA:
+
+
+```r
+pca &lt;- penguin %&gt;% 
+  select(body_mass_g,
+         ends_with("_mm")) %&gt;%
+  prcomp(scale. = TRUE)
+```
+
+**Scaling**: prevents the variables with the biggest values dominating the analysis.
+
+--
+
+We have saved the result to a list object called `pca`
+---
+# Principal Components Analysis
+
+🎬 See the variance accounted for by each component
+
+
+```r
+summary(pca)
+```
+
+```
+## Importance of components:
+##                           PC1    PC2     PC3     PC4
+## Standard deviation     1.6594 0.8789 0.60435 0.32938
+## Proportion of Variance 0.6884 0.1931 0.09131 0.02712
+## Cumulative Proportion  0.6884 0.8816 0.97288 1.00000
+```
+
+
+
+--
+
+68.844% of the variation is captured in the first PC; 88.157% in the first 2 together.
+
+---
+# Principal Components Analysis
+
+🎬 See the importance (loadings) of each variable in each component:
+.code80[
+
+```r
+pca$rotation 
+```
+
+```
+##                          PC1         PC2        PC3        PC4
+## body_mass_g        0.5483502 0.084362920 -0.5966001 -0.5798821
+## culmen_length_mm   0.4552503 0.597031143  0.6443012 -0.1455231
+## culmen_depth_mm   -0.4003347 0.797766572 -0.4184272  0.1679860
+## flipper_length_mm  0.5760133 0.002282201 -0.2320840  0.7837987
+```
+]
+
+
+
+`\(PC1=\)` 0.5483502 `\(body\_mass\_g +\)` 0.4552503 `\(culmen\_length\_mm +\)` -0.4003347 `\(culmen\_depth\_mm +\)` 0.5760133 `\(flipper\_length\_mm\)`
+
+--
+
+This what we mean when we say the PCs are linear combinations of the original variables
+
+---
+# Principal Components Analysis
+
+To plot, we might want to use the scores on each of the new axes and colour them by species. The scores are in a variable called `$x`
+
+🎬 Extract the scores into a dataframe with the species names: 
+
+```r
+pca_labelled &lt;- data.frame(pca$x, common_name = penguin$common_name)
+# a then to do a scatterplot
+```
+
+🎬 Create a scatter plot: 
+
+
+```r
+pca_labelled %&gt;% 
+  ggplot(aes(x = PC1, y = PC2, color = common_name)) +
+  geom_point() 
+```
+
+---
+# Principal Components Analysis
+
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-14-1.png" width="65%" /&gt;
+
+---
+# Principal Components Analysis
+
+Our species separate a little better on the first two PC than any pairwise comparison.
+
+Compare to the `ggpairs()` plot.
+
+--
+
+There's a recording with a demo of this PCA.
+
+---
+class: inverse
+
+#  PCA on single-cell RNASeq data
+
+
+---
+#  PCA on scRNASeq data
+
+The data in [scrna_data.csv](../data-raw/scrna_data.csv) are some scRNASeq data. Each row is a cell (an observation) and each column is a gene. The values are gene expression values.
+
+🎬 Import the data: 
+
+```r
+file &lt;- "../data-raw/scrna_data.csv"
+rna &lt;- read_csv(file)
+```
+
+--
+
+The expression of 1838 genes has been measured for 2638 cells.
+
+--
+
+You do **not** want to use GGally on this data!!
+
+---
+#  PCA on single-cell RNAseq data
+
+🎬 Carry out a PCA: 
+
+```r
+pca &lt;- rna %&gt;% 
+  prcomp(scale. = TRUE)
+```
+
+🎬 Consider the variance in the first ten PC:
+
+.code60[
+
+```r
+summary(pca)[["importance"]][,1:10]
+```
+
+```
+##                             PC1      PC2      PC3      PC4      PC5      PC6
+## Standard deviation     5.738281 5.125134 4.365527 3.686102 2.383895 2.277447
+## Proportion of Variance 0.017920 0.014290 0.010370 0.007390 0.003090 0.002820
+## Cumulative Proportion  0.017920 0.032210 0.042570 0.049970 0.053060 0.055880
+##                             PC7      PC8      PC9     PC10
+## Standard deviation     2.169628 2.051966 1.979966 1.940448
+## Proportion of Variance 0.002560 0.002290 0.002130 0.002050
+## Cumulative Proportion  0.058440 0.060730 0.062870 0.064910
+```
+]
+
+---
+#  PCA on single-cell RNAseq data
+
+
+
+The amount of variation in the first 10 components combined is still quite small (6.49%)
+
+--
+
+but as there are 1838 variables, perhaps not that small. There is 20.71% in the first 100.
+
+---
+#  PCA on single-cell RNAseq data
+
+Let's plot PC1 against PC2.
+
+🎬 Put the PC scores in a dataframe:
+
+```r
+dat &lt;-  data.frame(pca$x)
+```
+🎬 Plot PC1 against PC2.
+
+```r
+ggplot(dat, aes(x = PC1, y = PC2)) +
+  geom_point()
+```
+
+---
+#  PCA on single-cell RNAseq data
+
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-20-1.png" width="50%" /&gt;
+
+It's difficult to discern and clusters of cell types from this figure. That PCA maximises the distance between dissimilar cells is clear here.
+
+---
+#  PCA on single-cell RNAseq data
+
+Since the first two components don't capture much of the variation in the cells, it's worth looking at some other pairwise comparisons. 
+
+--
+
+Any two will still only capture a small amount of variance but clusters may be seen better in some comparisons than others.
+
+🎬 Select the first 10 PCs and pipe in to `ggpairs()`: 
+
+
+```r
+dat %&gt;%
+  select(PC1:PC10) %&gt;% 
+  ggpairs()
+```
+
+
+---
+#  PCA on single-cell RNAseq data
+
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-21-1.png" width="50%" /&gt;
+
+Some comparisons suggest we might have clusters of cell types but PCA isn't helping us much.
+
+---
+class: inverse
+
+#  *t*-SNE on single-cell RNASeq data
+
+
+---
+# Summary
+
+.font80[
+
+* 
+  
+
+]
+
+---
+# Reading
+
+## Strongly recommended
+
+* Identifying cell populations with scRNASeq &lt;a name=cite-Andrews2018-cy&gt;&lt;/a&gt;([Andrews and Hemberg, 2018](#bib-Andrews2018-cy)) A good overview of different experimental protocols for Single-cell RNASeq and the most popular methods for facilitating the computational analysis. The abstract, introduction and section 3 are essential reading
+
+## Further
+
+* Section 4, on clustering, is also worth reading.
+
+---
+# References
+
+.font90[
+&lt;a name=bib-Andrews2018-cy&gt;&lt;/a&gt;[Andrews, T. S. and M.
+Hemberg](#cite-Andrews2018-cy) (2018). "Identifying cell populations
+with scRNASeq". En. In: _Mol. Aspects Med._ 59, pp. 114-122.
+
+&lt;a name=bib-Gorman2014&gt;&lt;/a&gt;[Gorman, K. B., T. D. Williams, et
+al.](#cite-Gorman2014) (2014). "Ecological Sexual Dimorphism and
+Environmental Variability within a Community of Antarctic Penguins
+(Genus Pygoscelis)". In: _PLOS ONE_ 9.3, pp. 1-14. DOI:
+[10.1371/journal.pone.0090081](https://doi.org/10.1371%2Fjournal.pone.0090081).
+URL:
+[https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081).
+
+&lt;a name=bib-palmerpenguins&gt;&lt;/a&gt;[Horst, A. M., A. P. Hill, et
+al.](#cite-palmerpenguins) (2020). _palmerpenguins: Palmer Archipelago
+(Antarctica) penguin data_. R package version 0.1.0. URL:
+[https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
+]
+---
+# References
+.font90[
+&lt;a name=bib-palmerpenguins&gt;&lt;/a&gt;[Horst, A. M., A. P. Hill, et
+al.](#cite-palmerpenguins) (2020). _palmerpenguins: Palmer Archipelago
+(Antarctica) penguin data_. R package version 0.1.0. URL:
+[https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
+]
+
+.font70[
+.footnote[
+Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
+]
+]
+---
+
+## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
