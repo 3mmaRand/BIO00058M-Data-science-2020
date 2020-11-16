@@ -62,9 +62,10 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 This slide show covers two commonly used unsupervised methods: Principal Components Analysis (PCA) and *t*-Distributed Stochastic Neighbour Embedding (*t*-SNE, pronounced tea-snee or tisne).
 
+You'll also get a little more practice with data filtering and tidying and meet the **`GGally`** package and some penguins.
 --
 
-They are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations discernible.
+PCA and *t*-SNE are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations discernible.
 
 ---
 # Outline: PCA
@@ -108,11 +109,6 @@ In these slides show you will apply:
 
 * PCA and *t*-SNE (separately) to some single-cell RNAseq data  
 
---
-
-
-* PCA followed by *t*-SNE to some breast cancer data
-
 ---
 # Outline
 
@@ -132,6 +128,17 @@ Create directory structure for each RStudio Project, write your analysis in R Ma
 
 Load the tidyverse for each RStudio Project.
 
+
+---
+# Important!
+
+If you are using git and especially if you intend to push to GitHub, do **not** track the data files in second example.
+
+You prevent tracking by adding the file to a .gitignore. You can do this by right-clicking on the file in the git pane and choosing 'Ignore'
+
+![biologists](../pics/gitignore1.png)
+
+
 ---
 class: inverse
 
@@ -141,7 +148,7 @@ class: inverse
 ---
 background-image: url(../pics/lter_penguins.png)
 background-position: 50% 70%
-background-size: 400px
+background-size: 500px
 
 # Principal Components Analysis
 
@@ -192,7 +199,7 @@ Do `str(penguins_raw)` if you'd like to see the original names.
 ---
 # Tidy Penguins
 
-`r emo::ji("clapper")` Take a look at our four variables: 
+`r emo::ji("clapper")` Take a look at the four variables we will use: 
 
 .code70[
 ```{r}
@@ -205,9 +212,12 @@ penguin %>%
 
 --
 
-We have two missing values.
+Notice we have selected three variables with the helper function `ends_with()`.
+
 ---
 # Tidy Penguins
+
+We have two missing values and can't unclude then in our analysis.
 
 `r emo::ji("clapper")` Filter out the rows with missing values: 
 
@@ -219,7 +229,7 @@ penguin <- penguin %>%
 ---
 # Tidy Penguins
 
-Our species variable contains the common name followed by the scientific name in brackets. As this is quite long, I will split into two columns.
+Our species variable contains the common name followed by the scientific name in brackets. This is quite long, and will make legends a bit big. I will split the column into two.
 
 `r emo::ji("clapper")` Split `species` into `common_name` and `scientific_name`: 
 ```{r}
@@ -229,6 +239,22 @@ penguin <- penguin %>%
           "([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)")
 ```
 
+---
+# Tidy Penguins
+
+`"([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)"` is made of 2 patterns to be saved and two patterns we don't want to save.
+
+--
+The two patterns we want to save are in brackets:  
+
+`([a-zA-Z]+\\s[a-zA-Z]+)`  
+`([a-zA-Z]+\\s[a-zA-Z]+)`  
+
+They are the same pattern: one or more of (`+`) lower or uppercase letters (`[a-zA-Z]`) followed by a space (`\s`). The second `\` 'escapes' the first - meaning it is recognised to be part of the whitespace pattern. Then followed again by one or more lower or uppercase letters.
+
+--
+
+The two patterns we don't want to save are a whitespace followed by an opening bracket (between the saved patterns) and a closing bracket (at the end.
 
 ---
 #  Explore Penguins
@@ -355,7 +381,7 @@ pca_labelled %>%
 ---
 # Principal Components Analysis
 
-```{r ref.label = 'peng-pca', echo = FALSE, out.width="65%"} 
+```{r ref.label = 'peng-pca', echo = FALSE, out.width="700px", out.height="550px"} 
 ```
 
 ---
@@ -364,6 +390,10 @@ pca_labelled %>%
 Our species separate a little better on the first two PC than any pairwise comparison.
 
 Compare to the `ggpairs()` plot.
+
+--
+
+We have coloured our observations by species but PCA is an unsupervised method because PCA itself takes no account of the species in creating the PCs.
 
 --
 
@@ -378,7 +408,7 @@ class: inverse
 ---
 #  PCA on scRNASeq data
 
-The data in [scrna_data.csv](../data-raw/scrna_data.csv) are some scRNASeq data. Each row is a cell (an observation) and each column is a gene. The values are gene expression values.
+The data in [scrna_data.csv](../data-raw/scrna_data.csv) are some single-cell  RNASeq data. Each row is a cell (an observation) and each column is a gene (a variable / feature). The values are gene expression values.
 
 `r emo::ji("clapper")` Import the data: 
 ```{r}
@@ -395,7 +425,7 @@ The expression of `r dim(rna)[2]` genes has been measured for `r dim(rna)[1]` ce
 You do **not** want to use GGally on this data!!
 
 ---
-#  PCA on single-cell RNAseq data
+#  PCA on scRNAseq data
 
 `r emo::ji("clapper")` Carry out a PCA: 
 ```{r}
@@ -412,7 +442,7 @@ summary(pca)[["importance"]][,1:10]
 ]
 
 ---
-#  PCA on single-cell RNAseq data
+#  PCA on scRNAseq data
 
 ```{r echo=FALSE}
 ten <- summary(pca)[["importance"]]["Cumulative Proportion","PC10"] * 100
@@ -441,9 +471,9 @@ ggplot(dat, aes(x = PC1, y = PC2)) +
 ```
 
 ---
-#  PCA on single-cell RNAseq data
+#  PCA on scRNAseq data
 
-```{r ref.label = 'rna-pca-1v2', echo = FALSE, out.width="50%"} 
+```{r ref.label = 'rna-pca-1v2', echo = FALSE, out.width="580px", out.height="580px"} 
 ```
 
 It's difficult to discern and clusters of cell types from this figure. That PCA maximises the distance between dissimilar cells is clear here.
@@ -469,7 +499,7 @@ dat %>%
 ---
 #  PCA on single-cell RNAseq data
 
-```{r ref.label = 'rna-pca-pairs', echo = FALSE, out.width="50%"} 
+```{r ref.label = 'rna-pca-pairs', echo = FALSE,out.width="580px", out.height="580px"} 
 ```
 
 Some comparisons suggest we might have clusters of cell types but PCA isn't helping us much.
@@ -477,17 +507,125 @@ Some comparisons suggest we might have clusters of cell types but PCA isn't help
 ---
 class: inverse
 
-#  *t*-SNE on single-cell RNASeq data
+# *t*-SNE on scRNASeq data
 
 
+---
+# *t*-SNE on scRNASeq data
+
+We will now use *t*-SNE on this scRNASeq data. Will it visualise different cell types more effectively?
+
+`r emo::ji("clapper")` Load the **`Rtsne`** package:
+```{r}
+library(Rtsne)
+```
+
+---
+# *t*-SNE on scRNASeq data
+
+`r emo::ji("clapper")` Perform *t*-SNE with the `Rtsne()` function: 
+```{r}
+tsne <- rna %>% 
+  Rtsne(perplexity = 40,
+        check_duplicates = FALSE)
+```
+
+*t*-SNE is computationally demanding so expect it to take a minute or two.
+
+It is a stochastic method - the results will differ each time you run it even if the arguments are the same.
+
+`perplexity` is one of the arguments than can be altered - it is a smoothing of the number of neighbours. 
+
+
+---
+# *t*-SNE on scRNASeq data
+
+`r emo::ji("clapper")` Put the *t*-SNE scores in a dataframe: 
+```{r}
+dat <- data.frame(tsne$Y)
+```
+
+`r emo::ji("clapper")` Plot the first *t*-SNE dimension against the second: 
+```{r rna-tsne, fig.show='hide'}
+dat %>% ggplot(aes(x = X1, y = X2)) +
+  geom_point(size=0.5)
+```
+
+---
+# *t*-SNE on scRNASeq data
+
+```{r ref.label = 'rna-tsne', echo = FALSE, out.width="800px", out.height="550px"} 
+```
+
+How many cell types do you think there are?
+
+---
+# *t*-SNE on scRNASeq data
+
+I would expect you to see at least three or four cell types and possible 6 - it looks like the large cluster could be three clusters and one of the other clusters is two or three.
+
+--
+
+A cluster analysis (a different unsupervised method) has been performed on these data and the cell types identified and verified by mapping the expression of markers on the clusters.
+
+We can import this labelling and colour our *t*-SNE plot by cell type.
+
+---
+# *t*-SNE on scRNASeq data
+
+The labelling data are in [scrna_meta.csv](../scrna_meta.csv)
+
+`r emo::ji("clapper")` Import the metadata 
+```{r}
+file <- "../data-raw/scrna_meta.csv"
+meta <- read_csv(file)
+```
+
+--
+There is a row for every cell and one of the columns `louvain`, gives the cell types. Louvain is the name of the clustering algorithm that was used. 
+
+
+
+---
+# *t*-SNE on scRNASeq data
+
+There are 8 cell types.
+.code80[
+```{r}
+unique(meta$louvain)
+```
+]
+---
+# *t*-SNE on scRNASeq data
+
+`r emo::ji("clapper")` Add the cell type to the *t*-SNE scores dataframe: 
+
+```{r}
+dat <- data.frame(dat, type = meta$louvain)
+```
+
+`r emo::ji("clapper")` Replot the t*-SNE scores coloured by cell type: 
+```{r rna-tsne-cell, fig.show='hide'}
+dat %>% ggplot(aes(x = X1, y = X2, colour = type)) +
+  geom_point(size = 0.5)
+
+```
+
+---
+# *t*-SNE on scRNASeq data
+```{r ref.label = 'rna-tsne-cell', echo = FALSE, out.width="700px", out.height="550px"} 
+```
 ---
 # Summary
 
 .font80[
 
-* 
-  
-
+* PCA and *t*-SNE are unsupervised methods  
+* PCA and *t*-SNE are dimension/data reduction and visualisation methods  
+* They are applied when you have very many continuous variables and allow you to visualised the data in 2 dimensions, and thus see group/patterns more easily.  
+* PCA is a fast, linear, parametric method that optimises putting dissimilar observations far apart  
+* *t*-SNE is a non-parametric, non-linear method that prioritises placing similar observations near each other.  
+* *t*-SNE is a stochastic method and is computational intensive but works better on most biological/expression data where the relationships between variables are often non-linear 
 ]
 
 ---

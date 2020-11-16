@@ -50,9 +50,10 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 This slide show covers two commonly used unsupervised methods: Principal Components Analysis (PCA) and *t*-Distributed Stochastic Neighbour Embedding (*t*-SNE, pronounced tea-snee or tisne).
 
+You'll also get a little more practice with data filtering and tidying and meet the **`GGally`** package and some penguins.
 --
 
-They are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations discernible.
+PCA and *t*-SNE are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations discernible.
 
 ---
 # Outline: PCA
@@ -96,11 +97,6 @@ In these slides show you will apply:
 
 * PCA and *t*-SNE (separately) to some single-cell RNAseq data  
 
---
-
-
-* PCA followed by *t*-SNE to some breast cancer data
-
 ---
 # Outline
 
@@ -120,6 +116,17 @@ Create directory structure for each RStudio Project, write your analysis in R Ma
 
 Load the tidyverse for each RStudio Project.
 
+
+---
+# Important!
+
+If you are using git and especially if you intend to push to GitHub, do **not** track the data files in second example.
+
+You prevent tracking by adding the file to a .gitignore. You can do this by right-clicking on the file in the git pane and choosing 'Ignore'
+
+![biologists](../pics/gitignore1.png)
+
+
 ---
 class: inverse
 
@@ -129,7 +136,7 @@ class: inverse
 ---
 background-image: url(../pics/lter_penguins.png)
 background-position: 50% 70%
-background-size: 400px
+background-size: 500px
 
 # Principal Components Analysis
 
@@ -182,7 +189,7 @@ Do `str(penguins_raw)` if you'd like to see the original names.
 ---
 # Tidy Penguins
 
-🎬 Take a look at our four variables: 
+🎬 Take a look at the four variables we will use: 
 
 .code70[
 
@@ -207,9 +214,12 @@ penguin %&gt;%
 
 --
 
-We have two missing values.
+Notice we have selected three variables with the helper function `ends_with()`.
+
 ---
 # Tidy Penguins
+
+We have two missing values and can't unclude then in our analysis.
 
 🎬 Filter out the rows with missing values: 
 
@@ -222,7 +232,7 @@ penguin &lt;- penguin %&gt;%
 ---
 # Tidy Penguins
 
-Our species variable contains the common name followed by the scientific name in brackets. As this is quite long, I will split into two columns.
+Our species variable contains the common name followed by the scientific name in brackets. This is quite long, and will make legends a bit big. I will split the column into two.
 
 🎬 Split `species` into `common_name` and `scientific_name`: 
 
@@ -233,6 +243,22 @@ penguin &lt;- penguin %&gt;%
           "([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)")
 ```
 
+---
+# Tidy Penguins
+
+`"([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)"` is made of 2 patterns to be saved and two patterns we don't want to save.
+
+--
+The two patterns we want to save are in brackets:  
+
+`([a-zA-Z]+\\s[a-zA-Z]+)`  
+`([a-zA-Z]+\\s[a-zA-Z]+)`  
+
+They are the same pattern: one or more of (`+`) lower or uppercase letters (`[a-zA-Z]`) followed by a space (`\s`). The second `\` 'escapes' the first - meaning it is recognised to be part of the whitespace pattern. Then followed again by one or more lower or uppercase letters.
+
+--
+
+The two patterns we don't want to save are a whitespace followed by an opening bracket (between the saved patterns) and a closing bracket (at the end.
 
 ---
 #  Explore Penguins
@@ -369,7 +395,7 @@ pca_labelled %&gt;%
 ---
 # Principal Components Analysis
 
-&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-14-1.png" width="65%" /&gt;
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-14-1.png" width="700px" height="550px" /&gt;
 
 ---
 # Principal Components Analysis
@@ -377,6 +403,10 @@ pca_labelled %&gt;%
 Our species separate a little better on the first two PC than any pairwise comparison.
 
 Compare to the `ggpairs()` plot.
+
+--
+
+We have coloured our observations by species but PCA is an unsupervised method because PCA itself takes no account of the species in creating the PCs.
 
 --
 
@@ -391,7 +421,7 @@ class: inverse
 ---
 #  PCA on scRNASeq data
 
-The data in [scrna_data.csv](../data-raw/scrna_data.csv) are some scRNASeq data. Each row is a cell (an observation) and each column is a gene. The values are gene expression values.
+The data in [scrna_data.csv](../data-raw/scrna_data.csv) are some single-cell  RNASeq data. Each row is a cell (an observation) and each column is a gene (a variable / feature). The values are gene expression values.
 
 🎬 Import the data: 
 
@@ -409,7 +439,7 @@ The expression of 1838 genes has been measured for 2638 cells.
 You do **not** want to use GGally on this data!!
 
 ---
-#  PCA on single-cell RNAseq data
+#  PCA on scRNAseq data
 
 🎬 Carry out a PCA: 
 
@@ -439,7 +469,7 @@ summary(pca)[["importance"]][,1:10]
 ]
 
 ---
-#  PCA on single-cell RNAseq data
+#  PCA on scRNAseq data
 
 
 
@@ -467,9 +497,9 @@ ggplot(dat, aes(x = PC1, y = PC2)) +
 ```
 
 ---
-#  PCA on single-cell RNAseq data
+#  PCA on scRNAseq data
 
-&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-20-1.png" width="50%" /&gt;
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-20-1.png" width="580px" height="580px" /&gt;
 
 It's difficult to discern and clusters of cell types from this figure. That PCA maximises the distance between dissimilar cells is clear here.
 
@@ -495,24 +525,143 @@ dat %&gt;%
 ---
 #  PCA on single-cell RNAseq data
 
-&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-21-1.png" width="50%" /&gt;
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-21-1.png" width="580px" height="580px" /&gt;
 
 Some comparisons suggest we might have clusters of cell types but PCA isn't helping us much.
 
 ---
 class: inverse
 
-#  *t*-SNE on single-cell RNASeq data
+# *t*-SNE on scRNASeq data
 
 
+---
+# *t*-SNE on scRNASeq data
+
+We will now use *t*-SNE on this scRNASeq data. Will it visualise different cell types more effectively?
+
+🎬 Load the **`Rtsne`** package:
+
+```r
+library(Rtsne)
+```
+
+---
+# *t*-SNE on scRNASeq data
+
+🎬 Perform *t*-SNE with the `Rtsne()` function: 
+
+```r
+tsne &lt;- rna %&gt;% 
+  Rtsne(perplexity = 40,
+        check_duplicates = FALSE)
+```
+
+*t*-SNE is computationally demanding so expect it to take a minute or two.
+
+It is a stochastic method - the results will differ each time you run it even if the arguments are the same.
+
+`perplexity` is one of the arguments than can be altered - it is a smoothing of the number of neighbours. 
+
+
+---
+# *t*-SNE on scRNASeq data
+
+🎬 Put the *t*-SNE scores in a dataframe: 
+
+```r
+dat &lt;- data.frame(tsne$Y)
+```
+
+🎬 Plot the first *t*-SNE dimension against the second: 
+
+```r
+dat %&gt;% ggplot(aes(x = X1, y = X2)) +
+  geom_point(size=0.5)
+```
+
+---
+# *t*-SNE on scRNASeq data
+
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-25-1.png" width="800px" height="550px" /&gt;
+
+How many cell types do you think there are?
+
+---
+# *t*-SNE on scRNASeq data
+
+I would expect you to see at least three or four cell types and possible 6 - it looks like the large cluster could be three clusters and one of the other clusters is two or three.
+
+--
+
+A cluster analysis (a different unsupervised method) has been performed on these data and the cell types identified and verified by mapping the expression of markers on the clusters.
+
+We can import this labelling and colour our *t*-SNE plot by cell type.
+
+---
+# *t*-SNE on scRNASeq data
+
+The labelling data are in [scrna_meta.csv](../scrna_meta.csv)
+
+🎬 Import the metadata 
+
+```r
+file &lt;- "../data-raw/scrna_meta.csv"
+meta &lt;- read_csv(file)
+```
+
+--
+There is a row for every cell and one of the columns `louvain`, gives the cell types. Louvain is the name of the clustering algorithm that was used. 
+
+
+
+---
+# *t*-SNE on scRNASeq data
+
+There are 8 cell types.
+.code80[
+
+```r
+unique(meta$louvain)
+```
+
+```
+## [1] "CD4 T"             "B CELLS"           "CD14+ Monocytes"  
+## [4] "NK CELLS"          "CD8 T"             "FCGR3A+ Monocytes"
+## [7] "Dendritic"         "Megakaryocytes"
+```
+]
+---
+# *t*-SNE on scRNASeq data
+
+🎬 Add the cell type to the *t*-SNE scores dataframe: 
+
+
+```r
+dat &lt;- data.frame(dat, type = meta$louvain)
+```
+
+🎬 Replot the t*-SNE scores coloured by cell type: 
+
+```r
+dat %&gt;% ggplot(aes(x = X1, y = X2, colour = type)) +
+  geom_point(size = 0.5)
+```
+
+---
+# *t*-SNE on scRNASeq data
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-29-1.png" width="700px" height="550px" /&gt;
 ---
 # Summary
 
 .font80[
 
-* 
-  
-
+* PCA and *t*-SNE are unsupervised methods  
+* PCA and *t*-SNE are dimension/data reduction and visualisation methods  
+* They are applied when you have very many continuous variables and allow you to visualised the data in 2 dimensions, and thus see group/patterns more easily.  
+* PCA is a fast, linear, parametric method that optimises putting dissimilar observations far apart  
+* *t*-SNE is a non-parametric, non-linear method that prioritises placing similar observations near each other.  
+* *t*-SNE is a stochastic method and is computational intensive but works better on most biological/expression data where the relationships between variables are often non-linear 
 ]
 
 ---
