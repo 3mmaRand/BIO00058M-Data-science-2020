@@ -573,7 +573,7 @@ We can import this labelling and colour our *t*-SNE plot by cell type.
 ---
 # *t*-SNE on scRNASeq data
 
-The labelling data are in [scrna_meta.csv](../scrna_meta.csv)
+The labelling data are in [scrna_meta.csv](../data-raw/scrna_meta.csv)
 
 `r emo::ji("clapper")` Import the metadata 
 ```{r}
