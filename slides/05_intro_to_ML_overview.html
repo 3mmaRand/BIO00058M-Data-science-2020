@@ -48,60 +48,137 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 # Outline
 
-The aim of this topic 
-
-
----
-# Outline
-
+The aim of these slides if to provide an short overview of machine learning and machine learning methods.
 
 ---
 class: inverse
 
-# 
-
-
-
-
----
-# Summary
-
-.font80[
-
-* 
-  
-
-]
-
----
-# Reading
-
-## Strongly recommended
-
-* 
-* 
-
-## Further
-
+# What is Machine Learning?
 
 
 ---
-# References
+# What is Machine Learning?
 
-.font90[
-NULL
-]
+Machine learning is just statistics for exploring, summarising and modelling data.
+
+--
+
+It can be used for:
+
+* visualisation of high dimensional data  
+* discovering patterns/clusters in variables or observations  
+* making predictions  
+* classifying observations
+
 ---
-# References
-.font90[
-NULL
-]
+# What is Machine Learning?
 
-.font70[
-.footnote[
-Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
-]
-]
+In Stage 1, we approached data analysis very much from a hypothesis testing perspective.
+
+--
+
+From this perspective, the goal is to explain a response and determine whether specific variables have a significant effect on the response. 
+
+--
+
+Penalties may be applied for complexity because the interpretability of the model matters.
+
+--
+
+Typically the entire dataset is modelled.
+
+---
+# What is Machine Learning?
+
+In machine learning the analysis can be more exploratory.
+
+--
+
+In predictive machine learning the goal is often the quality of the predictions - how predictions arise is less important.
+
+--
+
+Models often have many variables.
+
+--
+
+In predictive machine learning typically 75% of the data are used to train (build) the model with 25% reserved for testing.
+
+---
+class: inverse
+
+# Categories of ML methods
+
+
+---
+# Categories of ML methods
+
+ML methods can be characterised as supervised or unsupervised.
+
+--
+
+Supervised methods, like classical statistical learning, are used for prediction and classification. 
+
+--
+
+With supervised learning both the inputs and the outputs are given to the algorithm and the goal is to find the rules to map the inputs to outputs.
+
+--
+
+We train the model on 75% of the data and test it on the remaining 25%.
+
+---
+# Categories of ML methods
+
+Unsupervised methods are usually used for exploration, visualisation and data reduction (often needed for visualisation of high dimensional datasets).
+
+--
+
+Unsupervised methods are unsupervised in that they do not use/optimise to a particular output. The goal is to uncover structure.
+
+---
+class: inverse
+
+# Supervised methods
+
+---
+# Supervised methods
+
+Examples are
+
+Parametric - relatively fast, make assumptions  
+* Linear regression - prediction of continuous output  
+* Logistic regression - prediction of binary output (classification)  
+* Linear Discriminant Analysis - prediction of more than two classes  
+
+Non-parametric - can be slow, can be stochastic   
+* Decision trees  
+* Naive Bayes
+* Support vector machines  
+* K nearest neighbour
+
+---
+class: inverse
+
+# Supervised methods
+
+---
+# Unsupervised methods
+
+Examples are
+
+Parametric - relatively fast, make assumptions  
+* Principal Component Analysis    
+* Metric Multidimensional scaling  
+* many clustering methods  
+
+Non-parametric - can be slow, can be stochastic   
+* K means clustering (no relation to K nearest neighbour).  
+* Non-Metric Multidimensional scaling
+* *t*-distributed stochastic neighbour embedding
+
+
+
 ---
 
 ## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
