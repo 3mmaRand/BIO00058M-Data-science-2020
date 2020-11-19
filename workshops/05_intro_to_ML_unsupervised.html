@@ -1606,16 +1606,61 @@ div.tocify {
 <p>Work in pairs in BB Collaborate breakout to tackle the tasks.</p>
 <p><font size="4"> 👥 Work together to complete the task. Take it in turns to share your screens.<br />
 💬 Communicate what you are doing and why<br />
-📝 Document and share your ideas and process<br />
+📜 Document and share your ideas and process<br />
 👥 Consider having one person code and other documenting<br />
 ❤️ Be kind, be understanding, be flexible<br />
 </font></p>
+<p>I suggest having a different RStudio Project for each dataset used. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.</p>
+<p>Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised.</p>
 </div>
 <div id="task-1" class="section level1">
 <h1>Task 1</h1>
+<p>The <a href="../data-raw/seeds_dataset.txt">Wheat Seeds Dataset</a> contains measurements of seed kernels from different varieties of wheat: Kama (1), Rosa (2) and Canadian (3). High quality visualization of the internal kernel structure was detected using a soft X-ray technique and 7 measurements were taken which are in this order in the file:</p>
+<ul>
+<li>Area.</li>
+<li>Perimeter.</li>
+<li>Compactness</li>
+<li>Length of kernel.</li>
+<li>Width of kernel.</li>
+<li>Asymmetry coefficient.</li>
+<li>Length of kernel groove.</li>
+</ul>
+<p>Investigate whether these variables might be useful to classifiy the species.</p>
 </div>
 <div id="task-2" class="section level1">
 <h1>Task 2</h1>
+<p>Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines. That was covered here <a href="02_tidying_data.html#Task_3">Task 3 Topic 2</a>. So that you can focus on applying the methods from this week, a processed form of the data are in <a href="../data-raw/sol.txt">sol.txt</a>. Note that like the raw data file, these are organised with samples in columns and proteins in rows. In order use the genes as variables and the samples as observations, we will need to transpose the data.</p>
+<p>Import:</p>
+<pre class="r"><code>file &lt;- &quot;../data-raw/sol.txt&quot;
+sol &lt;- read_table2(file)
+names(sol)</code></pre>
+<pre><code>##  [1] &quot;genename&quot; &quot;Y101_A&quot;   &quot;Y101_B&quot;   &quot;Y101_C&quot;   &quot;Y102_A&quot;   &quot;Y102_B&quot;  
+##  [7] &quot;Y102_C&quot;   &quot;Y201_A&quot;   &quot;Y201_B&quot;   &quot;Y201_C&quot;   &quot;Y202_A&quot;   &quot;Y202_B&quot;  
+## [13] &quot;Y202_C&quot;   &quot;Y1015_A&quot;  &quot;Y1015_B&quot;  &quot;Y1015_C&quot;</code></pre>
+<p>We can see that the genename is in the first column.</p>
+<p>Transpose all the values except the genename:</p>
+<pre class="r"><code>tsol &lt;- sol %&gt;% 
+  select(-genename) %&gt;% 
+  t() %&gt;% 
+  data.frame()</code></pre>
+<p>Use the genenames in <code>sol</code> to name the columns in <code>tsol</code>:</p>
+<pre class="r"><code>names(tsol) &lt;- sol$genename</code></pre>
+<p>The column names of <code>sol</code> have become the row names of <code>tsol</code>. We can add a column for these as well.</p>
+<pre class="r"><code>tsol$sample &lt;- row.names(tsol)</code></pre>
+<p>And process the sample name so we have the cell lineage in one column and the replicate in another</p>
+<pre class="r"><code>tsol &lt;- tsol %&gt;% 
+  extract(sample, 
+          c(&quot;lineage&quot;,&quot;rep&quot;),
+          &quot;(Y[0-9]{3,4})\\_([A-C])&quot;)</code></pre>
+<p>Now the data should be in a format to which you can apply the methods from this week.</p>
+</div>
+<div id="task-3" class="section level1">
+<h1>Task 3</h1>
+<p>to be added</p>
+</div>
+<div id="task-4" class="section level1">
+<h1>Task 4</h1>
+<p>Start working with your own assessment. Do continue to follow the practice covered in previous workshops with respect to project organisation, coding style and reproducibility.</p>
 </div>
 <div id="the-rmd-file" class="section level1">
 <h1>The Rmd file</h1>
