@@ -199,9 +199,6 @@ dat %>% ggplot(aes(x = X1, y = X2, colour = lineage)) +
 # a consistent message of 101.5 being distinctly different is has emerged.
 ```
 # Task 3
-to be added
-
-# Task 4
 Start working with your own assessment. Do continue to follow the practice covered in previous workshops with respect to project organisation, coding style and reproducibility.
 
 # The Rmd file
