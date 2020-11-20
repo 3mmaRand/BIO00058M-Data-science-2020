@@ -1,0 +1,525 @@
+---
+title: "An introduction to Machine Learning: Supervised methods"
+subtitle: "Data Science option of BIO00058M Data Analysis."
+author: "Emma Rand"
+institute: "University of York, UK"
+output:
+  xaringan::moon_reader:
+    css: [default, ../css_files/emma.css, ../css_files/emma-fonts.css]
+    lib_dir: libs
+    seal: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    fig_caption: false
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE,	
+                      warning = FALSE,
+                      fig.width = 4, 
+                      fig.height = 4, 
+                      fig.retina = 3)
+options(htmltools.dir.version = FALSE)
+```
+
+```{r style-share-again, echo=FALSE}
+xaringanExtra::use_share_again()
+xaringanExtra::style_share_again(
+  share_buttons = "all")
+xaringanExtra::use_clipboard()
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE)
+```
+
+```{r packages, include=FALSE}
+library(RefManageR)
+library(kableExtra)
+library(tidyverse)
+```
+
+
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = TRUE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
+
+<style>
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+</style>
+
+# Outline
+
+This slide show covers 
+
+
+---
+# Outline
+
+
+
+---
+# Outline
+
+---
+# Outline
+
+In these slides show you will apply:
+Linear Discriminant Analysis - prediction of more than two classes
+Decision trees 
+K nearest neighbour
+---
+# Outline
+
+You should be able to code along with the examples. When you see the film clapper it is ..
+
+
+`r emo::ji("clapper")` .. an instruction to do something!!
+
+
+I suggest having a different RStudio Project for each dataset we use. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
+
+--
+
+Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised. 
+
+--
+
+Load the tidyverse for each RStudio Project.
+
+
+---
+# Important!
+
+If you are using git and especially if you intend to push to GitHub, do **not** track the data files in second example.
+
+You prevent tracking by adding the file to a .gitignore. You can do this by right-clicking on the file in the git pane and choosing 'Ignore'
+
+![biologists](../pics/gitignore1.png)
+
+
+---
+class: inverse
+
+#  Linear Discriminant Analysis
+
+
+---
+# Linear Discriminant Analysis
+
+Linear Discriminant Analysis (LDA) aims to find linear combination of variables the maximise differences between groups. It is supervised because we label observations by their class and determine the allocation rules based on these. A ‘discriminant’ is a line that separates groups. As there are three classes we have at most two linear discriminants. the `lda()` function is in a package called **`MASS`**
+
+We will use the Palmer penguins again.
+
+You can read more about this dataset in the [Introduction to palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html)
+
+---
+# LDA: get data
+
+`r emo::ji("clapper")` Load the package to get the data: 
+```{r}
+library(palmerpenguins)
+```
+
+We will use the `penguins_raw` dataframe. 
+
+`r emo::ji("clapper")` Clean the variable names: 
+```{r}
+penguin <- penguins_raw %>%
+  janitor::clean_names()
+```
+
+---
+# LDA: Tidy Penguins
+`r emo::ji("clapper")` Filter out the rows with missing values: 
+
+```{r}
+penguin <- penguin %>% 
+  filter(!is.na(body_mass_g))
+```
+
+`r emo::ji("clapper")` Split `species` into `common_name` and `scientific_name`: 
+```{r}
+penguin <- penguin %>% 
+  extract(species, 
+          c("common_name", "scientific_name"),
+          "([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)")
+```
+
+
+---
+# LDA: Run
+
+Now to run the LDA. 
+
+`r emo::ji("clapper")` Select the four variables and pipe into the `prcomp()` function which does the PCA:
+
+```{r}
+lda <- penguin %>% 
+  select(body_mass_g,
+         ends_with("_mm")) %>%
+  MASS::lda(grouping = penguin$common_name)
+```
+
+This is a good example of when we definitely want to use `package::`. **`MASS`** has a function called `select()` like **`dplyr`**. But it works differently and you can spend hours of your life wondering what is wrong with your code when it looks fine and worked before if you load both packages. I have done it with these particular functions too many times!
+
+--
+
+We have saved the result to a list object called `lda`
+---
+# LDA: predict classes
+
+`r emo::ji("clapper")` 
+
+```{r}
+plda <- penguin %>% 
+  select(body_mass_g,
+         ends_with("_mm")) %>%
+  predict(object = lda)
+```
+
+```{r}
+table(predicted = plda$class, 
+      observed = penguin$common_name)
+```
+```{r echo=FALSE}
+perf <- table(predicted = pldaout$class, 
+              observed = penguin$common_name)
+
+```
+One of the Adelie penguins was misclassified as as chinstrap penguin and 3 of the Chinstraps were misclassified as Adelie but the predictions were mostly correct
+---
+# LDA
+
+`r emo::ji("clapper")` See the importance (scaling) of each variable in each discriminant:
+.code80[
+```{r}
+lda$scaling
+```
+]
+```{r echo=FALSE}
+a <- ldaout$scaling["body_mass_g", "LD1"]
+b <- ldaout$scaling["culmen_length_mm", "LD1"]
+c <- ldaout$scaling["culmen_depth_mm", "LD1"]
+d <- ldaout$scaling["flipper_length_mm", "LD1"]
+```
+
+
+$LD1=$ `r a` $body\_mass\_g +$ `r b` $culmen\_length\_mm +$ `r c` $culmen\_depth\_mm +$ `r d` $flipper\_length\_mm$
+
+You might want to compare to the [loadings for PCA](https://3mmarand.github.io/BIO00058M-Data-science-2020/slides/05_intro_to_ML_unsupervised.html#41)
+--
+
+This what we mean when we say the LD is a linear combinations of the original variables
+
+---
+# LDA: plot
+
+To plot, we might want to use the scores on each of the new axes and colour them by species. The scores are in a variable called `$x` in `plda`
+
+`r emo::ji("clapper")` Extract the scores into a dataframe with the species names: 
+```{r}
+ldaout_labelled <- data.frame(plda$x,
+                              common_name = penguin$common_name)
+# a then to do a scatterplot
+```
+
+`r emo::ji("clapper")` Create a scatter plot: 
+
+```{r peng-lda, fig.show='hide'}
+ldaout_labelled %>% 
+  ggplot(aes(x = LD1, y = LD2, color = common_name)) +
+  geom_point() 
+```
+
+---
+# LDA: plot
+
+```{r ref.label = 'peng-lda', echo = FALSE, out.width="700px", out.height="550px"} 
+```
+
+
+---
+class: inverse
+
+#  PCA on single-cell RNASeq data
+
+
+---
+#  PCA on scRNASeq data
+
+The data in [scrna_data.csv](../data-raw/scrna_data.csv) are some single-cell  RNASeq data. Each row is a cell (an observation) and each column is a gene (a variable / feature). The values are gene expression values.
+
+`r emo::ji("clapper")` Import the data: 
+```{r}
+file <- "../data-raw/scrna_data.csv"
+rna <- read_csv(file)
+```
+
+--
+
+The expression of `r dim(rna)[2]` genes has been measured for `r dim(rna)[1]` cells.
+
+--
+
+You do **not** want to use GGally on this data!!
+
+---
+#  PCA on scRNAseq data
+
+`r emo::ji("clapper")` Carry out a PCA: 
+```{r}
+pca <- rna %>% 
+  prcomp(scale. = TRUE)
+```
+
+`r emo::ji("clapper")` Consider the variance in the first ten PC:
+
+.code60[
+```{r}
+summary(pca)[["importance"]][,1:10]
+```
+]
+
+---
+#  PCA on scRNAseq data
+
+```{r echo=FALSE}
+ten <- summary(pca)[["importance"]]["Cumulative Proportion","PC10"] * 100
+hundred <- summary(pca)[["importance"]]["Cumulative Proportion","PC100"] * 100
+```
+
+The amount of variation in the first 10 components combined is still quite small (`r round(ten, 2)`%)
+
+--
+
+but as there are `r dim(rna)[2]` variables, perhaps not that small. There is `r round(hundred, 2)`% in the first 100.
+
+---
+#  PCA on single-cell RNAseq data
+
+Let's plot PC1 against PC2.
+
+`r emo::ji("clapper")` Put the PC scores in a dataframe:
+```{r}
+dat <-  data.frame(pca$x)
+```
+`r emo::ji("clapper")` Plot PC1 against PC2.
+```{r rna-pca-1v2, fig.show='hide'}
+ggplot(dat, aes(x = PC1, y = PC2)) +
+  geom_point()
+```
+
+---
+#  PCA on scRNAseq data
+
+```{r ref.label = 'rna-pca-1v2', echo = FALSE, out.width="580px", out.height="580px"} 
+```
+
+It's difficult to discern and clusters of cell types from this figure. That PCA maximises the distance between dissimilar cells is clear here.
+
+---
+#  PCA on single-cell RNAseq data
+
+Since the first two components don't capture much of the variation in the cells, it's worth looking at some other pairwise comparisons. 
+
+--
+
+Any two will still only capture a small amount of variance but clusters may be seen better in some comparisons than others.
+
+`r emo::ji("clapper")` Select the first 10 PCs and pipe in to `ggpairs()`: 
+
+```{r rna-pca-pairs, fig.show='hide'}
+dat %>%
+  select(PC1:PC10) %>% 
+  ggpairs()
+```
+
+
+---
+#  PCA on single-cell RNAseq data
+
+```{r ref.label = 'rna-pca-pairs', echo = FALSE,out.width="580px", out.height="580px"} 
+```
+
+Some comparisons suggest we might have clusters of cell types but PCA isn't helping us much.
+
+---
+class: inverse
+
+# *t*-SNE on scRNASeq data
+
+
+---
+# *t*-SNE on scRNASeq data
+
+We will now use *t*-SNE on this scRNASeq data. Will it visualise different cell types more effectively?
+
+`r emo::ji("clapper")` Load the **`Rtsne`** package:
+```{r}
+library(Rtsne)
+```
+
+---
+# *t*-SNE on scRNASeq data
+
+`r emo::ji("clapper")` Perform *t*-SNE with the `Rtsne()` function: 
+```{r}
+tsne <- rna %>% 
+  Rtsne(perplexity = 40,
+        check_duplicates = FALSE)
+```
+
+*t*-SNE is computationally demanding so expect it to take a minute or two.
+
+It is a stochastic method - the results will differ each time you run it even if the arguments are the same.
+
+`perplexity` is one of the arguments than can be altered - it is a smoothing of the number of neighbours. 
+
+
+---
+# *t*-SNE on scRNASeq data
+
+`r emo::ji("clapper")` Put the *t*-SNE scores in a dataframe: 
+```{r}
+dat <- data.frame(tsne$Y)
+```
+
+`r emo::ji("clapper")` Plot the first *t*-SNE dimension against the second: 
+```{r rna-tsne, fig.show='hide'}
+dat %>% ggplot(aes(x = X1, y = X2)) +
+  geom_point(size=0.5)
+```
+
+---
+# *t*-SNE on scRNASeq data
+
+```{r ref.label = 'rna-tsne', echo = FALSE, out.width="800px", out.height="550px"} 
+```
+
+How many cell types do you think there are?
+
+---
+# *t*-SNE on scRNASeq data
+
+I would expect you to see at least three or four cell types and possible 6 - it looks like the large cluster could be three clusters and one of the other clusters is two or three.
+
+--
+
+A cluster analysis (a different unsupervised method) has been performed on these data and the cell types identified and verified by mapping the expression of markers on the clusters.
+
+We can import this labelling and colour our *t*-SNE plot by cell type.
+
+---
+# *t*-SNE on scRNASeq data
+
+The labelling data are in [scrna_meta.csv](../data-raw/scrna_meta.csv)
+
+`r emo::ji("clapper")` Import the metadata 
+```{r}
+file <- "../data-raw/scrna_meta.csv"
+meta <- read_csv(file)
+```
+
+--
+There is a row for every cell and one of the columns `louvain`, gives the cell types. Louvain is the name of the clustering algorithm that was used. 
+
+
+
+---
+# *t*-SNE on scRNASeq data
+
+There are 8 cell types.
+.code80[
+```{r}
+unique(meta$louvain)
+```
+]
+---
+# *t*-SNE on scRNASeq data
+
+`r emo::ji("clapper")` Add the cell type to the *t*-SNE scores dataframe: 
+
+```{r}
+dat <- data.frame(dat, type = meta$louvain)
+```
+
+`r emo::ji("clapper")` Replot the t*-SNE scores coloured by cell type: 
+```{r rna-tsne-cell, fig.show='hide'}
+dat %>% ggplot(aes(x = X1, y = X2, colour = type)) +
+  geom_point(size = 0.5)
+
+```
+
+---
+# *t*-SNE on scRNASeq data
+```{r ref.label = 'rna-tsne-cell', echo = FALSE, out.width="700px", out.height="550px"} 
+```
+
+---
+# And finally
+
+load the MASS package. See those warnings about conflicts. Pay attention to them if you see that warning on loading packages.
+
+
+
+---
+# Summary
+
+.font80[
+
+* PCA and *t*-SNE are unsupervised methods  
+* PCA and *t*-SNE are dimension/data reduction and visualisation methods  
+* They are applied when you have very many continuous variables and allow you to visualised the data in 2 dimensions, and thus see group/patterns more easily.  
+* PCA is a fast, linear, parametric method that optimises putting dissimilar observations far apart  
+* *t*-SNE is a non-parametric, non-linear method that prioritises placing similar observations near each other.  
+* *t*-SNE is a stochastic method and is computational intensive but works better on most biological/expression data where the relationships between variables are often non-linear 
+]
+
+---
+# Reading
+
+## Strongly recommended
+
+* Identifying cell populations with scRNASeq `r Cite(myBib, "Andrews2018-cy")` A good overview of different experimental protocols for Single-cell RNASeq and the most popular methods for facilitating the computational analysis. The abstract, introduction and section 3 are essential reading
+
+## Further
+
+* Section 4, on clustering, is also worth reading.
+
+---
+# References
+
+.font90[
+```{r refs1, echo=FALSE, results="asis"}
+PrintBibliography(myBib, start = 1, end = 4)
+```
+]
+---
+# References
+.font90[
+```{r refs2, echo=FALSE, results="asis"}
+PrintBibliography(myBib, start = 5 )
+```
+]
+
+.font70[
+.footnote[
+Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
+]
+]
+---
+
+## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+<br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Data Science strand of BIO00058M</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Emma Rand</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
