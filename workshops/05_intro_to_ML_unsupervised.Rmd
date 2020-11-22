@@ -13,7 +13,6 @@ output:
 bibliography: "../refs.bib"
 ---
 
-
 ![](../pics/58M.png)
 
 ```{r setup, include=FALSE}
@@ -27,36 +26,35 @@ library(tidyverse)
 library(Rtsne)
 ```
 
-
 # Introduction
 
 Work in pairs in BB Collaborate breakout to tackle the tasks.
 
-<font size = "4">
-`r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
-`r emo::ji("speech_balloon")` Communicate what you are doing and why  
-`r emo::ji("document")` Document and share your ideas and process   
-`r  emo::ji("team")` Consider having one person code and other documenting  
-`r emo::ji("heart")` Be kind, be understanding, be flexible   
+<font size = "4"> `r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.\
+`r emo::ji("speech_balloon")` Communicate what you are doing and why\
+`r emo::ji("document")` Document and share your ideas and process\
+`r  emo::ji("team")` Consider having one person code and other documenting\
+`r emo::ji("heart")` Be kind, be understanding, be flexible\
 </font>
-
 
 I suggest having a different RStudio Project for each dataset used. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
 
 Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised.
 
 # Task 1
+
 The [Wheat Seeds Dataset](../data-raw/seeds_dataset.txt) contains measurements of seed kernels from different varieties of wheat: Kama (1), Rosa (2) and Canadian (3). High quality visualization of the internal kernel structure was detected using a soft X-ray technique and 7 measurements were taken which are in this order in the file:
 
-  * Area.
-  * Perimeter.
-  * Compactness
-  * Length of kernel.
-  * Width of kernel.
-  * Asymmetry coefficient.
-  * Length of kernel groove.
+-   Area.
+-   Perimeter.
+-   Compactness
+-   Length of kernel.
+-   Width of kernel.
+-   Asymmetry coefficient.
+-   Length of kernel groove.
 
 Investigate whether these variables might be useful to classifiy the species.
+
 ```{r include=FALSE}
 # import data note the file does not include column names
 file <- "../data-raw/seeds_dataset.txt"
@@ -127,20 +125,22 @@ dat %>% ggplot(aes(x = X1, y = X2, colour = species)) +
 ```
 
 
-
 # Task 2
 
-Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines.  That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3). So that you can focus on applying the methods from this week, a processed form of the data are in [sol.txt](../data-raw/sol.txt). Note that like the raw data file, these are organised with samples in columns and proteins in rows. In order use the genes as variables and the samples as observations, we will need to transpose the data. 
+Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines. That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3). So that you can focus on applying the methods from this week, a processed form of the data are in [sol.txt](../data-raw/sol.txt). Note that like the raw data file, these are organised with samples in columns and proteins in rows. In order use the genes as variables and the samples as observations, we will need to transpose the data.
 
-Import: 
+Import:
+
 ```{r echo=TRUE}
 file <- "../data-raw/sol.txt"
 sol <- read_table2(file)
 names(sol)
 ```
-We can see that the genename is in the first column. 
+
+We can see that the genename is in the first column.
 
 Transpose all the values except the genename:
+
 ```{r echo=TRUE}
 tsol <- sol %>% 
   select(-genename) %>% 
@@ -149,6 +149,7 @@ tsol <- sol %>%
 ```
 
 Use the genenames in `sol` to name the columns in `tsol`:
+
 ```{r echo=TRUE}
 names(tsol) <- sol$genename
 ```
@@ -160,6 +161,7 @@ tsol$sample <- row.names(tsol)
 ```
 
 And process the sample name so we have the cell lineage in one column and the replicate in another
+
 ```{r echo=TRUE}
 tsol <- tsol %>% 
   extract(sample, 
@@ -168,6 +170,7 @@ tsol <- tsol %>%
 ```
 
 Now the data should be in a format to which you can apply the methods from this week.
+
 ```{r include=FALSE}
 pca <- tsol %>% 
   select(-lineage, -rep) %>%
@@ -198,7 +201,9 @@ dat %>% ggplot(aes(x = X1, y = X2, colour = lineage)) +
 
 # a consistent message of 101.5 being distinctly different is has emerged.
 ```
+
 # Task 3
+
 Start working with your own assessment. Do continue to follow the practice covered in previous workshops with respect to project organisation, coding style and reproducibility.
 
 # The Rmd file
@@ -206,5 +211,3 @@ Start working with your own assessment. Do continue to follow the practice cover
 [Rmd file](05_intro_to_ML_unsupervised.Rmd)
 
 ![](../pics/58Mend.png)
-
-

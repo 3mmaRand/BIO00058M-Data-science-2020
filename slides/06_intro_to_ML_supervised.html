@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>An introduction to Machine Learning: Supervised methods</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emma Rand" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css_files/emma.css" type="text/css" />
+    <link rel="stylesheet" href="../css_files/emma-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# An introduction to Machine Learning: Supervised methods
+## Data Science option of BIO00058M Data Analysis.
+### Emma Rand
+### University of York, UK
+
+---
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+}</style>
+
+
+
+
+
+
+&lt;style&gt;
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+&lt;/style&gt;
+
+
+# Outline
+
+In a previous topic you were introduced to machine learning. You learnt that ML is statistical methods for exploring, summarising and modelling data and that it can be used for:
+
+* visualisation of high dimensional data  
+* discovering patterns/clusters in variables or observations  
+* making predictions  
+* classifying observations  
+
+--
+
+You also learnt that ML methods can be characterised as supervised or unsupervised and applied two unsupervised methods: Principal Component Analysis (PCA) and *t*-distributed Stochastic neighbour embedding (*t*-SNE)
+
+---
+# Outline
+
+The aim of this topic is to introduce you to a specific supervised learning method, Linear Discriminant Analysis, which will illustrate some general concepts in supervised learning such as overfitting, training and testing and confusion matrices. 
+
+
+
+---
+# Linear Discriminant Analysis
+
+Linear Discriminant Analysis (LDA) aims to find linear combination of variables the maximise differences between groups. 
+
+--
+
+It is supervised because we *label* observations by their class and determine the allocation rules based on these. 
+
+--
+
+A ‘discriminant’ is a linear combination of variables that best separates the groups. If there `\(n\)` classes we have, at most, `\(n-1\)` discriminants. 
+
+--
+
+The `lda()` function is in a package called **`MASS`** &lt;a name=cite-venables_ripley&gt;&lt;/a&gt;([Venables and Ripley, 2002](#bib-venables_ripley)) which is part of the base R distribution so you do not need to install it. 
+
+❗ Do not load the package!
+
+
+---
+# Training and testing
+
+When we a take a hypothesis testing perspective in which the goal is to explain a response and determine whether specific variables have a significant effect on the response, we  typically use all the data we have. 
+
+--
+
+A problem with this approach is that we cannot be sure model we have fitted to our data is generalisable. That is, we do not know how well the model would predict the responses for a new data set.  This is known as *overfitting*.
+
+--
+
+Overfitting is when your model fits the data you have very well but does not generalise. You can think of it as fitting the random variation in the data in addition to the non-random variation.
+
+---
+# Training and testing
+
+A key concept of using supervised ML methods build the model on approximately 75% of the data and test it on the remaining 25%. Building the model is known as 'training' the model.
+
+--
+
+The **`caret`** package &lt;a name=cite-caret&gt;&lt;/a&gt;([Kuhn, 2020](#bib-caret)) includes functions to facilitate training and testing  - in addition to many ML algorithms. 
+
+--
+
+The name comes from *C*lassification *A*nd *RE*gression *T*raining. Max Kuhn's work on ML in R has been extremely influential. 
+
+--
+
+His most recent work is on tidymodels  a collection of packages for modelling and ML using the tidyverse paradigm.
+
+
+---
+# Outline
+
+In these slides show you will apply:
+
+* LDA to the Penguin data *without* training and testing  
+* LDA to the Penguin data *with* training and testing  
+* LDA to the scRNASeq data *with* training and testing but we will consider how good the model is at predicting classes from the training set comapred to the test set. 
+
+--
+
+You should be able to code along with the examples. When you see the film clapper it is ..
+
+🎬 .. an instruction to do something!!
+
+---
+# Set up
+
+I suggest having a different RStudio Project for each dataset we use. You might want to reopen those you used for the Penguins data and the scRNASeq data respectively.
+
+--
+
+Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
+
+--
+
+Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised. 
+
+---
+# Set up
+
+Load the **`tidyverse`**, **`caret`** and **`GGally`** and for each RStudio Project.
+
+
+```r
+library(tidyverse)
+library(caret)
+library(GGally)
+```
+
+Do not load **`MASS`**, we will access the `lda()` function with `MASS::lda()` instead.
+
+---
+# Important!
+
+If you are using git and especially if you intend to push to GitHub, do **not** track the data files in second example.
+
+You prevent tracking by adding the file to a .gitignore. You can do this by right-clicking on the file in the git pane and choosing 'Ignore'
+
+![biologists](../pics/gitignore1.png)
+
+
+---
+class: inverse
+
+#  LDA on Penguins without training and testing
+
+
+---
+# Penguin LDA
+
+We use the Palmer penguins again. You can read more about this dataset in [Introduction to palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html).
+
+
+🎬 Load the package to get the data: 
+
+```r
+library(palmerpenguins)
+```
+
+🎬 Clean the variable names for ease of use: 
+
+```r
+penguin &lt;- penguins_raw %&gt;%
+  janitor::clean_names()
+```
+
+---
+# Penguin LDA: tidy
+
+We repeat the simple filtering and tidying we did previously.
+
+🎬 Filter out the rows with missing values: 
+
+
+```r
+penguin &lt;- penguin %&gt;% 
+  filter(!is.na(body_mass_g))
+```
+
+🎬 Split `species` into `common_name` and `scientific_name`: 
+
+```r
+penguin &lt;- penguin %&gt;% 
+  extract(species, 
+          c("common_name", "scientific_name"),
+          "([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)")
+```
+
+
+---
+# Penguin LDA: build model
+
+Now to run the LDA. 
+
+🎬 Select the four variables and pipe into the `MASS::lda()` function which does the PCA:
+
+
+```r
+lda &lt;- penguin %&gt;% 
+  select(body_mass_g,
+         ends_with("_mm")) %&gt;%
+  MASS::lda(grouping = penguin$common_name)
+```
+
+--
+
+We have saved the result to a list object called `lda`
+
+---
+# Penguin LDA: build model
+
+This is a good example of when we definitely want to use `package::function()`. 
+
+**`MASS`** has a function called `select()` like **`dplyr`**, but it works differently (the function is defined differently).
+
+You can spend hours of your life wondering what is wrong with your code when it looks fine and worked before if you load both packages. I have done this with these particular functions too many times!
+
+---
+# Penguin LDA: examine model
+
+Just as we could see the importance of each variable in each Principal Component using `pca$loadings`, we can see the importance of each variable in each discriminant using `lda$scaling`.
+
+🎬 View the importance of each variable in each discriminant:
+.code70[
+
+```r
+lda$scaling
+```
+
+```
+##                        LD1       LD2
+## body_mass_g        0.00130  0.001711
+## culmen_length_mm   0.08833 -0.417871
+## culmen_depth_mm   -1.03730 -0.021005
+## flipper_length_mm  0.08616  0.013475
+```
+]
+
+
+---
+# Penguin LDA: examine model
+
+`\(LD1=\)` 0.0013 `\(body\_mass\_g +\)` 0.0883 `\(culmen\_length\_mm +\)` -1.0373 `\(culmen\_depth\_mm +\)` 0.0862 `\(flipper\_length\_mm\)`
+
+You might want to compare to the [loadings for PCA](05_intro_to_ML_unsupervised.html#41)
+
+---
+# Penguin LDA: predict classes
+
+The generic function `predict()` is used to give the species predicted by the model for each observation.
+
+🎬 Select the variables from `Penguin` that are in the model and predict the species from the `lda` model object:
+
+
+```r
+plda &lt;- penguin %&gt;% 
+  select(body_mass_g,
+         ends_with("_mm")) %&gt;%
+  predict(object = lda)
+```
+
+---
+# Penguin LDA: Confusion matrix
+
+**`caret`** provides us with a useful function to examine the *confusion matrix*. 
+
+--
+
+A confusion matrix is a table that tells us about the performance of a classification model. 
+--
+
+The table gives the number of:
+
+* correct predictions: the species predicted matches the observed species  
+* incorrect predictions: the species predicted does not match the observed species.
+for each species.  
+
+---
+# Penguin LDA: Confusion matrix
+
+The `confusionMatrix()` function also outputs:
+
+* Accuracy - No. correct predictions / No. of observations 
+* 95% CI - 95 percent confidence interval on the accuracy (using `binom.test()`)  
+* No Information Rate - No. observations in the largest class / Number of observations   
+* P-Value [Acc &gt; NIR] - Is the model significantly better than than you could do by always predicting the most common class (again using `binom.test()`).  
+
+---
+# Penguin LDA: Confusion matrix
+
+🎬 Examining the confusion matrix:
+
+.scroll-output-height[
+
+```r
+confusionMatrix(plda$class, factor(penguin$common_name))
+```
+
+```
+## Confusion Matrix and Statistics
+## 
+##                    Reference
+## Prediction          Adelie Penguin Chinstrap penguin Gentoo penguin
+##   Adelie Penguin               150                 3              0
+##   Chinstrap penguin              1                65              0
+##   Gentoo penguin                 0                 0            123
+## 
+## Overall Statistics
+##                                        
+##                Accuracy : 0.988        
+##                  95% CI : (0.97, 0.997)
+##     No Information Rate : 0.442        
+##     P-Value [Acc &gt; NIR] : &lt;2e-16       
+##                                        
+##                   Kappa : 0.982        
+##                                        
+##  Mcnemar's Test P-Value : NA           
+## 
+## Statistics by Class:
+## 
+##                      Class: Adelie Penguin Class: Chinstrap penguin
+## Sensitivity                          0.993                    0.956
+## Specificity                          0.984                    0.996
+## Pos Pred Value                       0.980                    0.985
+## Neg Pred Value                       0.995                    0.989
+## Prevalence                           0.442                    0.199
+## Detection Rate                       0.439                    0.190
+## Detection Prevalence                 0.447                    0.193
+## Balanced Accuracy                    0.989                    0.976
+##                      Class: Gentoo penguin
+## Sensitivity                           1.00
+## Specificity                           1.00
+## Pos Pred Value                        1.00
+## Neg Pred Value                        1.00
+## Prevalence                            0.36
+## Detection Rate                        0.36
+## Detection Prevalence                  0.36
+## Balanced Accuracy                     1.00
+```
+]
+
+---
+# Penguin LDA: Confusion matrix
+
+
+
+
+The model had an accuracy of 98.8304%. There were 151 Adelie Penguins of which 1 were predicted incorrectly; 68 Adelie Penguins of which 3 were predicted incorrectly; and 123 Adelie Penguins of which 0 were predicted incorrectly.
+
+---
+# Penguin LDA: plot
+
+To plot, we might want to use the scores on each of the new axes and colour them by species. The scores are in a variable called `$x` in `plda`
+
+🎬 Extract the scores into a dataframe with the species names: 
+
+```r
+lda_labelled &lt;- data.frame(plda$x,
+                              common_name = penguin$common_name)
+```
+
+🎬 Create a scatter plot: 
+
+
+```r
+lda_labelled %&gt;% 
+  ggplot(aes(x = LD1, y = LD2, color = common_name)) +
+  geom_point() 
+```
+
+---
+# Penguin LDA: plot
+
+&lt;img src="06_intro_to_ML_supervised_files/figure-html/unnamed-chunk-13-1.png" width="288" /&gt;
+
+The separation between species is stronger in the LDA than in the[ PCA.](05_intro_to_ML_unsupervised.html#44)
+
+---
+class: inverse
+
+
+#  LDA on Penguins with training and testing
+
+---
+# Penguin LDA: Train &amp; test
+
+We used the same data to train the LDA model as we used to examine its performance. Few were incorrectly classified. But this is not very robust - we could have overfitting.
+
+We can use the **`caret`** function `createDataPartition()` to split the dataset in to training and testing sets. 
+
+--
+
+It returns a proportion of row numbers randomly sampled from the dataframe.
+
+---
+# Penguin LDA: Create train &amp; test sets
+
+🎬 Create a vector of row numbers that will be used to split the dataset in to training and testing sets:
+
+```r
+ids &lt;- createDataPartition(y = penguin$common_name,
+                           p = 0.75,
+                           list = FALSE)
+```
+
+`p` is the proportion of rows to sample.
+
+`list = FALSE` gives me a vector of numbers rather than a one item list.
+
+You might want to examine the `ids` variable.
+
+---
+# Penguin LDA: Create training set
+Now we use those row numbers to select the rows from `penguin` to create the training and test datasets. We use the `dplyr` function slice which works like the filter function but filters rows on their index rather than a match to a condition.
+
+🎬 Create the training set:
+
+```r
+train &lt;- penguin %&gt;% slice(ids)
+```
+
+---
+# Penguin LDA: Create testing set
+
+The testing set is all the rows that are not in `ids`.
+
+🎬 Create the testing set:
+
+```r
+test &lt;- penguin %&gt;% slice(-ids)
+```
+
+--
+
+You might want to examine the two dataframes, `train` and `test`, we just made.
+
+---
+# Penguin LDA: train model
+
+The process of the using `lda()` and `predict()` is the same as previously but the input data differ.
+
+🎬 Perform the LDA on the training data:
+
+```r
+*lda &lt;- train %&gt;%
+  select(body_mass_g,
+         ends_with("_mm")) %&gt;%
+* MASS::lda(grouping = train$common_name)
+```
+
+---
+# Penguin LDA: test model
+
+🎬 And predict classes of the test data based on lda model:
+
+
+
+```r
+*plda &lt;- test %&gt;%
+  select(body_mass_g,
+         ends_with("_mm")) %&gt;%
+  predict(object = lda)
+```
+
+---
+# Penguin LDA: Confusion matrix
+
+🎬 Examining the confusion matrix:
+.scroll-output-height[
+
+```r
+confusionMatrix(plda$class,factor(test$common_name))
+```
+
+```
+## Confusion Matrix and Statistics
+## 
+##                    Reference
+## Prediction          Adelie Penguin Chinstrap penguin Gentoo penguin
+##   Adelie Penguin                37                 0              0
+##   Chinstrap penguin              0                17              0
+##   Gentoo penguin                 0                 0             30
+## 
+## Overall Statistics
+##                                     
+##                Accuracy : 1         
+##                  95% CI : (0.957, 1)
+##     No Information Rate : 0.44      
+##     P-Value [Acc &gt; NIR] : &lt;2e-16    
+##                                     
+##                   Kappa : 1         
+##                                     
+##  Mcnemar's Test P-Value : NA        
+## 
+## Statistics by Class:
+## 
+##                      Class: Adelie Penguin Class: Chinstrap penguin
+## Sensitivity                           1.00                    1.000
+## Specificity                           1.00                    1.000
+## Pos Pred Value                        1.00                    1.000
+## Neg Pred Value                        1.00                    1.000
+## Prevalence                            0.44                    0.202
+## Detection Rate                        0.44                    0.202
+## Detection Prevalence                  0.44                    0.202
+## Balanced Accuracy                     1.00                    1.000
+##                      Class: Gentoo penguin
+## Sensitivity                          1.000
+## Specificity                          1.000
+## Pos Pred Value                       1.000
+## Neg Pred Value                       1.000
+## Prevalence                           0.357
+## Detection Rate                       0.357
+## Detection Prevalence                 0.357
+## Balanced Accuracy                    1.000
+```
+]
+
+
+The model had an accuracy of 100%. You may have had greater or fewer because the training and testing sets were random selections.
+
+---
+class: inverse
+
+#  LDA on single-cell RNASeq data with training and testing
+
+
+---
+# scRNASeq LDA
+
+The data in [scrna_data.csv](../data-raw/scrna_data.csv) are the single-cell  RNASeq data we considered last week. Each row is a cell (an observation) and each column is a gene (a variable / feature). The values are gene expression values.
+
+🎬 Import the data and the cell labels: 
+
+```r
+file &lt;- "../data-raw/scrna_data.csv"
+rna &lt;- read_csv(file)
+file &lt;- "../data-raw/scrna_meta.csv"
+meta &lt;- read_csv(file) %&gt;% select(louvain)
+```
+
+---
+# scRNASeq LDA
+
+🎬 Add the cell labels to the data: 
+
+
+```r
+rna$cell &lt;- meta$louvain
+```
+
+---
+# scRNASeq LDA: create train &amp; test sets
+
+
+🎬 Split the dataset in to training and testing sets using `createDataPartition()`
+
+```r
+ids &lt;- createDataPartition(y = rna$cell,
+                           p = 0.75,
+                           list = FALSE)
+```
+
+
+---
+# scRNASeq LDA: create train &amp; test sets
+
+Now we use those row numbers to select the rows from `rna` to create the training and test datasets. 
+
+🎬 Create the training set:
+
+```r
+train &lt;- rna %&gt;% slice(ids)
+```
+
+🎬 Create the testing set:
+
+```r
+test &lt;- rna %&gt;% slice(-ids)
+```
+
+---
+# scRNASeq LDA: train model
+
+🎬 Perform the LDA on the training data:
+
+```r
+lda &lt;- train %&gt;% 
+  select(-cell) %&gt;%
+  MASS::lda(grouping = train$cell)
+```
+
+---
+# scRNASeq LDA: Performance
+
+How well does our model perform on the training set data.
+
+🎬 Predict on the training data:
+
+
+
+```r
+plda_train &lt;- train %&gt;% 
+  select(-cell) %&gt;%
+  predict(object = lda)
+```
+
+---
+# scRNASeq LDA: Confusion matrix
+
+🎬 Examining the confusion matrix:
+.scroll-output-height[
+
+```r
+confusionMatrix(plda_train$class,factor(train$cell))
+```
+
+```
+## Confusion Matrix and Statistics
+## 
+##                    Reference
+## Prediction          B CELLS CD14+ Monocytes CD4 T CD8 T Dendritic
+##   B CELLS               256               0     0     0         0
+##   CD14+ Monocytes         0             360     0     0         0
+##   CD4 T                   0               0   865     0         0
+##   CD8 T                   0               0     0   228         0
+##   Dendritic               0               0     0     0        27
+##   FCGR3A+ Monocytes       0               0     0     0         0
+##   Megakaryocytes          0               0     0     0         0
+##   NK CELLS                0               0     0     0         0
+##                    Reference
+## Prediction          FCGR3A+ Monocytes Megakaryocytes NK CELLS
+##   B CELLS                           0              0        0
+##   CD14+ Monocytes                   0              0        0
+##   CD4 T                             0              0        0
+##   CD8 T                             0              0        0
+##   Dendritic                         0              0        0
+##   FCGR3A+ Monocytes               115              0        0
+##   Megakaryocytes                    0             12        0
+##   NK CELLS                          0              0      118
+## 
+## Overall Statistics
+##                                     
+##                Accuracy : 1         
+##                  95% CI : (0.998, 1)
+##     No Information Rate : 0.437     
+##     P-Value [Acc &gt; NIR] : &lt;2e-16    
+##                                     
+##                   Kappa : 1         
+##                                     
+##  Mcnemar's Test P-Value : NA        
+## 
+## Statistics by Class:
+## 
+##                      Class: B CELLS Class: CD14+ Monocytes Class: CD4 T
+## Sensitivity                   1.000                  1.000        1.000
+## Specificity                   1.000                  1.000        1.000
+## Pos Pred Value                1.000                  1.000        1.000
+## Neg Pred Value                1.000                  1.000        1.000
+## Prevalence                    0.129                  0.182        0.437
+## Detection Rate                0.129                  0.182        0.437
+## Detection Prevalence          0.129                  0.182        0.437
+## Balanced Accuracy             1.000                  1.000        1.000
+##                      Class: CD8 T Class: Dendritic Class: FCGR3A+ Monocytes
+## Sensitivity                 1.000           1.0000                   1.0000
+## Specificity                 1.000           1.0000                   1.0000
+## Pos Pred Value              1.000           1.0000                   1.0000
+## Neg Pred Value              1.000           1.0000                   1.0000
+## Prevalence                  0.115           0.0136                   0.0581
+## Detection Rate              0.115           0.0136                   0.0581
+## Detection Prevalence        0.115           0.0136                   0.0581
+## Balanced Accuracy           1.000           1.0000                   1.0000
+##                      Class: Megakaryocytes Class: NK CELLS
+## Sensitivity                        1.00000          1.0000
+## Specificity                        1.00000          1.0000
+## Pos Pred Value                     1.00000          1.0000
+## Neg Pred Value                     1.00000          1.0000
+## Prevalence                         0.00606          0.0596
+## Detection Rate                     0.00606          0.0596
+## Detection Prevalence               0.00606          0.0596
+## Balanced Accuracy                  1.00000          1.0000
+```
+]
+
+
+The model had an accuracy of 100%. Wow, that's good. Or is it??
+
+---
+# scRNASeq LDA: Performance on test
+
+But what about performance on the test set? Is our modelling overftting? Would it be equally good on the scRNASeq data for a new dataset?
+
+🎬 Predict classes of the test data based on LDA model:
+
+
+```r
+plda_test &lt;- test %&gt;% 
+  select(-cell) %&gt;%
+  predict(object = lda)
+```
+
+---
+# scRNASeq LDA: Confusion matrix
+
+🎬 Examining the confusion matrix:
+.scroll-output-height[
+
+```r
+confusionMatrix(plda_test$class, factor(test$cell))
+```
+
+```
+## Confusion Matrix and Statistics
+## 
+##                    Reference
+## Prediction          B CELLS CD14+ Monocytes CD4 T CD8 T Dendritic
+##   B CELLS                66               2    14     1         1
+##   CD14+ Monocytes         3              89    16     8         1
+##   CD4 T                   7              11   167    17         0
+##   CD8 T                   2               5    58    43         0
+##   Dendritic               1               0     0     0         7
+##   FCGR3A+ Monocytes       5              13    26     3         0
+##   Megakaryocytes          0               0     0     0         0
+##   NK CELLS                1               0     7     3         0
+##                    Reference
+## Prediction          FCGR3A+ Monocytes Megakaryocytes NK CELLS
+##   B CELLS                           1              0        0
+##   CD14+ Monocytes                  10              1        1
+##   CD4 T                             4              0        1
+##   CD8 T                             1              0        6
+##   Dendritic                         0              0        0
+##   FCGR3A+ Monocytes                22              0        2
+##   Megakaryocytes                    0              2        0
+##   NK CELLS                          0              0       29
+## 
+## Overall Statistics
+##                                         
+##                Accuracy : 0.647         
+##                  95% CI : (0.609, 0.683)
+##     No Information Rate : 0.438         
+##     P-Value [Acc &gt; NIR] : &lt;2e-16        
+##                                         
+##                   Kappa : 0.547         
+##                                         
+##  Mcnemar's Test P-Value : NA            
+## 
+## Statistics by Class:
+## 
+##                      Class: B CELLS Class: CD14+ Monocytes Class: CD4 T
+## Sensitivity                   0.776                  0.742        0.580
+## Specificity                   0.967                  0.926        0.892
+## Pos Pred Value                0.776                  0.690        0.807
+## Neg Pred Value                0.967                  0.941        0.731
+## Prevalence                    0.129                  0.183        0.438
+## Detection Rate                0.100                  0.135        0.254
+## Detection Prevalence          0.129                  0.196        0.315
+## Balanced Accuracy             0.872                  0.834        0.736
+##                      Class: CD8 T Class: Dendritic Class: FCGR3A+ Monocytes
+## Sensitivity                0.5733           0.7778                   0.5789
+## Specificity                0.8763           0.9985                   0.9208
+## Pos Pred Value             0.3739           0.8750                   0.3099
+## Neg Pred Value             0.9410           0.9969                   0.9727
+## Prevalence                 0.1142           0.0137                   0.0578
+## Detection Rate             0.0654           0.0107                   0.0335
+## Detection Prevalence       0.1750           0.0122                   0.1081
+## Balanced Accuracy          0.7248           0.8881                   0.7499
+##                      Class: Megakaryocytes Class: NK CELLS
+## Sensitivity                        0.66667          0.7436
+## Specificity                        1.00000          0.9822
+## Pos Pred Value                     1.00000          0.7250
+## Neg Pred Value                     0.99847          0.9838
+## Prevalence                         0.00457          0.0594
+## Detection Rate                     0.00304          0.0441
+## Detection Prevalence               0.00304          0.0609
+## Balanced Accuracy                  0.83333          0.8629
+```
+]
+
+
+The model had an accuracy of 64.688%. That is much more honest and robust test.
+---
+# scRNASeq LDA: plots
+
+We will plot the training data and then the test data.
+
+🎬 Extract the scores from the training set with the cell names: 
+
+```r
+lda_labelled_train &lt;- data.frame(plda_train$x,
+                              cell = train$cell)
+```
+
+🎬 Extract the scores from the training set with the cell names: 
+
+```r
+lda_labelled_test &lt;- data.frame(plda_test$x,
+                              cell = test$cell)
+```
+---
+# scRNASeq LDA: LD1 and LD2
+
+🎬 Create a scatter plot for the training data: 
+
+
+```r
+lda_labelled_train %&gt;% 
+  ggplot(aes(x = LD1, y = LD2, color = cell)) +
+  geom_point() 
+```
+
+---
+# scRNASeq LDA
+
+&lt;img src="06_intro_to_ML_supervised_files/figure-html/unnamed-chunk-35-1.png" width="700px" height="550px" /&gt;
+
+---
+# scRNASeq LDA: plots
+
+Based on this plot, you might be surprised by the accuracy of the model predictions on the training set - there seems to be a lot of overlap.
+
+--
+
+However, you are only looking at LD1 and LD2. There are many dimensions in this dataset and the separation of groups might not be obvious from the first to LD.
+
+--
+
+**`GGally`** &lt;a name=cite-GGally&gt;&lt;/a&gt;([Schloerke Cook, et al., 2020](#bib-GGally)) can let us examine several pairwise LD comparisons.
+
+---
+# scRNASeq LDA: More LD
+
+🎬 Select the first 5 LDs and pipe in to `ggpairs()`: 
+
+
+```r
+lda_labelled_train %&gt;% 
+  select(LD1:LD5, cell) %&gt;% 
+  ggpairs(aes(color = cell))
+```
+
+
+---
+# scRNASeq LDA: More LD
+
+&lt;img src="06_intro_to_ML_supervised_files/figure-html/unnamed-chunk-36-1.png" width="580px" height="580px" /&gt;
+
+---
+# scRNASeq LDA:
+
+You can see how LD1 really separates Megakaryocytes from the other cell types but that other LD are needed to distinguish all the cell types.
+
+--
+
+Now consider the test set.
+
+---
+# scRNASeq LDA: LD1 and LD2
+
+🎬 Create a scatter plot for the test data: 
+
+
+```r
+lda_labelled_test %&gt;% 
+  ggplot(aes(x = LD1, y = LD2, color = cell)) +
+  geom_point() 
+```
+
+---
+# scRNASeq LDA
+
+&lt;img src="06_intro_to_ML_supervised_files/figure-html/unnamed-chunk-37-1.png" width="700px" height="550px" /&gt;
+
+---
+# scRNASeq LDA: plots
+
+There's a lot of overlap here. Perhaps we will better see the difference by examining additional LDs. However, remember that the predictions were less good on the test set so we would expect it to be difficult to distinguish all cells.
+
+
+
+---
+# scRNASeq LDA: More LD
+
+🎬 Select the first 5 LDs and pipe in to `ggpairs()`: 
+
+
+```r
+lda_labelled_test %&gt;% 
+  select(LD1:LD5, cell) %&gt;% 
+  ggpairs(aes(color = cell))
+```
+
+
+---
+# scRNASeq LDA
+
+&lt;img src="06_intro_to_ML_supervised_files/figure-html/unnamed-chunk-38-1.png" width="580px" height="580px" /&gt;
+
+
+---
+# Summary
+
+.font80[
+
+* Linear discriminant analysis is a supervised ML method  
+* It is applied when you have many continuous variables and allows you to visualised the data in fewer dimensions, and thus see group/patterns more easily.  
+* LDA is a fast, linear, parametric method  
+* the maximum number of discrimants is one fewer than the number of dimensions.
+* overfitting occurs when a model too closely fits a limited set of data points and does not generalise  
+* partitioning data into training and testing sets is the primary way to avoid overfitting  
+* the performance of a classification model can be evaluated using a confusion matrix  
+]
+
+---
+# Reading
+
+## Strongly recommended
+
+* The Assessment information!
+
+
+---
+# References
+.font90[
+&lt;a name=bib-caret&gt;&lt;/a&gt;[Kuhn, M.](#cite-caret) (2020). _caret:
+Classification and Regression Training_. R package version 6.0-86. URL:
+[https://CRAN.R-project.org/package=caret](https://CRAN.R-project.org/package=caret).
+
+&lt;a name=bib-GGally&gt;&lt;/a&gt;[Schloerke, B., D. Cook, et al.](#cite-GGally)
+(2020). _GGally: Extension to 'ggplot2'_. R package version 2.0.0. URL:
+[https://CRAN.R-project.org/package=GGally](https://CRAN.R-project.org/package=GGally).
+
+&lt;a name=bib-venables_ripley&gt;&lt;/a&gt;[Venables, W. N. and B. D.
+Ripley](#cite-venables_ripley) (2002). _Modern Applied Statistics with
+S_. Fourth. ISBN 0-387-95457-0. New York: Springer. URL:
+[http://www.stats.ox.ac.uk/pub/MASS4/](http://www.stats.ox.ac.uk/pub/MASS4/).
+]
+
+.font70[
+.footnote[
+Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
+]
+]
+---
+
+## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
