@@ -136,13 +136,17 @@ In these slides show you will apply:
 
 * LDA to the Penguin data *without* training and testing  
 * LDA to the Penguin data *with* training and testing  
-* LDA to the scRNASeq data *with* training and testing but we will consider how good the model is at predicting classes from the training set comapred to the test set. 
+* LDA to the scRNASeq data *with* training and testing but we will consider how good the model is at predicting classes from the training set compared to the test set. 
 
 --
 
-You should be able to code along with the examples. When you see the film clapper it is ..
+You should be able to code along with the examples. When you see the film clapper it is..
 
 `r emo::ji("clapper")` .. an instruction to do something!!
+
+--
+
+There is also demo on the scRNASeq data
 
 ---
 # Set up
