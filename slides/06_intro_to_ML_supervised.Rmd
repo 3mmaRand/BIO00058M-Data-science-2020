@@ -345,7 +345,7 @@ gentoo_num <- sum(res$table[,"Gentoo penguin"])
 gentoo_wrong <- res$table["Chinstrap penguin","Gentoo penguin"] + res$table["Adelie Penguin","Gentoo penguin"] 
 ```
 
-The model had an accuracy of `r accuracy`%. There were `r adelie_num` Adelie Penguins of which `r adelie_wrong` were predicted incorrectly; `r chin_num` Adelie Penguins of which `r chin_wrong` were predicted incorrectly; and `r gentoo_num` Adelie Penguins of which `r gentoo_wrong` were predicted incorrectly.
+The model had an accuracy of `r accuracy`%. There were `r adelie_num` Adelie Penguins of which `r adelie_wrong` were predicted incorrectly; `r chin_num` Chinstrap Penguins of which `r chin_wrong` were predicted incorrectly; and `r gentoo_num` Gentoo Penguins of which `r gentoo_wrong` were predicted incorrectly.
 
 ---
 # Penguin LDA: plot
