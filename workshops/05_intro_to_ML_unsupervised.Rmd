@@ -208,6 +208,6 @@ Start working with your own assessment. Do continue to follow the practice cover
 
 # The Rmd file
 
-[Rmd file](05_intro_to_ML_unsupervised.html)
+[Rmd file](05_intro_to_ML_unsupervised.Rmd)
 
 ![](../pics/58Mend.png)

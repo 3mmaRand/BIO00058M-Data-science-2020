@@ -1,0 +1,243 @@
+---
+title: "Topic 6: An introduction to Machine Learning: Supervised methods"
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: flatly
+  word_document: default
+bibliography: "../refs.bib"
+---
+
+![](../pics/58M.png)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkg}
+library(tidyverse)
+library(Rtsne)
+library(caret)
+```
+
+# Introduction
+
+Work in pairs in BB Collaborate breakout to tackle the tasks.
+
+<font size = "4"> `r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.\
+`r emo::ji("speech_balloon")` Communicate what you are doing and why  
+`r emo::ji("document")` Document and share your ideas and process  
+`r  emo::ji("team")` Consider having one person code and other documenting  
+`r emo::ji("heart")` Be kind, be understanding, be flexible  
+</font>
+
+I suggest having a different RStudio Project for each dataset used. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
+
+Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised.
+
+# Task 1
+
+Evaluate yourself and determine which of the tasks 2 - 5 will benefit you. Bounce your thoughts off your partner, see where you coincide and make a plan for using the workshop time and potentially additional time.
+
+# Task 2
+If you carried out the [workshop last week](05_intro_to_ML_unsupervised.html) you will be familiar with the [Wheat Seeds Dataset](../data-raw/seeds_dataset.txt). You can apply LDA to this dataset to determine how well you can predict the species from the seed metrics and how robust or generalisable your predictions are.
+
+You may want to skip this task if you feel you have a good understanding of using PCA on this dataset, using LDA on the Penguin dataset and of how using LDA on this dataset would be carried out and interpreted.
+
+```{r seed-import, include=FALSE}
+# the task in this section was carried out last week too
+# import data note the file does not include column names
+file <- "../data-raw/seeds_dataset.txt"
+# create column names
+cols <- c("area", 
+          "perimeter",
+          "compactness",
+          "kernal_length",
+          "kernel_width",
+          "asymmetry_coef",
+          "groove_length",
+          "species")
+# import data
+seeds <- read_table2(file, col_names = cols)
+
+```
+
+```{r seed-recode, include=FALSE}
+# the task in this section was carried out last week too
+# The species is coded as 1, 2, and 3 and it would be useful to recode to the species names:
+seeds$species <- recode(seeds$species,
+                        `1` = "Kama",
+                        `2` = "Rosa",
+                        `3` = "Canadian")
+```
+
+```{r seed-partition, include=FALSE}
+# randomly select row numbers for the training set
+ids <- createDataPartition(y = seeds$species,
+                           p = 0.75,
+                           list = FALSE)
+# subset training and testing data based on that random row selection
+train <- seeds %>% slice(ids)
+test <- seeds %>% slice(-ids)
+```
+
+```{r seed-lda-train, include=FALSE}
+lda <- train %>% 
+  select(-species) %>%
+  MASS::lda(grouping = train$species)
+```
+
+```{r seed-lda-predict-on-test, include=FALSE}
+plda <- test %>% 
+  select(-species) %>%
+  predict(object = lda)
+```
+
+```{r seed-lda-confusion, include=FALSE}
+confusionMatrix(plda$class, factor(test$species))
+```
+# Task 3
+
+Genome-wide gene expression of lymphoblasts from patients with newly diagnosed childhood acute lymphoblastic leukemia (ALL) is in  [Leukemia_GSE28497.csv](https://www-users.york.ac.uk/~er13/data/Leukemia_GSE28497.csv).
+One of the aims of the study was to determine whether there were genetic signatures which corresponded to subtypes of ALL. The data comprise 22283 gene expression values for 281 samples. The sample id is given in a column `sample` and the ALL subtype in a column `type`.
+
+You can apply LDA to this dataset to determine how well you can predict the subtype from the gene expression and how robust or generalisable your predictions are.
+
+I recommend reading the data in from the web address without first saving it. 
+
+LDA will take 10 - 15 mins or so to run on this data set. You might want have start a conversation with your partner about Task 4 while you wait. Expect to get a warning about collinear variables.
+
+If you feel confident with LDA following the independent study you may wish to skip this task.
+
+
+```{r leuk-import, include=FALSE, eval=FALSE}
+#### leuk
+file <- "https://www-users.york.ac.uk/~er13/data/Leukemia_GSE28497.csv"
+leuk <- read_csv(file)
+```
+
+```{r leuk-pca, include=FALSE, eval=FALSE}
+# I decided to take a look at this data set with PCA first since PCA is fairly quick and will give me an overview of the data
+pca <- leuk %>%
+  select(-samples, -type) %>%
+  prcomp(scale. = TRUE)
+```
+
+```{r leuk-pca-plot1, include=FALSE, eval=FALSE}
+# extract pca scores from pca object into a dataframe with the type label
+dat <- data.frame(pca$x, type = leuk$type)
+# plot the first two PCs against each other
+dat %>% 
+  ggplot(aes(x = PC1, y = PC2, colour = type)) +
+  geom_point()
+# clustering of subtypes is not obvious but we are only considering two dimensions
+```
+
+```{r leuk-pca-plot2, include=FALSE, eval=FALSE}
+# view pairwise scatterplot of the first ten PC
+dat %>% 
+  select(PC1:PC10, type) %>% 
+  ggpairs(aes(color = type))
+```
+
+```{r leuk-partition, include=FALSE, eval=FALSE}
+ids <- createDataPartition(y = leuk$type,
+                           p = 0.75,
+                           list = FALSE)
+train <- leuk %>% slice(ids)
+test <- leuk %>% slice(-ids)
+```
+
+```{r leuk-lda-train, include=FALSE, eval=FALSE}
+lda <- train %>% 
+  select(-samples, -type) %>% 
+  MASS::lda(grouping = train$type)
+```
+
+```{r leuk-lda-predict-on-train, include=FALSE, eval=FALSE}
+# predict on the training set
+plda_train <- train %>% 
+  select(-samples, -type) %>%
+  predict(object = lda)
+```
+
+```{r leuk-lda-predict-on-train-confusion, include=FALSE, eval=FALSE}
+# Examining the confusion matrix:
+confusionMatrix(plda_train$class, factor(train$type))
+```
+
+```{r leuk-lda-predict-on-test, include=FALSE, eval=FALSE}
+# predict on the test set
+plda_test <- test %>% 
+  select(-samples, -type) %>%
+  predict(object = lda)
+```
+
+```{r leuk-lda-predict-on-test-confusion, include=FALSE, eval=FALSE}
+# Examining the confusion matrix:
+confusionMatrix(plda_test$class, factor(test$type))
+```
+
+```{r leuk-lda-extract-scores, include=FALSE, eval=FALSE}
+#  Extract the scores from the training set with the cell names:
+lda_labelled_train <- data.frame(plda_train$x,
+                                 type = train$type)
+# Extract the scores from the training set with the cell names:
+lda_labelled_test <- data.frame(plda_test$x,
+                                type = test$type)
+```
+
+
+```{r leuk-lda-train-plot1, include=FALSE, eval=FALSE}
+# Create a scatter plot for the training data:
+lda_labelled_train %>% 
+  ggplot(aes(x = LD1, y = LD2, color = type)) +
+  geom_point()
+```
+
+
+```{r leuk-lda-train-plot2, include=FALSE, eval=FALSE}
+# Select the first 5 LDs and pipe in to ggpairs():
+lda_labelled_train %>% 
+  select(LD1:LD5, type) %>% 
+  ggpairs(aes(color = type))
+```
+
+
+```{r leuk-lda-test-plot1, include=FALSE, eval=FALSE}
+# Now consider the test set.
+# Create a scatter plot for the test data:
+lda_labelled_test %>% 
+  ggplot(aes(x = LD1, y = LD2, color = type)) +
+  geom_point()
+```
+
+```{r leuk-lda-test-plot2, include=FALSE, eval=FALSE}
+# Select the first 5 LDs and pipe in to ggpairs():
+lda_labelled_test %>% 
+  select(LD1:LD5, type) %>% 
+  ggpairs(aes(color = type))
+```
+
+
+# Task 4
+Consider the [Case study](05_intro_to_ML_unsupervised.html) of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines. Do think LDA could be applied here?
+If you do, carry it out. The data will need to be in the same format as for PCA (proteins in columns, samples in rows). 
+
+
+# Task 5
+
+Start working with your own assessment. Do continue to follow the practice covered in previous workshops with respect to project organisation, coding style and reproducibility.
+
+# The Rmd file
+
+[Rmd file](06_intro_to_ML_supervised.Rmd)
+
+![](../pics/58Mend.png)
