@@ -487,7 +487,7 @@ class: inverse
 ---
 # scRNASeq LDA
 
-The data in [scrna_data.csv](../data-raw/scrna_data.csv) are the single-cell  RNASeq data we considered last week. Each row is a cell (an observation) and each column is a gene (a variable / feature). The values are gene expression values.
+The data in [scrna_data.csv](../data-raw/scrna_data.csv) and [scrna_meta.csv](../data-raw/scrna_meta.csv) are the single-cell  RNASeq data we considered last week. Each row is a cell (an observation) and each column is a gene (a variable / feature). The values are gene expression values.
 
 `r emo::ji("clapper")` Import the data and the cell labels: 
 ```{r}
