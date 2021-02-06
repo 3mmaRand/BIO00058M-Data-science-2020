@@ -171,14 +171,14 @@ ldaout_labelled <- data.frame(pldaout$x,
 ggplot(ldaout_labelled, aes(x = LD1, y = LD2, colour = type)) +
   geom_point()
 
-#### BREAST
-file <- "data-raw/Breast_GSE70947.csv"
-breast <- read_csv(file)
+#### leuk
+file <- "data-raw/Leukemia_GSE28497.csv"
+leuk <- read_csv(file)
 
-pca <- breast %>%
+pca <- leuk %>%
   select(-samples, -type) %>%
   prcomp(scale. = TRUE)
-dat <- data.frame(pca$x, type = breast$type)
+dat <- data.frame(pca$x, type = leuk$type)
 ggplot(dat, aes(x = PC1, y = PC2, colour = type)) +
   geom_point()
 
@@ -196,24 +196,24 @@ dat %>%
 # dat2 %>% ggplot(aes(x = X1, y = X2, colour = type)) +
 #   geom_point()
 
-# w/o training and testing
-lda <- breast  %>% 
-  select(-samples, -type) %>% 
-  MASS::lda(grouping = breast$type)
+# # w/o training and testing
+# lda <- leuk  %>% 
+#   select(-samples, -type) %>% 
+#   MASS::lda(grouping = leuk$type)
+# 
+# plda <- leuk %>% 
+#   select(-samples, -type) %>%
+#   predict(object = lda)
+# # Examining the confusion matrix:
+# confusionMatrix(plda$class, factor(leuk$type))
 
-plda <- breast %>% 
-  select(-samples, -type) %>%
-  predict(object = lda)
-# Examining the confusion matrix:
-confusionMatrix(plda$class, factor(breast$type))
 
 
-
-ids <- createDataPartition(y = breast$type,
+ids <- createDataPartition(y = leuk$type,
                            p = 0.75,
                            list = FALSE)
-train <- breast %>% slice(ids)
-test <- breast %>% slice(-ids)
+train <- leuk %>% slice(ids)
+test <- leuk %>% slice(-ids)
 
 lda <- train %>% 
   select(-samples, -type) %>% 
@@ -236,10 +236,10 @@ confusionMatrix(plda_test$class, factor(test$type))
 
 #  Extract the scores from the training set with the cell names:
 lda_labelled_train <- data.frame(plda_train$x,
-                                 cell = train$cell)
+                                 type = train$type)
 # Extract the scores from the training set with the cell names:
 lda_labelled_test <- data.frame(plda_test$x,
-                                cell = test$cell)
+                                type = test$type)
 
 
 # Create a scatter plot for the training data:
@@ -249,20 +249,20 @@ lda_labelled_train %>%
 
 # Select the first 5 LDs and pipe in to ggpairs():
 lda_labelled_train %>% 
-  select(LD1:LD5, cell) %>% 
-  ggpairs(aes(color = cell))
+  select(LD1:LD5, type) %>% 
+  ggpairs(aes(color = type))
 
 
 # Now consider the test set.
 # Create a scatter plot for the test data:
 lda_labelled_test %>% 
-  ggplot(aes(x = LD1, y = LD2, color = cell)) +
+  ggplot(aes(x = LD1, y = LD2, color = type)) +
   geom_point()
 
 # Select the first 5 LDs and pipe in to ggpairs():
 lda_labelled_test %>% 
-  select(LD1:LD5, cell) %>% 
-  ggpairs(aes(color = cell))
+  select(LD1:LD5, type) %>% 
+  ggpairs(aes(color = type))
 ##############################
 ## PCA LDA demo
 n <- 50

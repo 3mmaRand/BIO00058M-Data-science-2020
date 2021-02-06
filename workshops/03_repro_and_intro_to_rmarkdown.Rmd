@@ -120,7 +120,7 @@ Turn your work on the Case study of the proteomic data from five immortalised me
 
 # The Rmd file
 
-[Rmd file](03_repro_and_intro_to_rmarkdown.html)
+[Rmd file](03_repro_and_intro_to_rmarkdown.Rmd)
 
 ![](../pics/58Mend.png)
 
