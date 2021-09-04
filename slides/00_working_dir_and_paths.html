@@ -4,6 +4,7 @@
     <title>Working directories, relative paths and absolute paths.</title>
     <meta charset="utf-8" />
     <meta name="author" content="Emma Rand" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <script src="libs/clipboard/clipboard.min.js"></script>
     <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
@@ -14,8 +15,8 @@
     <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
     <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
     <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="..\css_files\emma.css" type="text/css" />
-    <link rel="stylesheet" href="..\css_files\emma-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="C:/Users/emmar/Documents/teaching/BIO00058M-Data-science-2020/css_files/emma.css" type="text/css" />
+    <link rel="stylesheet" href="C:/Users/emmar/Documents/teaching/BIO00058M-Data-science-2020/css_files/emma-fonts.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -71,9 +72,9 @@ class: inverse
 ---
 # What is a directory?
 
-Directory is the old word for what many now call a folder 📁.
+Directory is a folder 📁.
 
-It is commonly used in scientific computing. Commands that act on directories in most programming languages and environments reflect this.
+Directory rather than folder is used commonly in scientific computing. Commands that act on directories reflect this.
 
 For example, all of these mean "tell me my working directory":
 
@@ -84,9 +85,20 @@ For example, all of these mean "tell me my working directory":
 ---
 # What is a working directory?
 
-The working directory is the default location a program is using. It is where the program will read and write files by default. You have only one working directory at a time.
+The working directory is the default location a program is using. 
+
+
+It is where the program will read file from, or write files to, by default. 
+
+
+You have only one working directory at a time.
 
 The terms 'working directory', 'current working directory' and 'current directory' all mean the same thing.
+
+---
+# What is YOUR working directory?
+
+You can find out what RStudio is using for your working directory at any time.
 
 🎬 Find your current working directory with:
 .scroll-output-width[
@@ -96,9 +108,11 @@ getwd()
 ```
 
 ```
-## [1] "C:/Users/er13/Desktop/BIO00058M-Data-science-2020/slides"
+## [1] "C:/Users/emmar/Documents/teaching/BIO00058M-Data-science-2020"
 ```
 ]
+
+You are on a different computer, so your working directory differs from mine.
 
 ---
 # What is a working directory?
@@ -117,6 +131,10 @@ If you want to change your working directory as you are working then use `setwd(
 setwd("C:/Users/er13/Desktop/gist-lm/")
 ```
 ]
+
+**📢 But, you should almost never do this ❗**
+
+
 ---
 # What is a working directory?
 
@@ -125,8 +143,13 @@ Your working directory *can* be the same as the location of the script file you 
 ... but does not have to be.
 
 
+
 --
-When using RStudio projects the working directory is the project directory and you will rarely, if ever, use `setwd()`.
+When using RStudio Projects the working directory is the project directory. You do not need to want to use `setwd()`.
+
+You should make a habit of using RStudio Projects.
+
+**📢 Don't use `setwd()` ❗**
 
 
 ---
@@ -165,7 +188,7 @@ For example, `C:\` or `M:\` on windows or `/` on a Mac which is displayed as Mac
 
 The absolute path for a file, `pigeon.txt` could be:  
 
-* windows: `C:/Users/er13/Desktop/pigeons/data-raw/pigeon.txt`  &lt;sup&gt;1&lt;/sup&gt;
+* windows: .font70[ `C:/Users/er13/Desktop/pigeons/data-raw/pigeon.txt`]  &lt;sup&gt;1&lt;/sup&gt;
 
 .footnote[
 .font60[
@@ -174,33 +197,33 @@ The absolute path for a file, `pigeon.txt` could be:
 ]
 --
 
-* Mac/unix systems: `/Users/er13/Desktop/pigeons/data-raw/pigeon.txt`  
+* Mac/unix systems: .font70[ `/Users/er13/Desktop/pigeons/data-raw/pigeon.txt`]
 
 --
 
-* web: `http://www-users.york.ac.uk/~er13/58M_BDS_2019/data/pigeon.txt`  
+* web: .font70[ `https://3mmarand.github.io/BIO00017C-Data-Analysis-in-R-2020/data/pigeon.txt` ] 
 
 ---
 # Relative paths
 
-A relative path gives the location of a filesystem object *relative* to the working directory, (i.e., that returned by `getwd()`).
+A relative path gives the location of a filesystem object *relative* to the working directory, (i.e., the directory returned by `getwd()`).
 
-When `pigeon.txt` is in the working directory the relative path is just the file name:  `pigeon.txt`  
+When `pigeon.txt` is in the working directory the relative path is:  `pigeon.txt`  
 
 --
 
-If there is a folder in the working directory called `data-raw` and `pigeon.txt` is in there then the relative path is `data-raw/pigeon.txt`  
+When `pigeon.txt` is in a folder called `data-raw` which is in the working directory the relative path is: `data-raw/pigeon.txt`  
 
 ---
 # Paths: moving up the hierarchy
 
 `../` allows you to look in the directory above the working directory
 
-When `pigeon.txt` is in folder above the working the relative path is `../pigeon.txt`  
+When `pigeon.txt` is in folder above the working the relative path is: `../pigeon.txt`  
 
 --
 
-And if it is in a folder called `data-raw` which is in the directory above the working directory then the relative path is `../data-raw/pigeon.txt`  
+And if `pigeon.txt` is in a folder called `data-raw` which is in the directory above the working directory then the relative path is `../data-raw/pigeon.txt`  
 
 ---
 # What's in my directory?
@@ -209,21 +232,21 @@ You can list the contents of a directory using the `dir()` command
 
 * `dir()` list the contents of the working directory
 * `dir("..")` list the contents of the directory above the working directory
-* `dir(../..)` list the contents of the directory two directories above the working directory
-* `dir("data-raw")` list the contents of a folder call data-raw which is in the working directory.
+* `dir("../..")` list the contents of the directory two directories above the working directory
+* `dir("data-raw")` list the contents of a folder call `data-raw` which is in the working directory.
 
 ---
 # Relative or absolute
 
-Most of the time you should use relative paths because that makes your work portable.
+📢 Most of the time you should use relative paths because that makes your work portable.
 
 --
 
-You only need to use absolute paths when you are referring to filesystem outside the one you are using.
+You only need to use absolute paths when you are referring to files on other filesystems (e.g., the web)
 
 --
 
-58M students will learn about the `here` package &lt;a name=cite-R-here&gt;&lt;/a&gt;([Müller, 2017](#bib-R-here)) to construct file paths relative to your RStudio project.
+58M students will learn about the `here` package &lt;a name=cite-here&gt;&lt;/a&gt;([Müller, 2020b](#bib-here)) to construct file paths relative to your RStudio Project.
 
 
 ---
@@ -250,48 +273,51 @@ class: inverse
    |__pigeons.Rproj
 ```
 ---
-# Example
-
-🎬 Open the two script files check you can alter the paths for file import and export commands if you set your working directory to
-   * `pigeons`
-   * `scripts`
-   * the directory above `pigeons` on your set up
-   * the directory two directories above `pigeons` on your set up
-
----
 
 .font150[
-🎂 Congratulations! Keep practising! 🎉
+🎈 Congratulations! Keep practising! 🎉
 ]
 
-More if you need it: [What do we mean by paths?](https://youtu.be/oZblx36rqq0) 
 
 
 ---
 # References
+.font60[
 .footnote[
-Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
+Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2021](#bib-xaringan)),  xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra)) and &lt;a name=cite-xaringanthemer&gt;&lt;/a&gt;([Aden-Buie, 2021](#bib-xaringanthemer))
 
 ]
+
 &lt;a name=bib-xaringanExtra&gt;&lt;/a&gt;[Aden-Buie, G.](#cite-xaringanExtra)
 (2020). _xaringanExtra: Extras And Extensions for Xaringan Slides_. R
 package version 0.2.3.9000. URL:
 [https://github.com/gadenbuie/xaringanExtra](https://github.com/gadenbuie/xaringanExtra).
 
-&lt;a name=bib-R-here&gt;&lt;/a&gt;[Müller, K.](#cite-R-here) (2017). _here: A
-Simpler Way to Find Your Files_. R package version 0.1. URL:
+&lt;a name=bib-xaringanthemer&gt;&lt;/a&gt;[Aden-Buie, G.](#cite-xaringanthemer)
+(2021). _xaringanthemer: Custom 'xaringan' CSS Themes_. R package
+version 0.4.0. URL:
+[https://CRAN.R-project.org/package=xaringanthemer](https://CRAN.R-project.org/package=xaringanthemer).
+
+&lt;a name=bib-here&gt;&lt;/a&gt;[Müller, K.](#cite-here) (2020b). _here: A Simpler
+Way to Find Your Files_. R package version 1.0.1. URL:
 [https://CRAN.R-project.org/package=here](https://CRAN.R-project.org/package=here).
 
-&lt;a name=bib-xaringan&gt;&lt;/a&gt;[Xie, Y.](#cite-xaringan) (2019). _xaringan:
-Presentation Ninja_. R package version 0.12. URL:
+&lt;a name=bib-xaringan&gt;&lt;/a&gt;[Xie, Y.](#cite-xaringan) (2021). _xaringan:
+Presentation Ninja_. R package version 0.22. URL:
 [https://CRAN.R-project.org/package=xaringan](https://CRAN.R-project.org/package=xaringan).
 
-
+]
 ---
 
-## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
 &lt;br&gt;
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
