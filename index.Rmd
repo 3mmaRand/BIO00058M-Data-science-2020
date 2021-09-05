@@ -32,9 +32,10 @@ xaringanExtra::style_share_again(
 **Preparation**  
 [Working directories, relative paths and absolute paths](slides/00_working_dir_and_paths.html)  
 [Introduction to the module](slides/00_intro_to_module.html)  
-[Introduction to git and GitHub](slides/00_intro_to_git_and_github.html)  
 
-**Topic 1 Project organisation. Tools for version control and collaborating**  
+*Optional* [Introduction to git and GitHub](slides/00_intro_to_git_and_github.html)  
+
+**Topic 1 Project organisation.**  
 [Independent Study](slides/01_project_organisation.html)  
 [Workshop](workshops/01_project_organisation.html)  
 
