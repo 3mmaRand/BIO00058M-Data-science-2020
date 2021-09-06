@@ -1,0 +1,6 @@
+@import "./googleFonts.css";
+
+/* gulp-google-fonts does not properly handle variable fonts
+Files (woff|woff2|css) are from the Inter github:
+https://github.com/rsms/inter/releases/tag/v3.15 */
+@import "./inter.css";

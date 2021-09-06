@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introduction to the module.</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emma Rand" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="C:/Users/er13/Desktop/BIO00058M/BIO00058M-Data-science-2020/css_files/emma.css" type="text/css" />
+    <link rel="stylesheet" href="C:/Users/er13/Desktop/BIO00058M/BIO00058M-Data-science-2020/css_files/emma-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction to the module.
+## Data Science option of BIO00058M Data Analysis.
+### Emma Rand
+### University of York, UK
+
+---
+
+
+
+<style>.shareagain-bar {
+--shareagain-foreground: rgb(255, 255, 255);
+--shareagain-background: rgba(0, 0, 0, 0.5);
+}</style>
+
+
+
+
+
+
+
+
+&lt;style&gt;
+div.blue { background-color:#b0cdef; border-radius: 5px; padding: 20px;}
+div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
+&lt;/style&gt;
+
+# Overview
+
+* Aims and learning objectives of 58M
+* Pre-module survey results!
+* What is Data Science?
+  * definition and process
+  * reproducibility
+  * a rationale for scripting
+* Module overview
+  * topic list and rationale
+  * approach and assessment 
+  * relationship between topics and assessment
+
+---
+class: inverse
+# Aims &amp; Learning Outcomes
+
+---
+# Aims &amp; Learning Outcomes
+
+The aim of the 58M module is to enable you to to develop skills in some specific types of ‘data analysis’ by providing supported practice in workshops and opportunities to apply them independently in ‘projects’.
+
+--
+
+There three options: Data Science, Sequence Analysis, Using 3D structures of macromolecules
+
+--
+
+At the end of this module the successful student will be able to:
+1. Demonstrate the acquisition of skills in experimental design and data analysis, related to the option chosen within the module.
+2. Apply the skills learned to address novel bioscience problems.
+
+---
+# Learning Outcomes of Data Science
+
+For Data Science, the first objective means:
+
+**Produce a reproducible data analysis and report. **
+
+The analysis can emphasise data import, processing, statistical analysis, visualisation or any combination of these.
+
+
+---
+class: inverse
+# Survey Results
+
+---
+# Survey results 1/3
+
+
+
+The distribution of ratings you (n = 39) gave in the survey were:
+
+&lt;img src="Introduction-to-the-module_files/figure-html/unnamed-chunk-2-1.png" width="576" /&gt;
+
+---
+# Survey results 2/3
+
+&lt;img src="Introduction-to-the-module_files/figure-html/unnamed-chunk-3-1.png" width="936" /&gt;
+
+---
+# Survey results 3/3
+
+
+&lt;img src="Introduction-to-the-module_files/figure-html/unnamed-chunk-4-1.png" width="936" /&gt;
+
+---
+class: inverse
+# What is Data Science?
+
+---
+# What is Data Science?
+
+The development, and application, of reproducible workflows for the simulation, collection, organisation, processing, analysis and presentation of data in order to extract knowledge or insight.
+
+Data science underlies open and reproducible research.
+
+--
+
+How much of data science is using statistics?
+
+Less than you probably think
+
+~80% of your time working and reporting on data reproducibly outside of statistical analysis.
+
+
+---
+# Reproducibility is key!
+
+One definition
+*"... obtaining consistent results using the same input data; computational steps, methods, and code; and conditions of analysis. This definition is synonymous with “computational reproducibility"*. (National Academies of Sciences, Engineering Medicine, et al., 2019)
+
+ Also see 
+
+-  The Turing Way "Definitions for Reproducibility" (Arnold Bowler, et al., 2019)
+-  National Science Foundation (Bollen Cacioppo, et al., 2015)
+
+---
+# Reproducibility is key!
+
+&lt;img src="C:/Users/er13/Desktop/BIO00058M/BIO00058M-Data-science-2020/pics/reproducible-matrix.jpg" width="500px" /&gt;
+
+.font60[
+How the Turing Way (Arnold Bowler, et al., 2019) defines reproducible research
+]
+
+
+---
+# Who cares?
+
+* Many high profile cases of work which did not reproduce e.g. Anil Potti unravelled by Baggerly and Coombes (2009) 
+
+* Five selfish reasons to work reproducibly (Markowetz, 2015). Alternatively, see the [talk](https://youtu.be/yVT07Sukv9Q)
+
+
+* **Will** become standard in Science and publishing e.g OECD Global Science Forum Building digital workforce capacity and skills for data-intensive science (OECD Global Science Forum, 2020)
+
+---
+# Open Science
+
+&lt;img src="../pics/Foster.png" width="569" /&gt;
+.font60[
+By Petr Knoth and Nancy Pontika - https://en.wikipedia.org/wiki/Open_science#/media/File:Os_taxonomy.png, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=61125075
+]
+
+FAIR - Findable, Accessible, Interoperable, Reusable (Wilkinson Dumontier, et al., 2016)
+
+
+---
+class: inverse
+
+# Rationale for scripting analysis
+
+
+---
+# Rationale for scripting analysis
+Science is the generation of ideas, designing work to test them and reporting the results.
+
+&lt;img src="../pics/rationale1.png" width="600px" /&gt;
+
+.pull-left[
+Generating the results
+]
+
+.pull-right[
+Analysing and reporting them
+]
+---
+
+# Rationale for scripting analysis
+We ensure reproducibility of laboratory and field work by planning and recording in lab books and using standard protocols. 
+
+
+&lt;img src="../pics/rationale2.png" width="600px" /&gt;
+
+Even so replicating results can be hard.
+---
+
+# Rationale for scripting analysis
+We ensure reproducibility of laboratory and field work by planning and recording in lab books and using standard protocols. 
+
+&lt;img src="../pics/rationale3.png" width="600px" /&gt;
+
+
+Workflows for computational projects and the data analysis and reporting of other work can, and should, be 100% reproducible! Scripting is the way to achieve this.
+
+---
+
+# Rationale for scripting analysis
+
+That reproducibility applies to all aspects of the data workflow.
+
+&lt;img src="../pics/rationale5.png" width="600px" /&gt;
+
+--
+
+From importing or collecting the data, processing it for analysis, building statistical models and communicating the methods and results.
+
+--
+
+These are usually iterative and that process of iteration (the development of the analysis) should also be captured.
+
+---
+class: inverse
+
+# Why R?
+
+
+---
+# Why R?
+
+Open source and free
+
+--
+ .......But so is Python
+  
+--
+
+R has reputation for catering to users who do not see themselves as programmers, and  allowing them to slide gradually into programming.
+
+
+&lt;img src="../pics/biologist1.png" width="600px" /&gt;
+
+
+--
+
+Designed for data analysis and graphics - which means it is often easier to achieve those tasks in R than a general purpose programming language.
+
+---
+
+# Why R?
+
+The R community is one of R's greatest assets, being vibrant, inclusive and supportive of users at all levels.
+
+.pull-left[
+* [#rstats](https://twitter.com/hashtag/rstats?lang=en) on twitter is very active
+* [RForwards](https://forwards.github.io/about/) the widening participation task force &lt;sup&gt;1&lt;/sup&gt;
+* [RLadies](https://rladies.org/) gender diversity promotion 
+* [Hey! You there! You are welcome here](https://ropensci.org/blog/2017/06/23/community/)  
+
+.font70[
+.footnote[
+1. I am member of the Core Team for Forwards
+]
+]
+
+]
+
+.pull-right[
+&lt;img src="../pics/welcome_to_rstats_twitter.png" width="400px" /&gt;
+
+.font70[
+.footnote[
+Artwork by @allison_horst 
+]
+]
+
+]
+
+
+---
+# Why R?
+
+R Markdown is sometimes called R's "killer feature". Turns analyses into fully reproducible high quality reports, presentations and dashboards.
+
+Can run Python and other languages in R Markdown documents
+
+&lt;img src="../pics/rmarkdown_wizards.png" width="500px" /&gt;
+
+.font70[
+.footnote[
+Artwork by @allison_horst 
+]
+]
+
+---
+# Module overview
+
+Chosen topics are: 
+
+-  foundational
+-  follow stages 1 and 2 well
+-  are widely applicable (in this module and beyond) 
+-  transferable conceptually
+
+We cover:
+
+-  Using RStudio projects and an emphasis on good practice for code and project documentation and organisation
+-  More advanced data tidying
+-  An emphasis on reproducibility and reproducible reporting using R Markdown.
+-  Some commonly applied machine learning methods
+
+---
+# Week plan 
+.font90[
+-  *Week 2: Preparation 1 - Update your R and RStudio, refresh your knowledge*
+-  *Week 3: Preparation 2 - Introduction to the module, refresh your knowledge*
+-  Week 4: Topic 1 - Project organisation.
+-  Week 5: Topic 2 - Tidying data and the tidyverse
+-  Week 6: Topic 3 - Reproducibility and an introduction to R Markdown
+-  Week 7: Topic 4 - Advanced R Markdown
+-  Week 8: Topic 5 - An introduction to Machine Learning: Overview and Unsupervised methods
+-  Week 9: Topic 6 - An introduction to Machine Learning: Supervised Methods
+-  Week 10: Project work
+-  Spring Weeks 1 - 5: Project work. Drop-ins TBC
+
+]
+
+---
+# Approach and Assessment
+
+You will
+-  learn essential skills for reproducible and open research but otherwise......
+-  work on problems you are interested in and/or that are related to project or module work
+
+Thus there is choice and flexibility in the assessment. Two highly scoring submissions could look completely different.
+
+---
+# The options
+
+1. Reproducible analysis related to your project/module work
+   * Analysis of existing or simulated data including images
+   * Conversion of existing lab tools (eg excel files) to reproducible pipelines
+   * Analysis of literature (text analysis)
+2. Reproducible analysis of previous work undertaken unreproducibly
+   * 58I Bioscience Techniques - almost all of the analyses undertaken (use of excel, Summit, ImageJ etc) can be coded reproducibly.
+3. Reproducible analysis of a provided project - because not everyone enjoys choosing their own
+
+---
+# Topics and assessment
+.font70[
+* &lt;div class = "blue"&gt;Week 4: Topic 1 - Project organisation.&lt;/div&gt;
+* Week 5: Topic 2 - Tidying data and the tidyverse.
+* &lt;div class = "blue"&gt;Week 6: Topic 3 - Reproducibility and an introduction to R Markdown.&lt;/div&gt;
+* &lt;div class = "blue"&gt;Week 7: Topic 4 - Advanced R Markdown.&lt;/div&gt;
+* Week 8: Topic 5 - An introduction to Machine Learning: Overview and Unsupervised methods.
+* Week 9: Topic 6 - An introduction to Machine Learning: Supervised Methods.
+]
+In your assessment you **must** use RStudio projects and rmarkdown (any, incl. Shiny), organise your analyses for reproducibility and follow good practice.
+
+--
+
+The extent of data tidying and processing and machine learning methods will vary depending on your project. 
+
+---
+# Assessment
+
+You can ask any questions about taught materials or the assessment in the workshop or [here](https://docs.google.com/document/d/1MgGCLlStDq_MSNmroyVkbrJCMjs9wuQViPQ2z8U5VXA/edit#heading=h.sicwyys1xx47) 
+
+&lt;div class="tenor-gif-embed" data-postid="11365139" data-share-method="host" data-width="50%" data-aspect-ratio="1.4310344827586208"&gt;&lt;a href="https://tenor.com/view/hadley-wickham-rstats-typing-rcode-gif-11365139"&gt;Hadley Wickham GIF&lt;/a&gt; from &lt;a href="https://tenor.com/search/hadley-gifs"&gt;Hadley GIFs&lt;/a&gt;&lt;/div&gt;&lt;script type="text/javascript" async src="https://tenor.com/embed.js"&gt;&lt;/script&gt;
+
+---
+# Organisations
+
+* [The Alan Turing Institute](https://www.turing.ac.uk/)  
+* [Software Sustainability Institute](https://www.software.ac.uk/)  
+* [UK Reproducibility Network](https://www.ukrn.org/)  
+* [FOSTER Plus](https://www.fosteropenscience.eu/)  
+* [Center for Open Science](https://www.cos.io/)  
+
+---
+# References
+.font50[
+.footnote[
+Slides made with with xaringan (Xie, 2021),  xaringanExtra (Aden-Buie, 2020) and xaringanthemer (Aden-Buie, 2021)
+
+]
+
+Aden-Buie, G. (2020). _xaringanExtra: Extras And Extensions for
+Xaringan Slides_. R package version 0.2.3.9000. URL:
+[https://github.com/gadenbuie/xaringanExtra](https://github.com/gadenbuie/xaringanExtra).
+
+Aden-Buie, G. (2021). _xaringanthemer: Custom 'xaringan' CSS Themes_. R
+package version 0.4.0. URL:
+[https://CRAN.R-project.org/package=xaringanthemer](https://CRAN.R-project.org/package=xaringanthemer).
+
+Arnold, B., L. Bowler, et al. (2019). _The Turing Way: A Handbook for
+Reproducible Data Science_. This work was supported by The UKRI
+Strategic Priorities Fund under the EPSRC Grant EP/T001569/1,
+particularly the "Tools, Practices and Systems" theme within that
+grant, and by The Alan Turing Institute under the EPSRC grant
+EP/N510129/1.. Zenodo. DOI:
+[10.5281/zenodo.3233986](https://doi.org/10.5281%2Fzenodo.3233986).
+URL:
+[https://doi.org/10.5281/zenodo.3233986](https://doi.org/10.5281/zenodo.3233986).
+
+Baggerly, K. A. and K. R. Coombes (2009). "DERIVING CHEMOSENSITIVITY
+FROM CELL LINES: FORENSIC BIOINFORMATICS AND REPRODUCIBLE RESEARCH IN
+HIGH-THROUGHPUT BIOLOGY". In: _Ann. Appl. Stat._ 3.4, pp. 1309-1334.
+
+Bollen, K., J. T. Cacioppo, et al. (2015). _Social, Behavioral, and
+Economic Sciences Perspectives on Robust and Reliable Science_.
+National Science Foundation.
+
+Markowetz, F. (2015). "Five selfish reasons to work reproducibly". En.
+In: _Genome Biol._ 16, p. 274.
+
+National Academies of Sciences, Engineering, Medicine, et al. (2019).
+_Understanding Reproducibility and Replicability_. National Academies
+Press (US).
+
+OECD Global Science Forum (2020). _Building digital workforce capacity
+and skills for data-intensive science_. OECD.
+
+Wilkinson, M. D., M. Dumontier, et al. (2016). "The FAIR Guiding
+Principles for scientific data management and stewardship". En. In:
+_Sci Data_ 3, p. 160018.
+
+Xie, Y. (2021). _xaringan: Presentation Ninja_. R package version 0.22.
+URL:
+[https://CRAN.R-project.org/package=xaringan](https://CRAN.R-project.org/package=xaringan).
+
+]
+---
+
+Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
+&lt;br&gt;
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

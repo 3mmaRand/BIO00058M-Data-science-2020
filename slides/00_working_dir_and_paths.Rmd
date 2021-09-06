@@ -44,7 +44,7 @@ BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
            cite.style = "authoryear",
            style = "markdown",
-           hyperlink = TRUE,
+           hyperlink = FALSE,
            dashed = FALSE,
            longnamesfirst = FALSE,
            max.names = 2)
@@ -291,7 +291,7 @@ class: inverse
 # References
 .font60[
 .footnote[
-Slides made with with xaringan `r Cite(myBib, "xaringan")`,  xaringanExtra `r Cite(myBib, "xaringanExtra")` and `r Cite(myBib, "xaringanthemer")`
+Slides made with with xaringan `r Cite(myBib, "xaringan")`,  xaringanExtra `r Cite(myBib, "xaringanExtra")` and xaringanthemer `r Cite(myBib, "xaringanthemer")`
 
 ]
 
