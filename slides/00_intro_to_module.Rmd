@@ -274,8 +274,7 @@ One definition
 # Reproducibility is key!
 
 ```{r turing-reprod-matrix, echo = FALSE, out.width="500px"}
-img <- here::here("pics", "reproducible-matrix.jpg")
-knitr::include_graphics(img)
+knitr::include_graphics("../pics/reproducible-matrix.jpg")
 ```
 
 .font60[
