@@ -61,7 +61,7 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 # Outline
 
-This slide show introduces a workflow for project organisation using RStudio Projects.
+This slide show introduces a workflow for project organisation using a version controlled RStudio Project with a remote repo on GitHub.
 
 It covers structured directories, naming conventions, READMEs and Licenses.
 
@@ -124,16 +124,15 @@ For example, if you create an RStudio Project called `stem_cell_rna` then your f
 ```
 -- stem_cell_rna
    |__stem_cell_rna.Rproj
-   |__raw_ data/
+   |__raw_ data
       |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
    |__README.md
-   |__LICENSE
-   |__R/
+   |__analyses
       |__01_data_processing.R
       |__02_exploratory.R
-      |__functions/
-         |__01_file_import
-         |__02_normalise.R
  
 ```
 ]
@@ -146,16 +145,15 @@ For example, if you create an RStudio Project called `stem_cell_rna` then your f
 ```
 *-- stem_cell_rna
    |__stem_cell_rna.Rproj
-   |__raw_ data/
+   |__raw_ data
       |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
    |__README.md
-   |__LICENSE
-   |__R/
+   |__analyses
       |__01_data_processing.R
       |__02_exploratory.R
-      |__functions/
-         |__01_file_import
-         |__02_normalise.R
  
 ```
 ]
@@ -169,16 +167,15 @@ the Project directory
 ```
 -- stem_cell_rna
 *  |__stem_cell_rna.Rproj
-   |__raw_ data/
+   |__raw_ data
       |__2019-03-21_donor_1.csv
+   |__functions
+      |__01_file_import
+      |__02_normalise.R
    |__README.md
-   |__LICENSE
-   |__R/
+   |__analyses
       |__01_data_processing.R
       |__02_exploratory.R
-      |__functions/
-         |__01_file_import
-         |__02_normalise.R
  
 ```
 ]
@@ -221,16 +218,16 @@ class: inverse
 ---
 # Directory structure
 
-You are aiming for structured , systematic and repeatable. For example, the Project directory typically contains:
+You are aiming for structured , systematic and repeatable. For example, the Project directory might contain:
 
 * .RProj file  
 * README - tell people what the project is and how to use it  
-* LICENSE - tell people what they are allowed to do with your project 
+* License - tell people what they are allowed to do with your project 
 * Directories
   * data-raw/  
   * images/  
-  * R/
-  * reports/
+  * scripts/  
+  * functions/  
   * figures/  
 
 ---
@@ -248,7 +245,7 @@ READMEs are a form of documentation which have been widely used for a long time.
 For *this* module assessment you need only have:
 
 * Title 
-* Description, 50 - 100 words on what the project is or does
+* Description, 50 words or so on what the project is
 * Technical Description of the project
   * What software and packages are needed including versions
   * Any instructions needed to run the analysis/use the software
@@ -326,46 +323,138 @@ I suggest
 ---
 class: inverse
 
-# Creating an RStudio Project
+# Version controlled RStudio Project
 
 ---
-# Creating an RStudio Project
+# Version controlled RStudio Project
 
-This workflow uses the **`usethis`** package and is demonstrated in "Project Organisation - demo"
+When you are using an version controlled RStudio Project you will have a Git tab
+
+```{r echo = FALSE, out.width="70%", fig.cap="the git tab in RStudio"}
+knitr::include_graphics("../pics/git_tab.png")
+```
+
+The process is stage, commit, push or pull, stage, commit, push
 
 ---
-# The workflow
+# Version controlled RStudio Project
 
-`r emo::ji("clapper")` Go to RStudio and check your working directory:
-```{r eval=FALSE}
-getwd()
+```{r echo = FALSE, out.width="70%", fig.cap="the review changes window in RStudio showing files that have been added or deleted since the last commit"}
+knitr::include_graphics("../pics/stage.png")
 ```
 
-`"C:/Users/er13/Desktop"`
+Top left is the list of files with changes since the last commit. 4 files have been added [A] and three deleted [D]
+
+Bottom pane shows the 'diffs' - the differences between the current file and the file at the last commit. "slides/01_project_organisation.Rmd" is entirely new so it is all green
 
 
+---
+# Version controlled RStudio Project
 
-`r emo::ji("clapper")` Create a project with:
-```{r eval=FALSE}
-usethis::create_project("bananas")
+```{r echo = FALSE, out.width="70%", fig.cap="the review changes window in RStudio showing files that have been modified since the last commit"}
+knitr::include_graphics("../pics/stage2.png")
 ```
 
-I wanted the project directory to be in `"C:/Users/er13/Desktop"`.
+In this example, 2 files have been modified [M] since the last commit.
 
-If you want the project directory elsewhere, you will need to give the path relative to your working directory, e.g.
+The "diffs" shows text that has been added (green) or deleted (red).
 
-```{r eval=FALSE}
-usethis::create_project("../Documents/bananas")
-```
+Each commit is accompanied by a Commit message which concisely summarises the changes you have made.
+ 
+
+---
+class: inverse
+
+# A workflow
 
 ---
 # A workflow
 
+In this module, we are covering a specific workflow which uses GitHub as remote a remote server.
+
+--
+
+It is the [New project, GitHub first](https://happygitwithr.com/new-github-first.html) workflow from Happy git and GitHub for the useR `r Cite(myBib, "Bryan_Happy_Git")`
+
+--
+
+This workflow is demonstrated in "Project Organisation - demo"
 
 ---
-# RStudio projects 
+# A workflow
 
-When a new project is created RStudio with **`usethis`**:
+The first step is to introduce yourself to git. You only have to do this once.
+
+Start RStudio and with your own name and email do:
+```{r eval=FALSE}
+usethis::use_git_config(user.name = "Emma Rand",
+                        user.email = "emma.rand@york.ac.uk")
+```
+
+Name: It can be, but does not have to be, your GitHub username. It will be used to label your commits so make it recognisable for future you and potential collaborators.
+
+Email: has to be the one used for your GitHub account.
+ 
+ 
+---
+# A workflow
+
+The second step is to do the [New project, GitHub first](https://happygitwithr.com/new-github-first.html) workflow. You have to do this each time you start a new version controlled RStudio project with a remote repo.
+
+* Make a new repo on GitHub
+  * initialise with a README  and license
+  * allow public
+* Copy the HTTPS to the clipboard
+
+---
+# A workflow
+
+Go to RStudio
+
+* File | New Project choose version control
+* Choose where to create the Project directory
+* Paste the URL that you copied to the clipboard
+* Create Project
+
+RStudio will restart and your working directory will be the Project directory
+
+---
+# A workflow
+You are now set up.
+
+* Do some work
+* Stage and commit changes including a commit message
+* Push to GitHub
+
+Better
+* Pull
+* Do some work
+* Stage and commit changes including a commit message
+* Pull
+* Push to GitHub
+
+---
+# What now?
+
+You may be able to create a version controlled RStudio Project with a remote on GitHub from these slides alone but watching the demo is recommended.
+
+--
+
+Do I have to use version control? Not for the assessment, no. It is included to help you work with others in an online workshop and because it is a highly employable skill with a steep learning curve. Starting that process with a limited workflow will help.
+
+If your level of anxiety over git/GitHub is outweighing any possible benefits, **don't use it**.
+
+---
+# RStudio projects without version control
+
+An [RStudio project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) is associated with a directory. 
+
+You create a new project with File | New Project...
+
+---
+# RStudio projects without git
+
+When a new project is created RStudio:
 
 1. Creates a project file (with an .Rproj extension) within the project directory.  
 2. Creates a hidden directory (named .Rproj.user) where project-specific temporary files are stored.  
