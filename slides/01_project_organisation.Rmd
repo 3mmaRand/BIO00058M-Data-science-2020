@@ -61,7 +61,7 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 # Outline
 
-This slide show introduces a workflow for project organisation using RStudio Projects.
+This slide show describes some good practice for project organisation and introduces a workflow for project organisation using RStudio Projects.
 
 It covers structured directories, naming conventions, READMEs and Licenses.
 
@@ -73,21 +73,23 @@ class: inverse
 ---
 # What is a project?
 
-A project is a discrete piece of work which has a number of files associated with it such as the data and scripts for an analysis and the production reports.
+A project is a discrete piece of work which has a number of files associated with it. These might be data files, analysis scripts and outputs such as reports and figures.
 
 --
 
-One science research project might have several organisational projects associated with it. For example, projects for each of:
+One science research project might be divided into several sub-projects. For example, sub-projects for:
 
 * data files and metadata (which may be made into a package)  
 * analysis and reporting  
 * a package developed for the analysis
 * an app to allow others to explore the data
 
+Or, all files might be in a single project.
+
 ---
 # Organising a project
 
-* Use an RStudio Project or similar (many IDEs have them)  
+* Use an RStudio Project or similar (many IDEs have them) for each sub-project 
 * Structure your directories
 * Have naming conventions   
 * Document thoroughly
@@ -109,7 +111,7 @@ The name of the RStudio Project is the same as the name of the top level directo
 
 --
 
-Project is obviously a commonly used word. When I am referring to an [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) I will use the capitalised words 'RStudio Project'.
+Project is obviously a common word. When I am referring to an [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) I will use the capitalised words 'RStudio Project'.
 
 In other cases, I will use 'project'.
 
@@ -118,7 +120,8 @@ In other cases, I will use 'project'.
 ---
 # RStudio Projects
 
-For example, if you create an RStudio Project called `stem_cell_rna` then your folder structure would look something like this:
+**Example**
+If you create an RStudio Project called `stem_cell_rna` then your folder structure would look something like this:
 
 .pull-left[
 ```
@@ -343,16 +346,23 @@ getwd()
 
 `"C:/Users/er13/Desktop"`
 
+`r emo::ji("question")` Is your working directory a good place to create a Project folder?
 
+---
+# The workflow
+
+If this is a good place to create a Project directory then...
 
 `r emo::ji("clapper")` Create a project with:
 ```{r eval=FALSE}
 usethis::create_project("bananas")
 ```
 
-I wanted the project directory to be in `"C:/Users/er13/Desktop"`.
+--
 
-If you want the project directory elsewhere, you will need to give the path relative to your working directory, e.g.
+Otherwise
+
+If you want the project directory elsewhere, you will need to give the relative path, e.g.
 
 ```{r eval=FALSE}
 usethis::create_project("../Documents/bananas")
@@ -361,29 +371,114 @@ usethis::create_project("../Documents/bananas")
 ---
 # A workflow
 
+The output will look like this and a new RStudio session will start.
+
+.code70[
+```
+> usethis::create_project("bananas")
+√ Creating 'bananas/'
+√ Setting active project to 'C:/Users/er13/Desktop/bananas'
+√ Creating 'R/'
+√ Writing 'bananas.Rproj'
+√ Adding '.Rproj.user' to '.gitignore'
+√ Opening 'C:/Users/er13/Desktop/bananas/' in new RStudio session
+√ Setting active project to '<no active project>'
+```
+]
+---
+# RStudio projects 
+
+When you create a new RStudio Project with  **`usethis`**:
+
+-  A folder called `bananas/` is created
+-  RStudio starts a new session in  `bananas/`
+   i.e., your working directory is now `bananas/`
+-  A folder called `R/` is created
+-  A file called `bananas.Rproj` is created
+-  A file called `.gitignore` is created
+-  A hidden directory called `.Rproj.user` is created
+-  `.Rproj.user` is added `.gitignore`
 
 ---
 # RStudio projects 
 
-When a new project is created RStudio with **`usethis`**:
+-  the .Rproj file is what makes the directory an RStudio Project  
 
-1. Creates a project file (with an .Rproj extension) within the project directory.  
-2. Creates a hidden directory (named .Rproj.user) where project-specific temporary files are stored.  
-3. Loads the project into RStudio and display its name in the Projects toolbar (far right on the menu bar).
+--
 
-Using a Project helps you manage file paths. The working directory is the Project directory (i.e., the location of the .Rproj file).
+-  the Rproj.user directory is where project-specific temporary files are stored.  
+
+--
+
+-  the `.gitignore` is used for version controlled projects. For this module, you can ignore it.
+
+--
+
+Using an RStudio Project helps you manage file paths. The working directory is the Project directory (i.e., the location of the .Rproj file).
 
 ---
-# RStudio projects without git
+# RStudio projects 
 
-You can open a project with:
+You close an RStudio Project with ONE of:
 
-1. File | Open Project or  File | Recent Projects  
-2. Double-clicking the .Rproj file  
-3. Using the option on the far right of the tool bar  
+1. File | Close Project
+2. Using the drop-down option on the far right of the tool bar where you see the Project name  
+
+--
+
+You can open an RStudio Project with ONE of:
+
+1. File | Open Project or  File | Recent Projects    
+2. Using the drop-down option on the far right of the tool bar where you see the Project name   
+3. Double-clicking an .Rproj file from your file explorer/finder  
 
 When you open project, a new R session starts and various settings are restored to their condition when the project was closed.
 
+---
+# The workflow
+
+Once the RStudio project has been created, **`usethis`** helps you follow good practice.
+
+`r emo::ji("clapper")` Add a README with:
+```{r eval=FALSE}
+usethis::use_readme_md()
+```
+
+--
+
+This create a file called `README.md`, with a little default text, in the Project directory and opens it for editing.
+
+---
+# The workflow
+
+A license can be added in a similar way.
+
+`r emo::ji("clapper")` Add a README with:
+```{r eval=FALSE}
+usethis::use_ccby_license()
+```
+
+--
+
+This creates a file called `LICENSE.md` containing the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+---
+# Summary
+
+.font80[
+-  Using an RStudio Project makes your work more portable
+-  An RStudio Project is a directory containing a .RProj file
+-  The name of the RStudio Project equals the name of that directory
+-  It is best practice for an RStudio Project (or equivalent) to 
+   -  include a README and a LICENSE
+   -  have a systematic folder structure often including these directories  `data-raw`, `R/`
+   -  use systematic human- and machine-readable names
+-  the **`usethis`** package is one way to create and populate an RStudio Project and the workflow is:
+   -  `getwd()`
+   -  `usethis::create_project("bananas")`
+   -  `usethis::use_readme_md()`
+   -  `usethis::use_ccby_license()` (data, data analysis, tutorials etc) or `usethis::use_mit_license()` (software)
+]
 ---
 # Reading
 
