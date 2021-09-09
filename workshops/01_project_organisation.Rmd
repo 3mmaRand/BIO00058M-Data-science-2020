@@ -1,5 +1,5 @@
 ---
-title: "Topic 1: Project organisation. Tools for version control and collaborating"
+title: "Topic 1: Project organisation"
 author: "Emma Rand"
 output:
   html_document:
@@ -10,11 +10,11 @@ output:
       smooth_scroll: false
     theme: flatly
   word_document: default
-bibliography: "../refs.bib"
 ---
 
 
 ![](../pics/58M.png)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5442490.svg)](https://doi.org/10.5281/zenodo.5442490)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
@@ -22,36 +22,88 @@ knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE)
 ```
 
-# Introduction
-
-Work in pairs in BB Collaborate breakout to tackle the tasks
-
-<font size = "4">
-`r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
-`r emo::ji("speech_balloon")` Communicate what you are doing and why  
-`r emo::ji("document")` Document and share your ideas and process   
-`r  emo::ji("team")` Consider having one person code and other documenting  
-`r emo::ji("heart")` Be kind, be understanding, be flexible   
-</font>
+```{r include=FALSE}
+library(RefManageR)
+```
 
 
-# Task 1 New project, without collaboration, GitHub first
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
 
-This exercise allows you to practice a workflow for a version controlled  RStudio Project which exists on your machine and on GitHub. It is suitable when you are the only person contributing to the project.
+# Week Overview
 
-The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. It is organised in to two columns, `males` and `females` a format which is not normally ideal. Your task is to organise a version controlled analysis of these data.
+## Aim
+The aim of this week is to introduce you to RStudio Projects and good practices for organising work. 
+## Objectives
+By the end of this week the successful student should be able to:
+-  Use an RStudio project with structured directories and documentation to organise their work
+-  develop a convention for naming files and directories which is machine and human readable
 
-You need to:
+# Task 1 New RStudio Project
 
-1. Do the New project, GitHub first workflow
-   * Make a new repo on GitHub and initialise with a README and license  
-   * Clone the repo into a RStudio Project on your own machine  
+This exercise allows you go through the new RStudio Project with **`usethis`** `r Cite(myBib, "usethis")` workflow. 
 
-2. Paste the address of your GitHub repo to the chat.  
+The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. They are organised as two columns, `males` and `females`, a format which is not ideal. Your task is to organise an analysis of these data in an RStudio Project.
 
-3. Create a directory structure suitable for the analysis - you may wish to revise this later as you work.  
+1. First check your working directory with `getwd()` and determine what path you need to create the RStudio Project in a place that suits you.
 
-4. Import and reformat the data into 'tidy' form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file.  A dataframe can be written to file using, for example:
+2. Create the RStudio Project with:
+
+```{r eval=FALSE}
+usethis::create_project("chaffinches")
+```
+   
+3. Add a README with:
+
+```{r eval=FALSE}
+usethis::use_readme_md()
+```
+
+   Add some text to the README about the data and analysis. You can continue to edit this as you work.
+
+4. Add a LICENSE with:
+
+```{r eval=FALSE}
+usethis::use_ccby_license()
+```
+
+5. Add directories to structure the analysis - you may wish to revise this as you work. I suggest adding `data-raw` and `data-processed`
+
+6. Save a copy of [chaff.txt](../data-raw/chaff.txt) to `data-raw`
+
+7. Make a script called `01-import.R`. There is a **`usethis`** helper function for that purpose if you wish:
+```{r eval=FALSE}
+usethis::use_r("01-import")
+```
+
+`usethis::use_r()` helpfully adds the R extension and creates the file in the `R/` directory
+
+We will now add code to import and reformat the data as 'tidy' `r Cite(myBib, "Wickham2014-nl")`, then write the reformatted data to file. Tidy means there is one column giving the sex and another giving the mass
+
+8. Load the `tidyverse` `r Cite(myBib, "Wickham2019-ml")` and import:  
+```{r eval=FALSE}
+file <-  "../daw-processed/chaff2.txt"
+```
+
+9. Reformat as tidy: 
+```{r eval=FALSE}
+file <-  "../daw-processed/chaff2.txt"
+write.table(chaff2, 
+            file, 
+            quote = FALSE,
+            row.names = FALSE)
+```
+
+8. Import 
 ```{r eval=FALSE}
 file <-  "../daw-processed/chaff2.txt"
 write.table(chaff2, 
@@ -123,6 +175,20 @@ To collaborate on someone else's project you 'fork' their repo, clone it, and su
 # The Rmd file
 
 [Rmd file](01_project_organisation.Rmd)
+
+
+Pages made with `rmarkdown` `r Cite(myBib, c("markdown1","markdown2", "markdown3"))`, `RefManageR``r Cite(myBib, "RefManageR")` 
+
+
+# References 
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)  
+```
+
+# Please cite as:
+
+Emma Rand. (2021). Data Science strand of BIO00058M (v1.0). Zenodo. https://doi.org/10.5281/zenodo.5442490
 
 ![](../pics/58Mend.png)
 

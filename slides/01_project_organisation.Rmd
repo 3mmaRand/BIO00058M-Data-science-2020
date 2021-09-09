@@ -496,7 +496,7 @@ This creates a file called `LICENSE.md` containing the [Creative Commons Attribu
 # References
 .font50[
 .footnote[
-Slides made with with xaringan `r Cite(myBib, "xaringan")`,  xaringanExtra `r Cite(myBib, "xaringanExtra")` and xaringanthemer `r Cite(myBib, "xaringanthemer")`
+Slides made with xaringan `r Cite(myBib, "xaringan")`,  xaringanExtra `r Cite(myBib, "xaringanExtra")`, xaringanthemer `r Cite(myBib, "xaringanthemer")` and RefManageR `r Cite(myBib, "RefManageR")` 
 
 ]
 
