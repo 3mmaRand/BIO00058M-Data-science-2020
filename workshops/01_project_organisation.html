@@ -1523,97 +1523,108 @@ div.tocify {
 
 
 <p><img src="data:image/png;base64,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" /> <a href="https://doi.org/10.5281/zenodo.5442490"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgICAgd2lkdGg9IjE4NiIgaGVpZ2h0PSIyMCI+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgICAgICA8bWFzayBpZD0iYSIgd2lkdGg9IjE4NiIgaGVpZ2h0PSIyMCI+CiAgICAgICAgICAgIDxyZWN0IHdpZHRoPSIxODYiIGhlaWdodD0iMjAiIHJ4PSIzIgogICAgICAgICAgICBmaWxsPSIjZmZmIi8+CiAgICAgICAgPC9tYXNrPgogICAgICAgIDxnIG1hc2s9InVybCgjYSkiPgogICAgICAgICAgICA8cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDMxdjIwSDB6IiAvPgogICAgICAgICAgICA8cGF0aCBmaWxsPSIjMDA3ZWM2IgogICAgICAgICAgICBkPSJNMzEgMGgxNTV2MjBIMzF6IgogICAgICAgICAgICAvPgogICAgICAgICAgICA8cGF0aCBmaWxsPSJ1cmwoI2IpIiBkPSJNMCAwaDE4NnYyMEgweiIgLz4KICAgICAgICA8L2c+CiAgICAgICAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLAogICAgICAgIFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPgogICAgICAgICAgICA8dGV4dCB4PSIxNiIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiCiAgICAgICAgICAgIGZpbGwtb3BhY2l0eT0iLjMiPgogICAgICAgICAgICAgICAgRE9JCiAgICAgICAgICAgIDwvdGV4dD4KICAgICAgICAgICAgPHRleHQgeD0iMTYiIHk9IjE0Ij4KICAgICAgICAgICAgICAgIERPSQogICAgICAgICAgICA8L3RleHQ+CiAgICAgICAgICAgIDx0ZXh0IHg9IjEwOCIKICAgICAgICAgICAgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPgogICAgICAgICAgICAgICAgMTAuNTI4MS96ZW5vZG8uNTQ0MjQ5MAogICAgICAgICAgICA8L3RleHQ+CiAgICAgICAgICAgIDx0ZXh0IHg9IjEwOCIgeT0iMTQiPgogICAgICAgICAgICAgICAgMTAuNTI4MS96ZW5vZG8uNTQ0MjQ5MAogICAgICAgICAgICA8L3RleHQ+CiAgICAgICAgPC9nPgogICAgPC9zdmc+" alt="DOI" /></a></p>
-<pre class="r"><code>library(RefManageR)</code></pre>
-<div id="introduction" class="section level1">
-<h1>Introduction</h1>
-<p>blurb</p>
+<!-- note for 2022 update, switch chaffinch example to subspecies -->
+<div id="week-overview" class="section level1">
+<h1>Week Overview</h1>
+<div id="aim" class="section level2">
+<h2>Aim</h2>
+<p>The aim of this week is to introduce you to RStudio Projects and good practices for organising work. ## Objectives By the end of this week the successful student should be able to: - Use an RStudio project with structured directories and documentation to organise their work - develop a convention for naming files and directories which is machine and human readable</p>
+</div>
 </div>
 <div id="task-1-new-rstudio-project" class="section level1">
 <h1>Task 1 New RStudio Project</h1>
-<p>This exercise allows you go through the new RStudio Project with <strong><code>usethis</code></strong> (Wickham and Bryan, 2021) workflow.</p>
-<p>The data in <a href="../data-raw/chaff.txt">chaff.txt</a> are the masses of male and female chaffinches. They are organised as two columns, <code>males</code> and <code>females</code>, a format which is not ideal. Your task is to organise an analysis of these data in an RStudio Project.</p>
-<ol style="list-style-type: decimal">
-<li><p>First check your working directory with <code>getwd()</code> and determine what path you need to create the RStudio Project in a place that suits you.</p></li>
-<li><p>Create the RStudio Project with:</p></li>
-</ol>
+<p>This exercise allows you go through the new RStudio Project with the <strong><code>usethis</code></strong> (Wickham and Bryan, 2021) workflow.</p>
+<p>The data in <a href="../data-raw/chaff.txt">chaff.txt</a> are the masses of male and female chaffinches. They are organised as two columns, <code>males</code> and <code>females</code>, a format which is not ideal. Your task is to organise an analysis of these data in an RStudio Project. The analysis will include data import, reformatting, writing reformatted data to file, summarising, significance testing and plotting.</p>
+<p>🎬 First check your working directory with <code>getwd()</code> and determine what path you need to create the RStudio Project in a place that suits you.</p>
+<p>🎬 Create the RStudio Project with:</p>
 <pre class="r"><code>usethis::create_project(&quot;chaffinches&quot;)</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Add a README with:</li>
-</ol>
+<p>🎬 Add a README with:</p>
 <pre class="r"><code>usethis::use_readme_md()</code></pre>
-<p>Add some text to the README about the data and analysis. You can continue to edit this as you work.</p>
-<ol start="4" style="list-style-type: decimal">
-<li>Add a LICENSE with:</li>
-</ol>
+<p>🎬 Add some text to the README about the data and analysis. You can continue to edit this as you work.</p>
+<p>🎬 Add a LICENSE with:</p>
 <pre class="r"><code>usethis::use_ccby_license()</code></pre>
-<ol start="5" style="list-style-type: decimal">
-<li><p>Add directories to structure the analysis - you may wish to revise this as you work. I suggest adding <code>data-raw</code> and <code>data-processed</code></p></li>
-<li><p>Save a copy of <a href="../data-raw/chaff.txt">chaff.txt</a> to <code>data-raw</code></p></li>
-<li><p>Make a script called 01-import.R. There is a <strong><code>usethis</code></strong> helper function for that purpose if you wish:</p></li>
-</ol>
+<p>🎬 Add directories to structure the analysis - you may wish to revise this as you work. I suggest adding <code>data-raw</code> and <code>data-processed</code></p>
+<p>🎬 Save a copy of <a href="../data-raw/chaff.txt">chaff.txt</a> to <code>data-raw</code></p>
+<p>🎬 Make a script called <code>01-import.R</code>. There is a <strong><code>usethis</code></strong> helper function for that purpose if you wish:</p>
 <pre class="r"><code>usethis::use_r(&quot;01-import&quot;)</code></pre>
 <p><code>usethis::use_r()</code> helpfully adds the R extension and creates the file in the <code>R/</code> directory</p>
-<ol start="6" style="list-style-type: decimal">
-<li>Import and reformat the data into ‘tidy’ form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file. A dataframe can be written to file using, for example:</li>
-</ol>
-<pre class="r"><code>file &lt;-  &quot;../daw-processed/chaff2.txt&quot;
-write.table(chaff2, 
-            file, 
-            quote = FALSE,
-            row.names = FALSE)</code></pre>
-<ol start="5" style="list-style-type: decimal">
-<li><p>Summarise and analyse the data testing whether there is a difference in mass between male and female chaffinches</p></li>
-<li><p>Stage and commit all the changes you have made using an appropriate commit message.</p></li>
-<li><p>Create a report-worthy figure for the analysis and write it to file. A useful function for saving <strong><code>ggplot2</code></strong> figures is <a href="https://ggplot2.tidyverse.org/reference/ggsave.html"><code>ggsave()</code></a>. It has arguments for the size, resolution and device for the image. Since I often make more than one figure, I might set these argument values to variables first:</p></li>
-</ol>
+<p>We will now add code to import and reformat the data as ‘tidy’ (Wickham, 2014), then write the reformatted data to file. Tidy means there is one column giving the sex and another giving the mass</p>
+<p>🎬 Load the <code>tidyverse</code> (Wickham Averick, et al., 2019) and import:</p>
+<pre class="r"><code>library(tidyverse)
+
+# import
+# data are the masses of male and female chaffinches organised
+# as two columns, `males` and `females`
+file &lt;- &quot;data-raw/chaff.txt&quot;
+chaff &lt;- read_table(file)</code></pre>
+<p>📢 <strong>Note:</strong> Your working directory is the Project directory, <code>chaffinches/</code>, not the location of the script, <code>R/</code>. When using a project, write your paths relative the project directory.</p>
+<p>🎬 Reformat as tidy:</p>
+<pre class="r"><code># reformat to tidy
+chaff_tidy &lt;- pivot_longer(chaff,
+                           cols = everything(),
+                           names_to = &quot;sex&quot;,
+                           values_to = &quot;mass&quot;)</code></pre>
+<p>🎬 Write to file:</p>
+<pre class="r"><code># write reformatted data to file
+file &lt;- &quot;data-processed/chaff-tidy.txt&quot;
+write_delim(chaff_tidy, file)</code></pre>
+<p>We have now imported and reformatted the data and written the new format to write. The next steps are to summarise chaffinch mass by sex and significance test for a difference in mass between male and female chaffinches.</p>
+<p>🎬 Make a script called <code>02-summarise.R</code> for summarising the data:</p>
+<p>🎬 Summarise chaffinch mass by sex with:</p>
+<pre class="r"><code># means, standard deviations, standard errors and sample sizes
+chaff_summary &lt;- chaff_tidy %&gt;%
+  group_by(sex) %&gt;%
+  summarise(mean = mean(mass),
+            std = sd(mass),
+            n = length(mass),
+            se = std/sqrt(n)))</code></pre>
+👀 The pipe operator, <code>%&gt;%</code>, may be new to you. We will be covering it in more detail next week. You can read the pipe as ‘and then’. For example:
+<pre>
+chaff_tidy %&gt;%                  # take `chaff_tidy` *and then*
+  group_by(sex) %&gt;%             # group it by `sex` *and then*
+  summarise(mean = mean(mass),  # summarise it by calculating: the mean,
+            std = sd(mass),     #                              the standard deviation
+            n = length(mass),   #                              the sample size
+            se = std/sqrt(n)))  #                              the standard error
+
+</pre>
+<p>🎬 Conduct an appropriate statistical test to determine whether male and female chaffinches differ in mass. You may want to look this up in these <a href="https://www-users.york.ac.uk/~er13/17C%20-%202018/lects/web06Two%20sample%20tests.pdf">BIO00017C lecture notes</a>. Think about your code organisation.</p>
+<p>Now we will create a figure and write it to file using <code>ggsave()</code>.</p>
+<p>🎬 Create a report-worthy figure using <strong><code>ggplot2</code></strong> for the analysis. Think about your code organisation.</p>
+<p>🎬 Write the figure to file to file. A useful function for saving <strong><code>ggplot2</code></strong> figures is <a href="https://ggplot2.tidyverse.org/reference/ggsave.html"><code>ggsave()</code></a>. It has arguments for the size, resolution and device for the image. Since I often make more than one figure, I might set these argument values to variables first:</p>
 <pre class="r"><code># figure saving settings
-units &lt;- &quot;in&quot;  
+units &lt;- &quot;in&quot;     # inches. &quot;cm&quot;, &quot;mm&quot;, &quot;px&quot; also possible
 fig_w &lt;- 3.5
 fig_h &lt;- fig_w
 dpi &lt;- 300
-device &lt;- &quot;tiff&quot; </code></pre>
+device &lt;- &quot;png&quot;   # Options are: eps&quot;, &quot;ps&quot;, &quot;tex&quot;, &quot;pdf&quot;, &quot;jpeg&quot;, 
+                  # &quot;tiff&quot;, &quot;png&quot;, &quot;bmp&quot;, &quot;svg&quot; or &quot;wmf&quot; (windows only).</code></pre>
 <p>Then write the figure to file using, for example:</p>
-<pre class="r"><code>ggsave(&quot;../figures/fig1.tiff&quot;,
+<pre class="r"><code>ggsave(&quot;figures/fig1.png&quot;,
        plot = fig1,
        device = device,
        width = fig_w,
        height = fig_h,
        units = units,
        dpi = dpi)</code></pre>
-<ol start="8" style="list-style-type: decimal">
-<li><p>Stage and commit all the changes you have made using an appropriate commit message. Push your changes to GitHub</p></li>
-<li><p>Reconsider the organisation of your code and project.</p>
+<p>🎬 Reconsider the organisation of your code and project.</p>
 <ul>
-<li>Would some pieces of code be better in their own script?<br />
-</li>
-<li>Is your code well commented? Are your variable names informative? See chapters 1 and 2 of <a href="https://style.tidyverse.org/">The tidyverse style guide</a> for more suggestions.</li>
-</ul></li>
-<li><p>Stage and commit any changes you have made using an appropriate commit message. Push your changes to GitHub</p></li>
-<li><p>Go to your GitHub repo, make some changes to the README and commit them.</p></li>
-<li><p>Go to back to your local repo and Pull the changes in.</p></li>
-</ol>
-<p><font size="4"> ❗ Start every work session with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early. </font></p>
-</div>
-<div id="task-2-contribute-to-your-partners-repo" class="section level1">
-<h1>Task 2 Contribute to your partner’s repo</h1>
-<p>To collaborate on someone else’s project you ‘fork’ their repo, clone it, and submit and submit a ‘pull request’ (a PR) to propose a change</p>
-<ol style="list-style-type: decimal">
-<li><p>Go to your partner’s repo on GitHub and Fork it using the button in the top right. You now have a copy of their repo on your GitHub</p></li>
-<li><p>On your GitHub repo page, copy the url of the origin repo using the green Code button as you did previously. Then go to RStudio and do File | New Project | Version Control | Git, paste in the URL Create Project. This is the same process you used to clone your own repo</p></li>
-<li><p>Make some changes to the analysis. For example, you might add comments to the code, add a piece of code or alter a piece of code.</p></li>
-<li><p>Stage and commit the changes you have made using an appropriate commit message. Push your changes to GitHub</p></li>
-<li><p>Go to your forked copy of the repo in GitHub. You should see a message telling you “This branch is 1 commit ahead of….”. Click on Pull request. Now you should be able to see the changes and also a message telling you whether the branches can be automatically merged. If they can Create a pull request. You will need to describe the changes you made.</p></li>
-<li><p>Your partner now needs accept (or not!) those changes by “merge the pull request”.</p></li>
-</ol>
-</div>
-<div id="the-rmd-file" class="section level1">
-<h1>The Rmd file</h1>
+<li>Are the names of R objects, files and directories informative and systematic?</li>
+<li>Have you scripted everything?</li>
+<li>Is your code well commented?</li>
+<li>Is code in logical places?</li>
+<li>See chapters 1 and 2 of <a href="https://style.tidyverse.org/">The tidyverse style guide</a> for more suggestions.</li>
+</ul>
+<p>🎬 Have a look at my version of <a href="https://github.com/3mmaRand/chaffinches">chaffinches</a> # The Rmd file</p>
 <p><a href="01_project_organisation.Rmd">Rmd file</a></p>
-<p>Pages made with <code>rmarkdown</code> (Allaire Xie, et al., 2021; Xie Allaire, et al., 2018; Xie Dervieux, et al., 2020), <code>RefManager</code></p>
+<p>Pages made with <code>rmarkdown</code> (Allaire Xie, et al., 2021; Xie Allaire, et al., 2018; Xie Dervieux, et al., 2020), <code>RefManageR</code>(McLean, 2017)</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
 <p>Allaire, J., Y. Xie, et al. (2021). <em>rmarkdown: Dynamic Documents for R</em>. R package version 2.10. URL: <a href="https://github.com/rstudio/rmarkdown">https://github.com/rstudio/rmarkdown</a>.</p>
+<p>McLean, M. W. (2017). “RefManageR: Import and Manage BibTeX and BibLaTeX References in R”. In: <em>The Journal of Open Source Software</em>. DOI: <a href="https://doi.org/10.21105%2Fjoss.00338">10.21105/joss.00338</a>.</p>
+<p>Wickham, H. (2014). “Tidy Data”. In: <em>Journal of Statistical Software, Articles</em> 59.10, pp. 1-23. URL: <a href="https://vita.had.co.nz/papers/tidy-data.pdf">https://vita.had.co.nz/papers/tidy-data.pdf</a>.</p>
+<p>Wickham, H., M. Averick, et al. (2019). “Welcome to the Tidyverse”. In: <em>JOSS</em> 4.43, p. 1686. URL: <a href="https://joss.theoj.org/papers/10.21105/joss.01686">https://joss.theoj.org/papers/10.21105/joss.01686</a>.</p>
 <p>Wickham, H. and J. Bryan (2021). <em>usethis: Automate Package and Project Setup</em>. R package version 2.0.1. URL: <a href="https://CRAN.R-project.org/package=usethis">https://CRAN.R-project.org/package=usethis</a>.</p>
 <p>Xie, Y., J. Allaire, et al. (2018). <em>R Markdown: The Definitive Guide</em>. ISBN 9781138359338. Boca Raton, Florida: Chapman and Hall/CRC. URL: <a href="https://bookdown.org/yihui/rmarkdown">https://bookdown.org/yihui/rmarkdown</a>.</p>
 <p>Xie, Y., C. Dervieux, et al. (2020). <em>R Markdown Cookbook</em>. ISBN 9780367563837. Boca Raton, Florida: Chapman and Hall/CRC. URL: <a href="https://bookdown.org/yihui/rmarkdown-cookbook">https://bookdown.org/yihui/rmarkdown-cookbook</a>.</p>

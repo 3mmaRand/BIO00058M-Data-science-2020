@@ -16,6 +16,8 @@ output:
 ![](../pics/58M.png)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5442490.svg)](https://doi.org/10.5281/zenodo.5442490)
 
+<!-- note for 2022 update, switch chaffinch example to subspecies -->
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE,
@@ -50,37 +52,37 @@ By the end of this week the successful student should be able to:
 
 # Task 1 New RStudio Project
 
-This exercise allows you go through the new RStudio Project with **`usethis`** `r Cite(myBib, "usethis")` workflow. 
+This exercise allows you go through the new RStudio Project with the **`usethis`** `r Cite(myBib, "usethis")` workflow. 
 
-The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. They are organised as two columns, `males` and `females`, a format which is not ideal. Your task is to organise an analysis of these data in an RStudio Project.
+The data in [chaff.txt](../data-raw/chaff.txt) are the masses of male and female chaffinches. They are organised as two columns, `males` and `females`, a format which is not ideal. Your task is to organise an analysis of these data in an RStudio Project. The analysis will include data import, reformatting, writing reformatted data to file, summarising, significance testing and plotting.
 
-1. First check your working directory with `getwd()` and determine what path you need to create the RStudio Project in a place that suits you.
+`r emo::ji("clapper")` First check your working directory with `getwd()` and determine what path you need to create the RStudio Project in a place that suits you.
 
-2. Create the RStudio Project with:
+`r emo::ji("clapper")` Create the RStudio Project with:
 
 ```{r eval=FALSE}
 usethis::create_project("chaffinches")
 ```
    
-3. Add a README with:
+`r emo::ji("clapper")` Add a README with:
 
 ```{r eval=FALSE}
 usethis::use_readme_md()
 ```
 
-   Add some text to the README about the data and analysis. You can continue to edit this as you work.
+`r emo::ji("clapper")` Add some text to the README about the data and analysis. You can continue to edit this as you work.
 
-4. Add a LICENSE with:
+`r emo::ji("clapper")` Add a LICENSE with:
 
 ```{r eval=FALSE}
 usethis::use_ccby_license()
 ```
 
-5. Add directories to structure the analysis - you may wish to revise this as you work. I suggest adding `data-raw` and `data-processed`
+`r emo::ji("clapper")` Add directories to structure the analysis - you may wish to revise this as you work. I suggest adding `data-raw` and `data-processed`
 
-6. Save a copy of [chaff.txt](../data-raw/chaff.txt) to `data-raw`
+`r emo::ji("clapper")` Save a copy of [chaff.txt](../data-raw/chaff.txt) to `data-raw`
 
-7. Make a script called `01-import.R`. There is a **`usethis`** helper function for that purpose if you wish:
+`r emo::ji("clapper")` Make a script called `01-import.R`. There is a **`usethis`** helper function for that purpose if you wish:
 ```{r eval=FALSE}
 usethis::use_r("01-import")
 ```
@@ -89,47 +91,135 @@ usethis::use_r("01-import")
 
 We will now add code to import and reformat the data as 'tidy' `r Cite(myBib, "Wickham2014-nl")`, then write the reformatted data to file. Tidy means there is one column giving the sex and another giving the mass
 
-8. Load the `tidyverse` `r Cite(myBib, "Wickham2019-ml")` and import:  
+`r emo::ji("clapper")` Load the `tidyverse` `r Cite(myBib, "Wickham2019-ml")` and import:  
 ```{r eval=FALSE}
-file <-  "../daw-processed/chaff2.txt"
+library(tidyverse)
+
+# import
+# data are the masses of male and female chaffinches organised
+# as two columns, `males` and `females`
+file <- "data-raw/chaff.txt"
+chaff <- read_table(file)
 ```
 
-9. Reformat as tidy: 
+`r emo::ji("loudspeaker")` **Note:** Your working directory is the Project directory, `chaffinches/`, not the location of the script, `R/`. When using a project, write your paths relative the project directory.
+
+
+`r emo::ji("clapper")` Reformat as tidy: 
 ```{r eval=FALSE}
-file <-  "../daw-processed/chaff2.txt"
-write.table(chaff2, 
-            file, 
-            quote = FALSE,
-            row.names = FALSE)
+# reformat to tidy
+chaff_tidy <- pivot_longer(chaff,
+                           cols = everything(),
+                           names_to = "sex",
+                           values_to = "mass")
 ```
 
-8. Import 
+`r emo::ji("clapper")` Write to file: 
 ```{r eval=FALSE}
-file <-  "../daw-processed/chaff2.txt"
-write.table(chaff2, 
-            file, 
-            quote = FALSE,
-            row.names = FALSE)
+# write reformatted data to file
+file <- "data-processed/chaff-tidy.txt"
+write_delim(chaff_tidy, file)
 ```
 
-5. Summarise and analyse the data testing whether there is a difference in mass between male and female chaffinches
+We have now imported and reformatted the data and written the new format to write. The next steps are to summarise chaffinch mass by sex and significance test for a difference in mass between male and female chaffinches.
 
-6. Stage and commit all the changes you have made using an appropriate commit message. 
 
-7. Create a report-worthy figure for the analysis and write it to file. A useful function for saving **`ggplot2`** figures is [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). It has arguments for the size, resolution and device for the image. Since I often make more than one figure, I might set these argument values to variables first:
+`r emo::ji("clapper")` Make a script called `02-summarise.R` for summarising the data: 
+```{r eval=FALSE, echo=FALSE}
+usethis::use_r("02-summarise")
+```
+
+`r emo::ji("clapper")` Summarise chaffinch mass by sex with:
+```{r eval=FALSE}
+# means, standard deviations, standard errors and sample sizes
+chaff_summary <- chaff_tidy %>%
+  group_by(sex) %>%
+  summarise(mean = mean(mass),
+            std = sd(mass),
+            n = length(mass),
+            se = std/sqrt(n)))
+```
+
+`r emo::ji("look")` The pipe operator, ` %>%`, may be new to you. We will be covering it in more detail next week. You can read the pipe as 'and then'. For example: 
+<pre>
+chaff_tidy %>%                  # take `chaff_tidy` *and then*
+  group_by(sex) %>%             # group it by `sex` *and then*
+  summarise(mean = mean(mass),  # summarise it by calculating: the mean,
+            std = sd(mass),     #                              the standard deviation
+            n = length(mass),   #                              the sample size
+            se = std/sqrt(n)))  #                              the standard error
+
+</pre>
+
+
+`r emo::ji("clapper")` Conduct an appropriate statistical test to determine whether male and female chaffinches differ in mass. You may want to look this up in these [BIO00017C lecture notes](https://www-users.york.ac.uk/~er13/17C%20-%202018/lects/web06Two%20sample%20tests.pdf). Think about your code organisation.
+
+```{r eval=FALSE, echo=FALSE}
+usethis::use_r("03-test")
+```
+
+```{r eval=FALSE, echo=FALSE}
+t.test(data = chaff_tidy,
+       mass ~ sex,
+       paired = F,
+       var.equal = T)
+```
+
+Now we will create a figure and write it to file using `ggsave()`.
+
+`r emo::ji("clapper")` Create a report-worthy figure using **`ggplot2`** for the analysis. Think about your code organisation.
+
+```{r eval=FALSE, echo=FALSE}
+usethis::use_r("04-figure")
+```
+
+
+```{r eval=FALSE, echo=FALSE}
+fig1 <- ggplot() +
+  geom_point(data = chaff_tidy, aes(x = sex, y = mass),
+             position = position_jitter(width = 0.1, height = 0),
+             colour = "gray50") +
+  geom_errorbar(data = chaff_summary,
+                aes(x = sex, ymin = mean - se, ymax = mean + se),
+                width = 0.3) +
+  geom_errorbar(data = chaff_summary,
+                aes(x = sex, ymin = mean, ymax = mean),
+                width = 0.2) +
+  scale_y_continuous(name = "Mass (g)",
+                     limits = c(0, 30),
+                     expand = c(0, 0)) +
+  scale_x_discrete(name = "",
+                   labels = c("Females", "Males")) +
+  annotate("segment", x = 1, xend = 2,     # long horizontal.
+           y = 28, yend = 28,
+           colour = "black") +
+  annotate("segment", x = 2, xend = 2,     # short vertical
+           y = 28, yend = 27,
+           colour = "black") +
+  annotate("segment", x = 1, xend = 1,     # short vertical
+           y = 28, yend = 27,
+           colour = "black") +
+  annotate("text", x = 1.5,  y = 29,       # the text
+           label = expression(italic(p)~"= 0.01175")) +
+  theme_classic()
+```
+
+
+`r emo::ji("clapper")` Write the figure to file to file. A useful function for saving **`ggplot2`** figures is [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). It has arguments for the size, resolution and device for the image. Since I often make more than one figure, I might set these argument values to variables first:
 
 ```{r eval=FALSE}
 # figure saving settings
-units <- "in"  
+units <- "in"     # inches. "cm", "mm", "px" also possible
 fig_w <- 3.5
 fig_h <- fig_w
 dpi <- 300
-device <- "tiff" 
+device <- "png"   # Options are: eps", "ps", "tex", "pdf", "jpeg", 
+                  # "tiff", "png", "bmp", "svg" or "wmf" (windows only).
 ```
 Then write the figure to file using, for example:
 
 ```{r eval=FALSE}
-ggsave("../figures/fig1.tiff",
+ggsave("figures/fig1.png",
        plot = fig1,
        device = device,
        width = fig_w,
@@ -138,40 +228,15 @@ ggsave("../figures/fig1.tiff",
        dpi = dpi)
 ```
 
-8. Stage and commit all the changes you have made using an appropriate commit message. Push your changes to GitHub
+`r emo::ji("clapper")` Reconsider the organisation of your code and project.
 
-9. Reconsider the organisation of your code and project.
-   * Would some pieces of code be better in their own script?  
-   * Is your code well commented? Are your variable names informative? See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
+-  Are the names of R objects, files and directories informative and systematic?
+-  Have you scripted everything?
+-  Is your code well commented? 
+-  Is code in logical places?
+-  See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
 
-10. Stage and commit any changes you have made using an appropriate commit message. Push your changes to GitHub
-
-11. Go to your GitHub repo, make some changes to the README and commit them.
-
-12. Go to back to your local repo and Pull the changes in.
-
-<font size = "4">
-`r emo::ji("exclamation_mark")` Start every work session with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early.
-</font>
-
-
-# Task 2 Contribute to your partner's repo
-
-To collaborate on someone else's project you 'fork' their repo, clone it, and submit and submit a 'pull request' (a PR) to propose a change
-
-1. Go to your partner's repo on GitHub and Fork it using the button in the top right. You now have a copy of their repo on your GitHub
-
-2. On your GitHub repo page, copy the url of the origin repo using the green Code button as you did previously. Then go to RStudio and do File | New Project | Version Control | Git, paste in the URL Create Project. This is the same process you used to clone your own repo
-
-3. Make some changes to the analysis. For example, you might add comments to the code, add a piece of code or alter a piece of code.
-
-4. Stage and commit the changes you have made using an appropriate commit message. Push your changes to GitHub
-
-5. Go to your forked copy of the repo in GitHub. You should see a message telling you "This branch is 1 commit ahead of....". Click on Pull request. Now you should be able to see the changes and also a message telling you whether the branches can be automatically merged. If they can Create a pull request. You will need to describe the changes you made.
-
-6. Your partner now needs accept (or not!) those changes by "merge the pull request".
-
-
+`r emo::ji("clapper")` Have a look at my version of [chaffinches](https://github.com/3mmaRand/chaffinches)
 # The Rmd file
 
 [Rmd file](01_project_organisation.Rmd)
