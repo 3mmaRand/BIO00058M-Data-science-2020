@@ -263,7 +263,7 @@ div.tocify {
 </div>
 <div id="task-1-new-rstudio-project" class="section level1">
 <h1>Task 1 New RStudio Project</h1>
-<p>This exercise allows you go through the new RStudio Project with the <strong><code>usethis</code></strong> workflow.</p>
+<p>This exercise allows you go through the new RStudio Project with the <strong><code>usethis</code></strong> (Wickham and Bryan, 2021) workflow.</p>
 <p>The data in <a href="../data-raw/chaff.txt">chaff.txt</a> are the masses of male and female chaffinches. They are organised as two columns, <code>males</code> and <code>females</code>, a format which is not ideal. Your task is to organise an analysis of these data in an RStudio Project. The analysis will include data import, reformatting, writing reformatted data to file, summarising, significance testing and plotting.</p>
 <p>🎬 First check your working directory with <code>getwd()</code> and determine what path you need to create the RStudio Project in a place that suits you.</p>
 <p>🎬 Create the RStudio Project with:</p>
@@ -278,8 +278,8 @@ div.tocify {
 <p>🎬 Make a script called <code>01-import.R</code>. There is a <strong><code>usethis</code></strong> helper function for that purpose if you wish:</p>
 <pre class="r"><code>usethis::use_r(&quot;01-import&quot;)</code></pre>
 <p><code>usethis::use_r()</code> helpfully adds the R extension and creates the file in the <code>R/</code> directory</p>
-<p>We will now add code to import and reformat the data as ‘tidy’ , then write the reformatted data to file. Tidy means there is one column giving the sex and another giving the mass</p>
-<p>🎬 Load the <code>tidyverse</code> and import:</p>
+<p>We will now add code to import and reformat the data as ‘tidy’ (Wickham, 2014), then write the reformatted data to file. Tidy means there is one column giving the sex and another giving the mass</p>
+<p>🎬 Load the <code>tidyverse</code> (Wickham Averick, et al., 2019) and import:</p>
 <pre class="r"><code>library(tidyverse)
 
 # import
@@ -345,13 +345,22 @@ device &lt;- &quot;png&quot;   # Options are: eps&quot;, &quot;ps&quot;, &quot;t
 <li>Is code in logical places?</li>
 <li>See chapters 1 and 2 of <a href="https://style.tidyverse.org/">The tidyverse style guide</a> for more suggestions.</li>
 </ul>
-<p>🎬 Have a look at my version of <a href="https://github.com/3mmaRand/chaffinches">chaffinches</a> # The Rmd file</p>
-<p><a href="01_project_organisation.Rmd">Rmd file</a></p>
-<p>Pages made with <code>rmarkdown</code> , <code>RefManageR</code></p>
+<p>🎬 Have a look at my version of <a href="https://github.com/3mmaRand/BIO00058M-chaffinches-w01">chaffinches</a></p>
+</div>
+<div id="the-code-files" class="section level1">
+<h1>The code files</h1>
+<p>These contain all the code needed in the workshop even where it is not visible on the webpage. <a href="01_project_organisation.Rmd">Rmd file</a> The Rmd file is the file I use to compile the practical. Rmd stands for R markdown. It allows R code and ordinary text to be interweaved to produce well-formatted reports including webpages. If you right-click on the link and choose Save-As, you will be able to open the Rmd file in RStudio. Alternatively, <a href="https://github.com/3mmaRand/BIO00058M-Data-science-2020/blob/master/workshops/01_project_organisation.Rmd">View in Browser</a>.</p>
+<p>Pages made with <code>rmarkdown</code> (Allaire Xie, et al., 2021; Xie Allaire, et al., 2018; Xie Dervieux, et al., 2020), <code>RefManageR</code>(McLean, 2017)</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
-<p>NULL</p>
+<p>Allaire, J., Y. Xie, et al. (2021). <em>rmarkdown: Dynamic Documents for R</em>. R package version 2.10. URL: <a href="https://github.com/rstudio/rmarkdown">https://github.com/rstudio/rmarkdown</a>.</p>
+<p>McLean, M. W. (2017). “RefManageR: Import and Manage BibTeX and BibLaTeX References in R”. In: <em>The Journal of Open Source Software</em>. DOI: <a href="https://doi.org/10.21105%2Fjoss.00338">10.21105/joss.00338</a>.</p>
+<p>Wickham, H. (2014). “Tidy Data”. In: <em>Journal of Statistical Software, Articles</em> 59.10, pp. 1-23. URL: <a href="https://vita.had.co.nz/papers/tidy-data.pdf">https://vita.had.co.nz/papers/tidy-data.pdf</a>.</p>
+<p>Wickham, H., M. Averick, et al. (2019). “Welcome to the Tidyverse”. In: <em>JOSS</em> 4.43, p. 1686. URL: <a href="https://joss.theoj.org/papers/10.21105/joss.01686">https://joss.theoj.org/papers/10.21105/joss.01686</a>.</p>
+<p>Wickham, H. and J. Bryan (2021). <em>usethis: Automate Package and Project Setup</em>. R package version 2.0.1. URL: <a href="https://CRAN.R-project.org/package=usethis">https://CRAN.R-project.org/package=usethis</a>.</p>
+<p>Xie, Y., J. Allaire, et al. (2018). <em>R Markdown: The Definitive Guide</em>. ISBN 9781138359338. Boca Raton, Florida: Chapman and Hall/CRC. URL: <a href="https://bookdown.org/yihui/rmarkdown">https://bookdown.org/yihui/rmarkdown</a>.</p>
+<p>Xie, Y., C. Dervieux, et al. (2020). <em>R Markdown Cookbook</em>. ISBN 9780367563837. Boca Raton, Florida: Chapman and Hall/CRC. URL: <a href="https://bookdown.org/yihui/rmarkdown-cookbook">https://bookdown.org/yihui/rmarkdown-cookbook</a>.</p>
 </div>
 <div id="please-cite-as" class="section level1">
 <h1>Please cite as:</h1>

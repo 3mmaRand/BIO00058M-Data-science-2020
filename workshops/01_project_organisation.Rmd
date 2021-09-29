@@ -236,10 +236,13 @@ ggsave("figures/fig1.png",
 -  Is code in logical places?
 -  See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
 
-`r emo::ji("clapper")` Have a look at my version of [chaffinches](https://github.com/3mmaRand/chaffinches)
-# The Rmd file
+`r emo::ji("clapper")` Have a look at my version of [chaffinches](https://github.com/3mmaRand/BIO00058M-chaffinches-w01)
 
-[Rmd file](01_project_organisation.Rmd)
+
+
+# The code files
+These contain all the code needed in the workshop even where it is not visible on the webpage.
+[Rmd file](01_project_organisation.Rmd) The Rmd file is the file I use to compile the practical. Rmd stands for R markdown. It allows R code and ordinary text to be interweaved to produce well-formatted reports including webpages. If you right-click on the link and choose Save-As, you will be able to open the Rmd file in RStudio. Alternatively, [View in Browser](https://github.com/3mmaRand/BIO00058M-Data-science-2020/blob/master/workshops/01_project_organisation.Rmd).
 
 
 Pages made with `rmarkdown` `r Cite(myBib, c("markdown1","markdown2", "markdown3"))`, `RefManageR``r Cite(myBib, "RefManageR")` 
