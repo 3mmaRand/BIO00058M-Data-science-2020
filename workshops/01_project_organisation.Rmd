@@ -137,7 +137,7 @@ chaff_summary <- chaff_tidy %>%
   summarise(mean = mean(mass),
             std = sd(mass),
             n = length(mass),
-            se = std/sqrt(n)))
+            se = std/sqrt(n))
 ```
 
 `r emo::ji("look")` The pipe operator, ` %>%`, may be new to you. We will be covering it in more detail next week. You can read the pipe as 'and then'. For example: 
@@ -147,7 +147,7 @@ chaff_tidy %>%                  # take `chaff_tidy` *and then*
   summarise(mean = mean(mass),  # summarise it by calculating: the mean,
             std = sd(mass),     #                              the standard deviation
             n = length(mass),   #                              the sample size
-            se = std/sqrt(n)))  #                              the standard error
+            se = std/sqrt(n))   #                              the standard error
 
 </pre>
 
