@@ -60,7 +60,7 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 # Outline
 
-The aim of this section is to introduce you to the tidyverse `r Cite(myBib, "Wickham2019-ml")` including the pipe, `%>%`  and some commonly applied data tidying operations.
+The aim of this section is to strength your understanding of the tidyverse `r Cite(myBib, "Wickham2019-ml")` including the pipe, `%>%`  and some commonly applied data tidying operations.
 
 It includes a case study which demonstrates how to problem solve your way to a solution using a one-step-at-a-time approach.
 
@@ -72,7 +72,9 @@ You should be able to code along with the examples. When you see the film clappe
 `r emo::ji("clapper")` .. an instruction to do something!!
 
 
-`r emo::ji("clapper")` Start a new project containing directories called scripts, data-raw, and data-processed. Use a new script for example. 
+--
+
+`r emo::ji("clapper")` Go through the workflow for creating a [new RStudio Project](https://3mmarand.github.io/BIO00058M-Data-science-2020/workshops/01_project_organisation.html#Task_1_New_RStudio_Project) with the **`usethis`** `r Cite(myBib, "usethis")`. I suggested including directories `R/`, `data-raw/`, and `data-processed/` 
 
 ---
 class: inverse
@@ -92,7 +94,7 @@ Tidy data adhere to a consistent structure which makes it easier to manipulate, 
 --
 
 Closely allied to the relational algebra of relational databases `r Cite(myBib, "Codd1990-th")`.  
-Underlies the enforced rectangular formatting in SPSS, STATA and R's dataframe.  
+Underlies the enforced rectangular formatting in SPSS, STATA and R's dataframe/tibble.  
 The term 'tidy data' was popularised by `r Citet(myBib, "Wickham2014-nl")`.   
 
 Note: There may be more than one potential tidy structure.
@@ -107,7 +109,9 @@ pigeon <- read_table2("../data-raw/pigeon.txt")
 Suppose we had just 3 individuals in each of two populations:
 
 .pull-left[
-## NOT TIDY!
+NOT TIDY!
+two observations per row
+column names are not variables
 ```{r echo=FALSE}
 knitr::kable(pigeon[1:3,], 
              format = "html")
@@ -121,7 +125,9 @@ pigeon2 <- gather(data = pigeon,
 
 .pull-right[
 
-## TIDY!
+TIDY!
+one observation per row
+column names are the two variables
 ```{r echo=FALSE}
 knitr::kable(head(pigeon2[c(1:3,41:43),]), 
              format = "html",
@@ -145,14 +151,17 @@ Contributors describe it as "an opinionated" collection of R packages designed f
 
 --
 
-The key feature is that **`tidyverse`** packages share an underlying design philosophy, grammar, and data structures.  
+The key feature is that all **`tidyverse`** packages share an underlying design philosophy, grammar, and data structures.  
 
-This means they work well together and learning new tidyverse packages is quick. This consistency is intended to make data work more efficient.
+This means:
+-  they work well together
+-  learning a new tidyverse packages is quick
+-  data work is more efficient.
 
 ---
 # Tidyverse
 
-**`tidyverse`** packages have a reputation for making code which is easy to read and write for humans, and for the connection of tools together into reproducible workflows.
+**`tidyverse`** packages have a reputation for making code which is easy for humans to read and to write, and for enabling tools to be connected into reproducible workflows.
 
 The R Views [article by Joe Rickert](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/) gives a good overview.
 
@@ -167,7 +176,7 @@ An example is the [Bioconductor Project](https://www.bioconductor.org/).
 
 However, Bioconductor packages that take a tidyverse approach are beginning to accumulate. For example:
 
-* **`tidybulk`** `r Cite(myBib, "R-tidybulk")`. See also https://stemangiola.github.io/rpharma2020_tidytranscriptomics/articles/tidytranscriptomics.html
+* **`tidybulk`** `r Cite(myBib, "R-tidybulk")`. See also .font70[https://stemangiola.github.io/rpharma2020_tidytranscriptomics/articles/tidytranscriptomics.html]
 * **`biobroom`** `r Cite(myBib, "R-biobroom")`
 
 
@@ -321,7 +330,13 @@ Using the pipe avoids these by taking the output of one operation as the input o
 
 The pipe has long been used by Unix operating systems (where the pipe operator is `|`). 
 
-The R pipe operator is `%>%` 
+The R pipe operator is `%>%` <sup>1</sup>
+
+
+.font70[
+.footnote[1. a pipe recently became available in base R too (with R version 4.1.0). Here the operator is `|>`
+]
+]
 
 --
 
@@ -401,13 +416,13 @@ Also in the data file are variables indicating the replicate number and the iden
 
 ```{r}
 file <- "../data-raw/biomass.txt"
-biomass <- read_table2(file)
+biomass <- read_table(file)
 
 ```
 
-`read_table2()` is a function from the tidyverse's **`readr`** package. It works a lot like base R's `read.table()` but with some useful defaults (e.g., is header assumed) and extra functionality (e.g.,it's faster).
+`read_table()` is a function from the tidyverse's **`readr`** package. It works a lot like base R's `read.table()` but with some useful defaults (e.g., is header assumed) and extra functionality (e.g.,it's faster).
 
-tidyverse import functions treat strings as character variables by default, not factors. Until R 4.x, `read.table()` turned strings into factors. This used to be an important reason for me to use `read_table2()`.
+tidyverse import functions treat strings as character variables by default, not factors. Until R 4.x, `read.table()` turned strings into factors. This used to be an important reason for me to use `read_table()`.
 
 Whilst analysis and visualisation often require factor variables, any processing of strings is made much easier if they are characters.
 
@@ -472,18 +487,6 @@ biomass2
 # Converting "wide" to "long"
 
 `r kableExtra::text_spec("Extra exercise:", background = "#25496b", color = "#fdf9f6", bold = TRUE)` Write this dataframe to file to your `processed_data` folder. This was covered in the [Project Organisation workshop](https://3mmarand.github.io/BIO00058M-Data-science-2020/workshops/01_project_organisation.html)
-
-```{r echo=FALSE}
-file <- "../data-processed/biomass2-base.txt"
-write.table(biomass2, 
-            file = file,
-            row.names = FALSE,
-            quote = FALSE)
-```
-
-See the result: [biomass2-base.txt](../data-processed/biomass2-base.txt)
-
-`r kableExtra::text_spec("Extra exercise:", background = "#25496b", color = "#fdf9f6", bold = TRUE)` Can you find a tidyverse function for writing dataframes.
 
 
 ```{r echo=FALSE}

@@ -4,6 +4,7 @@
     <title>Tidy data, the tidyverse and tidying data</title>
     <meta charset="utf-8" />
     <meta name="author" content="Emma Rand" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <script src="libs/clipboard/clipboard.min.js"></script>
     <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
@@ -47,7 +48,7 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 # Outline
 
-The aim of this section is to introduce you to the tidyverse &lt;a name=cite-Wickham2019-ml&gt;&lt;/a&gt;([Wickham Averick, et al., 2019](#bib-Wickham2019-ml)) including the pipe, `%&gt;%`  and some commonly applied data tidying operations.
+The aim of this section is to strength your understanding of the tidyverse &lt;a name=cite-Wickham2019-ml&gt;&lt;/a&gt;([Wickham Averick, et al., 2019](#bib-Wickham2019-ml)) including the pipe, `%&gt;%`  and some commonly applied data tidying operations.
 
 It includes a case study which demonstrates how to problem solve your way to a solution using a one-step-at-a-time approach.
 
@@ -59,7 +60,9 @@ You should be able to code along with the examples. When you see the film clappe
 🎬 .. an instruction to do something!!
 
 
-🎬 Start a new project containing directories called scripts, data-raw, and data-processed. Use a new script for example. 
+--
+
+🎬 Go through the workflow for creating a [new RStudio Project](https://3mmarand.github.io/BIO00058M-Data-science-2020/workshops/01_project_organisation.html#Task_1_New_RStudio_Project) with the **`usethis`** &lt;a name=cite-usethis&gt;&lt;/a&gt;([Wickham and Bryan, 2021](#bib-usethis)). I suggested including directories `R/`, `data-raw/`, and `data-processed/` 
 
 ---
 class: inverse
@@ -79,7 +82,7 @@ Tidy data adhere to a consistent structure which makes it easier to manipulate, 
 --
 
 Closely allied to the relational algebra of relational databases &lt;a name=cite-Codd1990-th&gt;&lt;/a&gt;([Codd, 1990](#bib-Codd1990-th)).  
-Underlies the enforced rectangular formatting in SPSS, STATA and R's dataframe.  
+Underlies the enforced rectangular formatting in SPSS, STATA and R's dataframe/tibble.  
 The term 'tidy data' was popularised by &lt;a name=cite-Wickham2014-nl&gt;&lt;/a&gt;[Wickham (2014)](#bib-Wickham2014-nl).   
 
 Note: There may be more than one potential tidy structure.
@@ -92,7 +95,9 @@ Note: There may be more than one potential tidy structure.
 Suppose we had just 3 individuals in each of two populations:
 
 .pull-left[
-## NOT TIDY!
+NOT TIDY!
+two observations per row
+column names are not variables
 &lt;table&gt;
  &lt;thead&gt;
   &lt;tr&gt;
@@ -120,7 +125,9 @@ Suppose we had just 3 individuals in each of two populations:
 
 .pull-right[
 
-## TIDY!
+TIDY!
+one observation per row
+column names are the two variables
 &lt;table&gt;
  &lt;thead&gt;
   &lt;tr&gt;
@@ -167,20 +174,23 @@ class: inverse
 ---
 # Tidyverse
 
-The [tidyverse](https://www.tidyverse.org/)  &lt;a name=cite-R-tidyverse&gt;&lt;/a&gt;([Wickham, 2017](#bib-R-tidyverse)) is both a paradigm for coding in R and a metapackage (a collection of packages).
+The [tidyverse](https://www.tidyverse.org/)   is both a paradigm for coding in R and a metapackage (a collection of packages).
 
 Contributors describe it as "an opinionated" collection of R packages designed for data science. 
 
 --
 
-The key feature is that **`tidyverse`** packages share an underlying design philosophy, grammar, and data structures.  
+The key feature is that all **`tidyverse`** packages share an underlying design philosophy, grammar, and data structures.  
 
-This means they work well together and learning new tidyverse packages is quick. This consistency is intended to make data work more efficient.
+This means:
+-  they work well together
+-  learning a new tidyverse packages is quick
+-  data work is more efficient.
 
 ---
 # Tidyverse
 
-**`tidyverse`** packages have a reputation for making code which is easy to read and write for humans, and for the connection of tools together into reproducible workflows.
+**`tidyverse`** packages have a reputation for making code which is easy for humans to read and to write, and for enabling tools to be connected into reproducible workflows.
 
 The R Views [article by Joe Rickert](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/) gives a good overview.
 
@@ -195,7 +205,7 @@ An example is the [Bioconductor Project](https://www.bioconductor.org/).
 
 However, Bioconductor packages that take a tidyverse approach are beginning to accumulate. For example:
 
-* **`tidybulk`** &lt;a name=cite-R-tidybulk&gt;&lt;/a&gt;([Mangiola, 2020](#bib-R-tidybulk)). See also https://stemangiola.github.io/rpharma2020_tidytranscriptomics/articles/tidytranscriptomics.html
+* **`tidybulk`** &lt;a name=cite-R-tidybulk&gt;&lt;/a&gt;([Mangiola, 2020](#bib-R-tidybulk)). See also .font70[https://stemangiola.github.io/rpharma2020_tidytranscriptomics/articles/tidytranscriptomics.html]
 * **`biobroom`** &lt;a name=cite-R-biobroom&gt;&lt;/a&gt;([Bass Robinson, et al., 2020](#bib-R-biobroom))
 
 
@@ -236,7 +246,7 @@ class: inverse
 ---
 # The pipe %&gt;%
 
-The pipe `%&gt;%` operator from the `magrittr` package &lt;a name=cite-magrittr&gt;&lt;/a&gt;([Bache and Wickham, 2014b](#bib-magrittr)) is loaded with core tidyverse. 
+The pipe `%&gt;%` operator from the `magrittr` package  is loaded with core tidyverse. 
 
 
 It is the feature that allows us to connect tools together in a readable way.
@@ -357,7 +367,13 @@ Using the pipe avoids these by taking the output of one operation as the input o
 
 The pipe has long been used by Unix operating systems (where the pipe operator is `|`). 
 
-The R pipe operator is `%&gt;%` 
+The R pipe operator is `%&gt;%` &lt;sup&gt;1&lt;/sup&gt;
+
+
+.font70[
+.footnote[1. a pipe recently became available in base R too (with R version 4.1.0). Here the operator is `|&gt;`
+]
+]
 
 --
 
@@ -440,12 +456,12 @@ Also in the data file are variables indicating the replicate number and the iden
 
 ```r
 file &lt;- "../data-raw/biomass.txt"
-biomass &lt;- read_table2(file)
+biomass &lt;- read_table(file)
 ```
 
-`read_table2()` is a function from the tidyverse's **`readr`** package. It works a lot like base R's `read.table()` but with some useful defaults (e.g., is header assumed) and extra functionality (e.g.,it's faster).
+`read_table()` is a function from the tidyverse's **`readr`** package. It works a lot like base R's `read.table()` but with some useful defaults (e.g., is header assumed) and extra functionality (e.g.,it's faster).
 
-tidyverse import functions treat strings as character variables by default, not factors. Until R 4.x, `read.table()` turned strings into factors. This used to be an important reason for me to use `read_table2()`.
+tidyverse import functions treat strings as character variables by default, not factors. Until R 4.x, `read.table()` turned strings into factors. This used to be an important reason for me to use `read_table()`.
 
 Whilst analysis and visualisation often require factor variables, any processing of strings is made much easier if they are characters.
 
@@ -538,12 +554,6 @@ The values will be in a column called `mass`, the treatments in a column called 
 # Converting "wide" to "long"
 
 &lt;span style=" font-weight: bold;    color: #fdf9f6 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #25496b !important;" &gt;Extra exercise:&lt;/span&gt; Write this dataframe to file to your `processed_data` folder. This was covered in the [Project Organisation workshop](https://3mmarand.github.io/BIO00058M-Data-science-2020/workshops/01_project_organisation.html)
-
-
-
-See the result: [biomass2-base.txt](../data-processed/biomass2-base.txt)
-
-&lt;span style=" font-weight: bold;    color: #fdf9f6 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #25496b !important;" &gt;Extra exercise:&lt;/span&gt; Can you find a tidyverse function for writing dataframes.
 
 
 
@@ -829,7 +839,7 @@ str_extract(one_description, "GN=[^\\s]+") %&gt;%
 
 --
 .font140[
-🎈
+🎉
 ]
 ---
 # Case study
@@ -903,54 +913,49 @@ You will continue to work on this case study in the workshop.
 # References
 
 .font90[
-&lt;a name=bib-magrittr&gt;&lt;/a&gt;[Bache, S. M. and H. Wickham](#cite-magrittr)
-(2014b). _magrittr: A Forward-Pipe Operator for R_. R package version
-1.5. URL:
-[https://CRAN.R-project.org/package=magrittr](https://CRAN.R-project.org/package=magrittr).
-
-&lt;a name=bib-R-biobroom&gt;&lt;/a&gt;[Bass, A. J, D. G. Robinson, et
+&lt;a name=bib-R-biobroom&gt;&lt;/a&gt;[Bass, A. J., D. G. Robinson, et
 al.](#cite-R-biobroom) (2020). _biobroom: Turn Bioconductor objects
 into tidy data frames_. R package version 1.20.0. URL:
 [https://github.com/StoreyLab/biobroom](https://github.com/StoreyLab/biobroom).
 
 &lt;a name=bib-Codd1990-th&gt;&lt;/a&gt;[Codd, E. F.](#cite-Codd1990-th) (1990).
 _The Relational Model for Database Management: Version 2_. Boston, MA,
-USA: Addison-Wesley Longman Publishing Co, Inc. URL:
+USA: Addison-Wesley Longman Publishing Co., Inc. URL:
 [https://dl.acm.org/doi/pdf/10.5555/77708](https://dl.acm.org/doi/pdf/10.5555/77708).
 
 &lt;a name=bib-R-tidybulk&gt;&lt;/a&gt;[Mangiola, S.](#cite-R-tidybulk) (2020).
 _tidybulk: Brings transcriptomics to the tidyverse_. R package version
 1.0.2. URL:
 [https://bioconductor.org/packages/release/bioc/html/tidybulk.html](https://bioconductor.org/packages/release/bioc/html/tidybulk.html).
-]
----
-# References
-.font90[
+
 &lt;a name=bib-Wickham2014-nl&gt;&lt;/a&gt;[Wickham, H.](#cite-Wickham2014-nl)
 (2014). "Tidy Data". In: _Journal of Statistical Software, Articles_
 59.10, pp. 1-23. URL:
 [https://vita.had.co.nz/papers/tidy-data.pdf](https://vita.had.co.nz/papers/tidy-data.pdf).
-
-&lt;a name=bib-R-tidyverse&gt;&lt;/a&gt;[Wickham, H.](#cite-R-tidyverse) (2017).
-_tidyverse: Easily Install and Load the 'Tidyverse'_. R package version
-1.2.1. URL:
-[https://CRAN.R-project.org/package=tidyverse](https://CRAN.R-project.org/package=tidyverse).
-
-&lt;a name=bib-Wickham2019-ml&gt;&lt;/a&gt;[Wickham, H, M. Averick, et
+]
+---
+# References
+.font90[
+&lt;a name=bib-Wickham2019-ml&gt;&lt;/a&gt;[Wickham, H., M. Averick, et
 al.](#cite-Wickham2019-ml) (2019). "Welcome to the Tidyverse". In:
 _JOSS_ 4.43, p. 1686. URL:
 [https://joss.theoj.org/papers/10.21105/joss.01686](https://joss.theoj.org/papers/10.21105/joss.01686).
 
+&lt;a name=bib-usethis&gt;&lt;/a&gt;[Wickham, H. and J. Bryan](#cite-usethis)
+(2021). _usethis: Automate Package and Project Setup_. R package
+version 2.0.1. URL:
+[https://CRAN.R-project.org/package=usethis](https://CRAN.R-project.org/package=usethis).
+
 &lt;a name=bib-Wickham2017RDS3086927&gt;&lt;/a&gt;[Wickham, H. and G.
 Grolemund](#cite-Wickham2017RDS3086927) (2017). _R for Data Science:
-Import, Tidy, Transform, Visualize, and Model Data_. 1st. O'Reilly
-Media, Inc. ISBN: 1491910399, 9781491910399. URL:
+Import, Tidy, Transform, Visualize, and Model Data_. 1st. Accessed:
+2021-11-22. O'Reilly Media, Inc. ISBN: 1491910399, 9781491910399. URL:
 [https://r4ds.had.co.nz/](https://r4ds.had.co.nz/).
 ]
 
 .font70[
 .footnote[
-Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
+Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2021](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
 ]
 ]
 ---

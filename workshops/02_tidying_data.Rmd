@@ -15,46 +15,56 @@ bibliography: "../refs.bib"
 
 
 ![](../pics/58M.png)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5442490.svg)](https://doi.org/10.5281/zenodo.5442490)
+
+<!-- note for 2022 update, switch chaffinch example to subspecies -->
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,
+knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE,
                       warning = FALSE)
 ```
 
-```{r pkg}
+```{r include=FALSE}
+library(RefManageR)
 library(tidyverse)
 ```
 
 
-# Introduction
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
 
-Work in pairs in BB Collaborate breakout to tackle the tasks.
+# Week Overview
 
-<font size = "4">
-`r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
-`r emo::ji("speech_balloon")` Communicate what you are doing and why  
-`r emo::ji("document")` Document and share your ideas and process   
-`r  emo::ji("team")` Consider having one person code and other documenting  
-`r emo::ji("heart")` Be kind, be understanding, be flexible   
-</font>
+## Aim
+The aim of this session is to strengthen your understanding of the concept of tidy data `r Cite(myBib, "Wickham2014-nl")`, introduce you to the tidyverse `r Cite(myBib, "Wickham2019-ml")` including the pipe,  and some commonly applied data tidying operations
+
+## Objectives
+By the end of this week the successful student should be able to:
+
+-  explain what is meant by, and recognise tidy data
+-  understand what the tidyverse is and appreciate tidyverse conventions
+-  use pipes to link operations together
+-  reshape data between 'long' and 'wide' formats
+-  rename and recode variables
+-  split and or extract cell contents over several columns
+-  recognise and regex and write some regex of their own
 
 
 # Set up
 
-1. Do the New project, GitHub first workflow
-   * Make a new repo on GitHub and initialise with a README and license  
-   * Clone the repo into a RStudio Project on your own machine  
+Go through the workflow for creating a [new RStudio Project](https://3mmarand.github.io/BIO00058M-Data-science-2020/workshops/01_project_organisation.html#Task_1_New_RStudio_Project) with the **`usethis`** `r Cite(myBib, "usethis")`   
 
-2. Paste the address of your GitHub repo to the chat.  `r emo::ji("speech_balloon")` This helps me see how you are getting on.
 
-3. Create a directory structure suitable for the analysis - you may wish to revise this later as you work.  
-
-4. As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub
-
-<font size = "4">
-`r emo::ji("exclamation_mark")` Start with a pull to make sure you are up-to-date. If you are working alone or only with the original repo and one clone, it is often not needed but it is a good habit to get into early.
-</font>
 
 # Task 1
 
@@ -283,9 +293,23 @@ write.table(sol2,
 ```
 
 
-# The Rmd file
+# The code files
+These contain all the code needed in the workshop even where it is not visible on the webpage.
+[Rmd file](02_tidying_data.Rmd) The Rmd file is the file I use to compile the practical. Rmd stands for R markdown. It allows R code and ordinary text to be interweaved to produce well-formatted reports including webpages. If you right-click on the link and choose Save-As, you will be able to open the Rmd file in RStudio. Alternatively, [View in Browser](https://github.com/3mmaRand/BIO00058M-Data-science-2020/blob/master/workshops/02_tidying_data.Rmd).
 
-[Rmd file](02_tidying_data.Rmd)
+
+Pages made with `rmarkdown` `r Cite(myBib, c("markdown1","markdown2", "markdown3"))`, `RefManageR``r Cite(myBib, "RefManageR")` 
+
+
+# References 
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)  
+```
+
+# Please cite as:
+
+Emma Rand. (2021). Data Science strand of BIO00058M (v1.0). Zenodo. https://doi.org/10.5281/zenodo.5442490
 
 ![](../pics/58Mend.png)
 
