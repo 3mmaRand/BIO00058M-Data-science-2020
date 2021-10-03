@@ -715,6 +715,15 @@ We need to:
 -  extract the string that starts `GN=`
 -  remove the `GN=` part of that that string
 
+
+---
+# Case study
+
+**Processing cells contents**
+
+One step at a time on one value.
+
+
 `r emo::ji("clapper")` Extract the first value of the `description` to work with:
 ```{r}
 one_description <- sol$description[1]
@@ -858,11 +867,7 @@ PrintBibliography(myBib)
 
 ]
 
-.font70[
-.footnote[
-Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
-]
-]
+
 ---
 
 ## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
