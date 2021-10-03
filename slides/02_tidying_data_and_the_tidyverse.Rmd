@@ -508,11 +508,11 @@ We sometimes have single columns which contain more than one type of encoded inf
 
 --
 
-For example, a column might contain a full species name and you might want to separate the genus and species names to perform a by-genus analysis.
+For example, if a column contains a full species name you may wish to separate the genus and species into separate columns. This allows you to perform a by-genus analysis.
 
 --
 
-Another example arises when you read in multiple files with names that encode a date, experiment or treatment. Typically, we add the file name to a column in the dataframe before combining the dataframes for analysis and then split the  name into columns for the date, experiment of treatment.
+Another example arises when you read in multiple files with names that encode a date, experiment or treatment. We  can add the file name to a column and then split the name into columns for the date, experiment or treatment.
 
 ---
 # Splitting column contents
@@ -536,8 +536,8 @@ It's a big topic and there are many tutorials. I remember a few bits and google 
 The `extract()` function from the `tidyr` helps us achieve this.
 
 We give:
-* the names of the new columns we want to create
-* the patterns matching the part of the `rep_tray` value we want to go in each column.
+-  the names of the new columns we want to create
+-  the patterns matching the part of the `rep_tray` value we want to go in each column.
 
 ---
 # Splitting column contents
@@ -553,10 +553,10 @@ biomass3 <- biomass2 %>%
 
 --
 .font80[
-* The patterns to save into columns are inside `( )`.  
-* The pattern going into `replicate_number`, `[0-9]{1,2}`, means 1 or 2 numbers.  
-* The pattern going into `tray_id`, `[a-z]` means one lowercase letter.
-* the bit between the two `( )`, `\_` is a pattern that matches what is in `rep_tray` but is not to be saved. 
+-  The patterns to save into columns are inside `( )`.  
+-  The pattern going into `replicate_number`, `[0-9]{1,2}`, means 1 or 2 numbers.  
+-  The pattern going into `tray_id`, `[a-z]` means one lowercase letter.
+-  the bit between the two `( )`, `\_` is a pattern that matches what is in `rep_tray` but is not to be saved. 
 ]
  
 
@@ -587,40 +587,40 @@ The data are normalised protein abundances. Each row is a protein.
 ---
 # Case study
 
-## Data description
+**Data description**
 
 The cells lines are Y101, Y102, Y201, Y202 and Y101.5 and there are three replicates for each cell line arranged in columns. Also in the file are columns for:
 .font70[
-* the protein accession
-* the number of peptides used to identify the protein
-* the number of unique peptides used to identify the protein
-* a measure of confidence in that identification
-* the maximum fold change between the mean abundances of two cell lines (i.e., highest mean / lowest mean)
-* a p value for a comparison test between the highest mean and lowest mean
-* a q value (corrected p value) 
-* a measure of the power of that test
-* the cell line with the highest mean
-* the cell line with the lowest mean
-* the protein mass
-* whether at least two peptides were detected for a protein.
+-  the protein accession
+-  the number of peptides used to identify the protein
+-  the number of unique peptides used to identify the protein
+-  a measure of confidence in that identification
+-  the maximum fold change between the mean abundances of two cell lines (i.e., highest mean / lowest mean)
+-  a *p* value for a comparison test between the highest mean and lowest mean
+-  a *q* value (corrected *p* value) 
+-  a measure of the power of that test
+-  the cell line with the highest mean
+-  the cell line with the lowest mean
+-  the protein mass
+-  whether at least two peptides were detected for a protein.
 ]
 ---
 # Case study
 
-## Data Import
+**Data Import**
 
 Column names are spread over three rows but are primarily in the third row.
 
 --
 
-We can read in from the third row by skipping the first two. We can also use the `clean()` function from the `janitor` package to improve the column names.
+We can read in from the third row by skipping the first two. We can also use the `clean()` function from the **`janitor`** package to improve the column names.
 
 ---
 # Case study
 
-## Data Import
+**Data Import**
 
-`r emo::ji("clapper")` Read in the file using `read_csv()` from the `tidyverse`'s `readr` package.
+`r emo::ji("clapper")` Read in the file using `read_csv()` from the **`tidyverse`**'s **`readr`** package.
 ```{r}
 # define file name
 filesol <- "../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv"
@@ -634,29 +634,29 @@ sol <- read_csv(filesol, skip = 2) %>%
 ---
 # Case study
 
-## Data Import
+**Data Import**
 
 `r emo::ji("eyes")` the `::` notation gives you access to a package's functions without first using the `library()` command. 
 
-This is useful when you want to use a single function from a package, or you need to specify which package when a function name is used in two loaded packages.
+This is useful when you only want to use one function from a package, or when you need to specify which package the function is in. 
 
 ---
 # Case study
 
-## Filtering rows
+**Filtering rows**
 
-This dataset includes bovine serum proteins from the medium on which the cells were grown which need to be filtered out.
+The cells were grown on bovine serum and any bovine proteins need to be filtered out.
 
 --
 
-We also filter out proteins for which fewer than 2 peptides were detected since we can not be confident about their identity. This is common practice for such proteomic data. 
+If a protein identify has been determined by fewer than two peptides we are not confident in that identification. Such proteins should also be filtered out. This is common practice for  proteomic data. 
 
 ---
 # Case study
 
-## Filtering rows
+**Filtering rows**
 
-**`dplyr`** (yep, a tidyverse package) has the `filter()` function. It is easier to use than selection using `datframe[rows, cols]`
+**`dplyr`** (yep, a tidyverse package) has the `filter()` function. It is easier to use than selection using `dataframe[condition1 & condition2]`
 
 `r emo::ji("clapper")` Keep rows of human proteins identified by more than one peptide:
 ```{r}
@@ -675,11 +675,11 @@ sol <- sol %>%
 ---
 # Case study
 
-## Processing cells contents
+**Processing cells contents**
 
-It would be useful to extract the genename from the description and put it in a column.
+It would be useful to extract the genename from the `description` and put it in a column of its own.
 
-One entry from the description column looks like this:
+One entry from the `description` column looks like this:
 
 .scroll-output-width[
 .code60[
@@ -691,32 +691,48 @@ sol$description[1]
 
 --
 
-The genename is after `GN=`. We need to extract the part of the string with the genename and put it in a new column. 
+The genename is after `GN=`. We need to extract the part of the string that follows `GN=` and put it in a new column. We need to do that for every row in of the dataframe.
 
 ---
 # Case study
 
-## Processing cells contents
+**Processing cells contents**
 
-A way to problem-solve your way through this is work with *one* value carrying out one operation at a time until you've worked out what to do before implementing on an entire column.
+You can problem-solve your way to the result by breaking the steps down. Start with *one* value and perform operations one at a time until you've worked out the pipeline. Then implement on the entire column.
 
 The pipe makes it especially easy to break problems down like this.
 
 ---
 # Case study
 
-## Processing cells contents
+**Processing cells contents**
 
-### One step at a time on one value
+One step at a time on one value.
 
-`r emo::ji("clapper")` Extract the first value of the description to work with:
+We need to:
+-  get one value from `description` to practice with
+-  find `GN=` in the description
+-  extract the string that starts `GN=`
+-  remove the `GN=` part of that that string
+
+`r emo::ji("clapper")` Extract the first value of the `description` to work with:
 ```{r}
 one_description <- sol$description[1]
 ```
 
 --
 
-`r emo::ji("clapper")` Extract the part of the string after `GN=` using a regex:
+We could use `sol$description[2]` or `sol$description[100]` or any other row
+
+
+---
+# Case study
+
+**Processing cells contents**
+
+One step at a time on one value.
+
+`r emo::ji("clapper")` Extract the string that starts `GN=` using a regex:
 ```{r}
 str_extract(one_description,"GN=[^\\s]+")
 ```
@@ -726,9 +742,9 @@ Explanation on next slide.
 ---
 # Case study
 
-## Processing cells contents
+**Processing cells contents**
 
-### One step at a time on one value
+One step at a time on one value.
 
 
 * `[ ]` means some characters
@@ -739,14 +755,14 @@ Explanation on next slide.
 
 --
 
-So `GN=[^\\s]+` means `GN=` followed by one or more characters that are not whitespace. This means the pattern stops matching at the first white space after "GN=".
+So `GN=[^\\s]+` means `GN=` followed by one or more characters that are not white space. This means the pattern stops matching at the first white space after "GN=".
 
 ---
 # Case study
 
-## Processing cells contents
+**Processing cells contents**
 
-### One step at a time on one value
+One step at a time on one value.
 
 We're close. Now we will drop the `GN=` part by replacing it with nothing:
 
@@ -763,9 +779,9 @@ str_extract(one_description, "GN=[^\\s]+") %>%
 ---
 # Case study
 
-## Processing cells contents
+**Processing cells contents**
 
-### Creating a new column
+Creating a new column
 
 Now we know how to get the result for one value, we need to apply the same process to the whole column
 
@@ -779,9 +795,9 @@ Now we know how to get the result for one value, we need to apply the same proce
 ---
 # Case study
 
-## Processing cells contents
+**Processing cells contents**
 
-### Creating a new column
+Creating a new column
 
 `r emo::ji("clapper")` Add a variable `genename` which contains the processed string from the `description` variable:
 ```{r}
@@ -801,15 +817,15 @@ You will continue to work on this case study in the workshop.
 
 .font80[
 
-* `tidyverse` is a collection of packages with a common design; many excellent packages are not part of it  
-* `library(tidyverse)` loads the core packages; other `tidyverse` packages need their own `library()` call  
-* the pipe `%>%` is key to connecting `tidyverse` tools together to create highly readable code  
-* reshaping data from wide to long format is common: `pivot_longer()`  
-* splitting cell contents is common: `extract()` 
-* regular expressions allow you to match text patterns; expect to have to google and do a lot of trial and error  
-* `clean_names()` is well useful!
-* `::` gives you access to a package's functions without using `library()`  
-* use particular rows `filter()`  
+-  **`tidyverse`** is a collection of packages with a common design; many excellent packages are not part of it  
+-  `library(tidyverse)` loads the core packages; other **`tidyverse`** packages need their own `library()` call  
+-  the pipe `%>%` is key to connecting **`tidyverse`** tools together to create highly readable code  
+-  reshaping data from wide to long format is common: `pivot_longer()`  
+-  splitting cell contents is common: `extract()` 
+-  regular expressions allow you to match text patterns; expect to have to google and do a lot of trial and error  
+-  `clean_names()` is well useful!
+-  `::` gives you access to a package's functions without using `library()`  
+-  use particular rows `filter()`  
   
 
 ]
@@ -819,29 +835,27 @@ You will continue to work on this case study in the workshop.
 
 ## Strongly recommended
 
-* [article by Joe Rickert](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/) gives a good overview.
-* Tidy Data `r Cite(myBib, "Wickham2014-nl")` sections 1 and 2
+-  [article by Joe Rickert](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/) gives a good overview.
+-  Tidy Data `r Cite(myBib, "Wickham2014-nl")` sections 1 and 2
 
 ## Further
-* Welcome to the Tidyverse `r Cite(myBib, "Wickham2019-ml")` 
-* Tidy Data `r Cite(myBib, "Wickham2014-nl")` sections 3 - 6
-* R for Data Science `r Cite(myBib, "Wickham:2017:RDS:3086927")` Chapter 12.1, to 12.3 and Chapter 18
+-  Welcome to the Tidyverse `r Cite(myBib, "Wickham2019-ml")` 
+-  Tidy Data `r Cite(myBib, "Wickham2014-nl")` sections 3 - 6
+-  R for Data Science `r Cite(myBib, "Wickham:2017:RDS:3086927")` Chapter 12.1, to 12.3 and Chapter 18
 
 
 ---
 # References
+.font50[
+.footnote[
+Slides made with xaringan `r Cite(myBib, "xaringan")`,  xaringanExtra `r Cite(myBib, "xaringanExtra")`, xaringanthemer `r Cite(myBib, "xaringanthemer")` and RefManageR `r Cite(myBib, "RefManageR")` 
 
-.font90[
-```{r refs1, echo=FALSE, results="asis"}
-PrintBibliography(myBib, start = 1, end = 4)
-```
 ]
----
-# References
-.font90[
-```{r refs2, echo=FALSE, results="asis"}
-PrintBibliography(myBib, start = 5 )
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)
 ```
+
 ]
 
 .font70[
