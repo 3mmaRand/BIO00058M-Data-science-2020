@@ -20,7 +20,7 @@ bibliography: "../refs.bib"
 <!-- note for 2022 update, switch chaffinch example to subspecies -->
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
+knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       warning = FALSE)
 ```

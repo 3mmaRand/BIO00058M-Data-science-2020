@@ -282,25 +282,8 @@ div.tocify {
 <h1>Task 1</h1>
 <p>The data given in <a href="../data-raw/Human-development-index.csv">Human-development-index.csv</a> give the <a href="http://hdr.undp.org/en/content/human-development-index-hdi">Human Development Index</a> (HDI) for different countries since 1990.</p>
 <p>🎬 Using tidyverse functions, import these data and reformat them in to a more ‘tidy’ form.</p>
-<pre class="r"><code># assumes you have loaded the tidyverse
-file &lt;- &quot;../data-raw/Human-development-index.csv&quot;
-hdi &lt;- read_csv(file) %&gt;% 
-  janitor::clean_names()
-
-# I have used janitor::clean_names() to ensure the column names are lowercase without spaces and that the year columns have an x in front of them. both these mean I will not need to use backticks around column names such as hdi$`HDI Rank (2018)` and hdi$`1990`  </code></pre>
-<pre class="r"><code># the format of the data would be improved by having a single observation (i.e., index) per row with other columns giving the country, year and 2018 rank.
-# this can be done using pivot_longer()  
-hdi &lt;- hdi %&gt;%
-  pivot_longer(names_to = &quot;year&quot;, 
-         values_to = &quot;index&quot;,
-         cols = -c(hdi_rank_2018, country)) 
-# remove the x from the year and make it numeric
-hdi &lt;- hdi %&gt;%
-  mutate(year =  str_replace(year, &quot;x&quot;, &quot;&quot;) %&gt;% as.numeric())</code></pre>
 <p>You should end up with a dataframe that has 6360 rows. I used the name <code>hdi</code> for this.</p>
 <p>🎬 Not all countries have an index for all years. Filter the dataset to exclude the missing observations. You’ll probably need to google here. Hint: the <code>is.na()</code> function may be useful.</p>
-<pre class="r"><code>hdi_no_na &lt;-  hdi %&gt;%  
-  filter(!is.na(index))</code></pre>
 <p>You should end up with a dataframe that has 5603 rows. I used the name <code>hdi_no_na</code> for this.</p>
 <p>The tidyverse way of summarising data is to combine the <code>group_by()</code> function with the <code>summarise()</code> function. For example, to get the mean index by country we would use:</p>
 <pre class="r"><code>hdi_summary &lt;- hdi_no_na %&gt;% 
@@ -312,14 +295,6 @@ hdi &lt;- hdi %&gt;%
   summarise(mean_index = mean(index),
             n = length(index))</code></pre>
 <p>🎬 Add columns for the standard deviation and the standard error (<span class="math inline">\(S.E. = \frac{s.d.}{\sqrt{n}}\)</span>) to the <code>hdi_summary</code> dataframe. It will look like this:</p>
-<pre class="r"><code>hdi_summary &lt;- hdi_no_na %&gt;% 
-  group_by(country) %&gt;% 
-  summarise(mean_index = mean(index),
-            n = length(index),
-            sd_index = sd(index),
-            se_index = sd_index/sqrt(n))
-
-hdi_summary</code></pre>
 <pre><code>## # A tibble: 204 x 5
 ##    country             mean_index     n sd_index se_index
 ##    &lt;chr&gt;                    &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;
@@ -392,21 +367,6 @@ readLines(file, n = 1)</code></pre>
                         skip = 2)</code></pre>
 <p>🎬 Make sure you understand why we have used <code>read_table()</code> rather than <code>read_table2()</code> or <code>read_csv()</code> (use <code>?read_table</code>)</p>
 <p>🎬 Use <code>scan()</code> to read in the appropriate lines then tidy the results and name the columns <code>measure_units</code>. Hint 1: Look up <code>scan()</code> using <code>?scan</code>. Hint 2. The functions I used were <code>str_remove()</code>, <code>str_replace()</code> and <code>paste()</code>.</p>
-<pre class="r"><code># read in the variable names from the first line, removing the hash
-measure &lt;- scan(file, 
-                nlines = 1,
-                what = character()) %&gt;%
-  str_remove(&quot;#&quot;)
-# read in the units from the second line, removing the hash and
-# replacing the / with _per_ as / is a special character
-units &lt;- scan(file, 
-              skip = 1,
-              nlines = 1, 
-              what = character()) %&gt;% 
-  str_remove(&quot;#&quot;) %&gt;% 
-  str_replace(&quot;/&quot;, &quot;_per_&quot;)
-# paste the variable name and its units together for the column names
-names(buoy44025) &lt;- paste(measure, units, sep = &quot;_&quot;) </code></pre>
 <p>You are aiming for the names to look like this:</p>
 <pre class="r"><code>names(buoy44025)</code></pre>
 <pre><code>##  [1] &quot;YY_yr&quot;        &quot;MM_mo&quot;        &quot;DD_dy&quot;        &quot;hh_hr&quot;        &quot;mm_mn&quot;       
@@ -423,47 +383,12 @@ names(buoy44025) &lt;- paste(measure, units, sep = &quot;_&quot;) </code></pre>
 <li>filter out the bovine proteins and those proteins identified from fewer than 2 peptides</li>
 <li>Extract the genename from the description and put it in a column.</li>
 </ul>
-<pre class="r"><code># define file name
-filesol &lt;- &quot;../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv&quot;
-
-# skip first two lines
-sol &lt;- read_csv(filesol, skip = 2) %&gt;% 
-  janitor::clean_names()</code></pre>
-<pre class="r"><code># filter out the bovine proteins and those proteins identified from fewer than 2 peptides
-sol &lt;- sol %&gt;% 
-  filter(str_detect(description, &quot;OS=Homo sapiens&quot;)) %&gt;% 
-  filter(x1pep == &quot;x&quot;)</code></pre>
-<pre class="r"><code># Extract the genename from the description and put it in a column.
-sol &lt;- sol %&gt;%
-  mutate(genename =  str_extract(description,&quot;GN=[^\\s]+&quot;) %&gt;% 
-           str_replace(&quot;GN=&quot;, &quot;&quot;))</code></pre>
 <p>🎬 Extract the top protein identifier from the <code>accession</code> column and put it in a column called <code>protid</code>. The top protein identifier is the first Uniprot ID after the “1::” in the <code>accession</code> column.</p>
-<pre class="r"><code># trying it out on one value
-accession &lt;- sol$accession[2]
-protid &lt;- str_extract(accession, &quot;1::[^;]+&quot;) %&gt;% 
-  str_replace(&quot;1::&quot;, &quot;&quot;)
-
-# adding a new column 
-sol &lt;- sol %&gt;%
-  mutate(protid =  str_extract(accession, &quot;1::[^;]+&quot;) %&gt;% 
-           str_replace(&quot;1::&quot;, &quot;&quot;))</code></pre>
 <p>🎬 Create a second dataframe, <code>sol2</code> in which the protein abundances are in a single column, <code>abundance</code> and the cell lineage and replicate, <code>lineage_rep</code>, is indicated in another. All the other variables should also be in the new data frame.</p>
-<pre class="r"><code>sol2 &lt;- sol %&gt;% pivot_longer(names_to = &quot;lineage_rep&quot;,
-                             values_to = &quot;abundance&quot;,
-                             cols = starts_with(&quot;y&quot;))</code></pre>
 <p>🎬 Create separate columns in <code>sol2</code> for the cell lineage and the replicate.</p>
-<pre class="r"><code>sol2 &lt;- sol2 %&gt;%
-  extract(lineage_rep,
-          c(&quot;line&quot;, &quot;rep&quot;),
-          &quot;(y[0-9]{3,4})\\_([a-c])&quot;)</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>Write <code>sol2</code> to file</li>
 </ol>
-<pre class="r"><code>file &lt;-  &quot;../data-processed/sol2.txt&quot;
-write.table(sol2, 
-            file, 
-            quote = FALSE,
-            row.names = FALSE)</code></pre>
 </div>
 <div id="the-code-files" class="section level1">
 <h1>The code files</h1>
