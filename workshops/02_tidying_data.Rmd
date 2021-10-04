@@ -62,7 +62,7 @@ By the end of this week the successful student should be able to:
 
 # Set up
 
-Go through the workflow for creating a [new RStudio Project](https://3mmarand.github.io/BIO00058M-Data-science-2020/workshops/01_project_organisation.html#Task_1_New_RStudio_Project) with the **`usethis`** `r Cite(myBib, "usethis")`   
+For each Task, go through the workflow for creating a [new RStudio Project](https://3mmarand.github.io/BIO00058M-Data-science-2020/workshops/01_project_organisation.html#Task_1_New_RStudio_Project) with the **`usethis`** `r Cite(myBib, "usethis")`. Use sensible RStudio Project names and folder structures.   
 
 
 
@@ -70,7 +70,7 @@ Go through the workflow for creating a [new RStudio Project](https://3mmarand.gi
 
 The data given in [Human-development-index.csv](../data-raw/Human-development-index.csv) give the [Human Development Index](http://hdr.undp.org/en/content/human-development-index-hdi) (HDI) for different countries since 1990.
 
-1. Using tidyverse functions, import these data and reformat them in to a more 'tidy' form.
+`r emo::ji("clapper")` Using tidyverse functions, import these data and reformat them in to a more 'tidy' form.
 ```{r task-1-import}
 # assumes you have loaded the tidyverse
 file <- "../data-raw/Human-development-index.csv"
@@ -93,7 +93,7 @@ hdi <- hdi %>%
 ```
 You should end up with a dataframe that has `r dim(hdi)[1]` rows. I used the name `hdi` for this.
 
-2. Not all countries have an index for all years. Filter the dataset to exclude the missing observations. You'll probably need to google here. Hint: the `is.na()` function may be useful.
+`r emo::ji("clapper")` Not all countries have an index for all years. Filter the dataset to exclude the missing observations. You'll probably need to google here. Hint: the `is.na()` function may be useful.
 ```{r task-1-filter}
 hdi_no_na <-  hdi %>%  
   filter(!is.na(index))
@@ -115,7 +115,7 @@ hdi_summary <- hdi_no_na %>%
             n = length(index))
 ```
 
-3. Add columns for the standard deviation and the standard error ($S.E. = \frac{s.d.}{\sqrt{n}}$) to the `hdi_summary` dataframe. It will look like this:
+`r emo::ji("clapper")` Add columns for the standard deviation and the standard error ($S.E. = \frac{s.d.}{\sqrt{n}}$) to the `hdi_summary` dataframe. It will look like this:
 
 ```{r task-1-summarise-3}
 hdi_summary <- hdi_no_na %>% 
@@ -153,7 +153,7 @@ hdi_summary_low %>%
   coord_flip()
 ```
 
-4. Build a pipeline that takes the `hdi` dataframe (the one with `r dim(hdi)[1]` rows) through to the plot above, without creating any intermediate data structures.
+`r emo::ji("clapper")` Build a pipeline that takes the `hdi` dataframe (the one with `r dim(hdi)[1]` rows) through to the plot above, without creating any intermediate data structures.
 
 ```{r task-1-pipeline, include=FALSE}
 hdi %>%  
@@ -178,6 +178,19 @@ hdi %>%
   
 ```
 
+`r emo::ji("clapper")` Reconsider the organisation of your code and project.
+
+-  Are the names of R objects, files and directories informative and systematic?
+-  Have you scripted everything?
+-  Is your code well commented? 
+-  Is code in logical places?
+-  See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
+
+`r emo::ji("clapper")` Have a look at my version of [chaffinches](https://github.com/3mmaRand/BIO00058M-chaffinches-w01)
+
+
+
+
 # Task 2 
 These data are from a buoy (buoy #44025) off the coast of New Jersey: [buoy data](http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/).
 
@@ -194,9 +207,9 @@ buoy44025 <- read_table(file,
                         skip = 2)
 ```
 
-1. Make sure you understand why we have used `read_table()` rather than `read_table2()` or `read_csv()` (use `?read_table`)
+`r emo::ji("clapper")` Make sure you understand why we have used `read_table()` rather than `read_table2()` or `read_csv()` (use `?read_table`)
 
-2. Use `scan()` to read in the appropriate lines then tidy the results and name the columns `measure_units`. Hint 1: Look up `scan()` using `?scan`. Hint 2. The functions I used were `str_remove()`, `str_replace()` and `paste()`.
+`r emo::ji("clapper")` Use `scan()` to read in the appropriate lines then tidy the results and name the columns `measure_units`. Hint 1: Look up `scan()` using `?scan`. Hint 2. The functions I used were `str_remove()`, `str_replace()` and `paste()`.
 ```{r task-2-colnames}
 # read in the variable names from the first line, removing the hash
 measure <- scan(file, 
@@ -222,7 +235,7 @@ names(buoy44025)
 # Task 3
 In this task you will continue working with proteomic data from five immortalised mesenchymal stromal cell (MSC) lines.  [Y101_Y102_Y201_Y202_Y101-5.csv](../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv)
 
-1. You may wish to close the RStudio Project you are currently working in and open the one used while coding along with the slides. Alternatively, continue in this project and copy in the code used to:  
+`r emo::ji("clapper")` You may wish to close the RStudio Project you are currently working in and open the one used while coding along with the slides. Alternatively, continue in this project and copy in the code used to:  
 
 * import the data
 * filter out the bovine proteins and those proteins identified from fewer than 2 peptides
@@ -252,7 +265,7 @@ sol <- sol %>%
            str_replace("GN=", ""))
 ```
 
-2. Extract the top protein identifier from the `accession` column and put it in a column called `protid`. The top protein identifier is the first Uniprot ID after the "1::" in the `accession` column. 
+`r emo::ji("clapper")` Extract the top protein identifier from the `accession` column and put it in a column called `protid`. The top protein identifier is the first Uniprot ID after the "1::" in the `accession` column. 
 
 ```{r task-3-extract-protid}
 # trying it out on one value
@@ -266,7 +279,7 @@ sol <- sol %>%
            str_replace("1::", ""))
 ```
 
-3. Create a second dataframe, `sol2` in which the protein abundances are in a single column, `abundance` and the cell lineage and replicate, `lineage_rep`, is indicated in another. All the other variables should also be in the new data frame. 
+`r emo::ji("clapper")` Create a second dataframe, `sol2` in which the protein abundances are in a single column, `abundance` and the cell lineage and replicate, `lineage_rep`, is indicated in another. All the other variables should also be in the new data frame. 
 ```{r task-3-pivot}
 sol2 <- sol %>% pivot_longer(names_to = "lineage_rep",
                              values_to = "abundance",
@@ -275,7 +288,7 @@ sol2 <- sol %>% pivot_longer(names_to = "lineage_rep",
 
 ```
 
-4. Create separate columns in `sol2` for the cell lineage and the replicate.
+`r emo::ji("clapper")` Create separate columns in `sol2` for the cell lineage and the replicate.
 ```{r task-3-extract-cols}
 sol2 <- sol2 %>%
   extract(lineage_rep,
