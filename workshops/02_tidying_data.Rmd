@@ -107,7 +107,7 @@ hdi_summary <- hdi_no_na %>%
   summarise(mean_index = mean(index))
 ```
 
-We can add summary columns by adding the code needed to create them in to the `summarise()` function. So for example, to add the number of indices available to each column we use:
+We can add summary columns by adding the code needed to create them in to the `summarise()` function. So for example, to add the number of indices available for a country to a column we use:
 ```{r echo=TRUE, task-1-summarise-2}
 hdi_summary <- hdi_no_na %>% 
   group_by(country) %>% 
@@ -186,8 +186,7 @@ hdi %>%
 -  Is code in logical places?
 -  See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
 
-`r emo::ji("clapper")` Have a look at my version of [chaffinches](https://github.com/3mmaRand/BIO00058M-chaffinches-w01)
-
+`r emo::ji("clapper")` Have a look at my version of [chaffinches](https://github.com/3mmaRand/BIO00058M-HDI-w02)
 
 
 
