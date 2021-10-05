@@ -239,11 +239,12 @@ names(buoy44025)
 # Task 3
 In this task you will continue working with proteomic data from five immortalised mesenchymal stromal cell (MSC) lines.  [Y101_Y102_Y201_Y202_Y101-5.csv](../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv)
 
-`r emo::ji("clapper")` You may wish to close the RStudio Project you are currently working in and open the one used while coding along with the slides. Alternatively, continue in this project and copy in the code used to:  
+`r emo::ji("clapper")` During the independent study you should have created a RStudio Project for all the examples the slides. I suggest you now start a new Project just for the case study and transfer the code your wrote for that example to the project. During the independent study you should have:   
 
-* import the data
-* filter out the bovine proteins and those proteins identified from fewer than 2 peptides
-* Extract the genename from the description and put it in a column.
+-  imported the data
+-  filtered out the bovine proteins and those proteins identified from fewer than 2 peptides
+-  Extracted the genename from the description and put it in a column.
+
 
 ```{r task-3-import}
 # define file name
@@ -269,7 +270,14 @@ sol <- sol %>%
            str_replace("GN=", ""))
 ```
 
-`r emo::ji("clapper")` Extract the top protein identifier from the `accession` column and put it in a column called `protid`. The top protein identifier is the first Uniprot ID after the "1::" in the `accession` column. 
+`r emo::ji("clapper")` Extract the top protein identifier from the `accession` column and put it in a column called `protid`. The top protein identifier is the first Uniprot ID after the "1::" in the `accession` column. I recommend using the problem solving approach given in the slides: Start with one value and perform operations one at a time until you've worked out the pipeline. Then implement on the entire column.
+
+You need to:
+
+-  get one value from accession to practice with
+-  find `1::` in the accession
+-  extract the string that starts `1::` and ends with `;`
+-  remove the `1::` part of that that string
 
 ```{r task-3-extract-protid}
 # trying it out on one value
@@ -300,7 +308,7 @@ sol2 <- sol2 %>%
           "(y[0-9]{3,4})\\_([a-c])")
 ```
 
-4. Write `sol2` to file
+`r emo::ji("clapper")` Write `sol2` to file
 ```{r task-3-write}
 file <-  "../data-processed/sol2.txt"
 write.table(sol2, 

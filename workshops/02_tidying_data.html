@@ -357,15 +357,19 @@ hdi_summary_low</code></pre>
 <div id="task-2" class="section level1">
 <h1>Task 2</h1>
 <p>These data are from a buoy (buoy #44025) off the coast of New Jersey: <a href="http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&amp;dir=data/historical/stdmet/">buoy data</a>.</p>
-<p>We can use the <code>readLines()</code> function to view the first few lines of the line and help us decide how to read it in:</p>
+<p>The organisation and format of data in a file is not always obvious to us. In these cases, it is useful to read the first few lines of the file to determine to best approach for importing it.</p>
+<p>You can use the <code>readLines()</code> function to read the first few lines from the file:</p>
 <pre class="r"><code>file &lt;- &quot;http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&amp;dir=data/historical/stdmet/&quot;
-readLines(file, n = 1)</code></pre>
-<pre><code>## [1] &quot;#YY  MM DD hh mm WDIR WSPD GST  WVHT   DPD   APD MWD   PRES  ATMP  WTMP  DEWP  VIS  TIDE&quot;</code></pre>
-<p>The first line gives the column name, the second line gives units and the data themselves begin on line 3. We can read them in with:</p>
+readLines(file, n = 3)</code></pre>
+<pre><code>## [1] &quot;#YY  MM DD hh mm WDIR WSPD GST  WVHT   DPD   APD MWD   PRES  ATMP  WTMP  DEWP  VIS  TIDE&quot;
+## [2] &quot;#yr  mo dy hr mn degT m/s  m/s     m   sec   sec degT   hPa  degC  degC  degC   mi    ft&quot;
+## [3] &quot;2010 12 31 23 50 222  7.2  8.5  0.75  4.55  3.72 203 1022.2   6.9   6.7   3.5 99.0 99.00&quot;</code></pre>
+<p><code>readLines()</code> just shows what the first three (in this case) line of the file look like, it doesn’t try to put it in a data structure such as a dataframe. This means it does not throw errors.</p>
+<p>In the buoy data, the first line gives the column name, the second line gives units and the data themselves begin on line 3. In other words, the column names are over two lines. The best approach is to import the data without the column names then process the first two line to create comnplete column names.</p>
+<p>Import the data without names:</p>
 <pre class="r"><code>buoy44025 &lt;- read_table(file, 
                         col_names = FALSE,
                         skip = 2)</code></pre>
-<p>🎬 Make sure you understand why we have used <code>read_table()</code> rather than <code>read_table2()</code> or <code>read_csv()</code> (use <code>?read_table</code>)</p>
 <p>🎬 Use <code>scan()</code> to read in the appropriate lines then tidy the results and name the columns <code>measure_units</code>. Hint 1: Look up <code>scan()</code> using <code>?scan</code>. Hint 2. The functions I used were <code>str_remove()</code>, <code>str_replace()</code> and <code>paste()</code>.</p>
 <p>You are aiming for the names to look like this:</p>
 <pre class="r"><code>names(buoy44025)</code></pre>
@@ -377,18 +381,23 @@ readLines(file, n = 1)</code></pre>
 <div id="task-3" class="section level1">
 <h1>Task 3</h1>
 <p>In this task you will continue working with proteomic data from five immortalised mesenchymal stromal cell (MSC) lines. <a href="../data-raw/Y101_Y102_Y201_Y202_Y101-5.csv">Y101_Y102_Y201_Y202_Y101-5.csv</a></p>
-<p>🎬 You may wish to close the RStudio Project you are currently working in and open the one used while coding along with the slides. Alternatively, continue in this project and copy in the code used to:</p>
+<p>🎬 During the independent study you should have created a RStudio Project for all the examples the slides. I suggest you now start a new Project just for the case study and transfer the code your wrote for that example to the project. During the independent study you should have:</p>
 <ul>
-<li>import the data</li>
-<li>filter out the bovine proteins and those proteins identified from fewer than 2 peptides</li>
-<li>Extract the genename from the description and put it in a column.</li>
+<li>imported the data</li>
+<li>filtered out the bovine proteins and those proteins identified from fewer than 2 peptides</li>
+<li>Extracted the genename from the description and put it in a column.</li>
 </ul>
-<p>🎬 Extract the top protein identifier from the <code>accession</code> column and put it in a column called <code>protid</code>. The top protein identifier is the first Uniprot ID after the “1::” in the <code>accession</code> column.</p>
+<p>🎬 Extract the top protein identifier from the <code>accession</code> column and put it in a column called <code>protid</code>. The top protein identifier is the first Uniprot ID after the “1::” in the <code>accession</code> column. I recommend using the problem solving approach given in the slides: Start with one value and perform operations one at a time until you’ve worked out the pipeline. Then implement on the entire column.</p>
+<p>You need to:</p>
+<ul>
+<li>get one value from accession to practice with</li>
+<li>find <code>1::</code> in the accession</li>
+<li>extract the string that starts <code>1::</code> and ends with <code>;</code></li>
+<li>remove the <code>1::</code> part of that that string</li>
+</ul>
 <p>🎬 Create a second dataframe, <code>sol2</code> in which the protein abundances are in a single column, <code>abundance</code> and the cell lineage and replicate, <code>lineage_rep</code>, is indicated in another. All the other variables should also be in the new data frame.</p>
 <p>🎬 Create separate columns in <code>sol2</code> for the cell lineage and the replicate.</p>
-<ol start="4" style="list-style-type: decimal">
-<li>Write <code>sol2</code> to file</li>
-</ol>
+<p>🎬 Write <code>sol2</code> to file</p>
 </div>
 <div id="the-code-files" class="section level1">
 <h1>The code files</h1>

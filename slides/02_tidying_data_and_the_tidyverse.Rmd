@@ -712,7 +712,7 @@ One step at a time on one value.
 We need to:
 -  get one value from `description` to practice with
 -  find `GN=` in the description
--  extract the string that starts `GN=`
+-  extract the string that starts `GN=` and ends with whitespace
 -  remove the `GN=` part of that that string
 
 
