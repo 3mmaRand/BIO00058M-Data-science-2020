@@ -186,27 +186,32 @@ hdi %>%
 -  Is code in logical places?
 -  See chapters 1 and 2 of [The tidyverse style guide](https://style.tidyverse.org/) for more suggestions.  
 
-`r emo::ji("clapper")` Have a look at my version of [chaffinches](https://github.com/3mmaRand/BIO00058M-HDI-w02)
+`r emo::ji("clapper")` Have a look at my version of [BIO00058M-HDI-w02](https://github.com/3mmaRand/BIO00058M-HDI-w02)
 
 
 
 # Task 2 
 These data are from a buoy (buoy #44025) off the coast of New Jersey: [buoy data](http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/).
 
-We can use the `readLines()` function to view the first few lines of the line and help us decide how to read it in:
+The organisation and format of data in a file is not always obvious to us. In these cases, it is useful to read the first few lines of the file to determine to best approach for importing it.
+
+You can use the `readLines()` function to read the first few lines from the file:
 ```{r task-2-examine, echo= TRUE}
 file <- "http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/"
-readLines(file, n = 1)
+readLines(file, n = 3)
 ```
-The first line gives the column name, the second line gives units and the data themselves begin on line 3. We can read them in with:
+
+`readLines()` just shows what the first three (in this case) line of the file look like, it doesn't try to put it in a data structure such as a dataframe. This means it does not throw errors.
+
+In the buoy data, the first line gives the column name, the second line gives units and the data themselves begin on line 3. In other words, the column names are over two lines. The best approach is to import the data without the column names then process the first two line to create comnplete column names.
+
+Import the data without names:
 
 ```{r task-2-import, echo= TRUE}
 buoy44025 <- read_table(file, 
                         col_names = FALSE,
                         skip = 2)
 ```
-
-`r emo::ji("clapper")` Make sure you understand why we have used `read_table()` rather than `read_table2()` or `read_csv()` (use `?read_table`)
 
 `r emo::ji("clapper")` Use `scan()` to read in the appropriate lines then tidy the results and name the columns `measure_units`. Hint 1: Look up `scan()` using `?scan`. Hint 2. The functions I used were `str_remove()`, `str_replace()` and `paste()`.
 ```{r task-2-colnames}
