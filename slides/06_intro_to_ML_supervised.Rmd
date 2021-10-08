@@ -747,16 +747,16 @@ lda_labelled_test %>%
 
 ---
 # References
-.font90[
-```{r refs2, echo=FALSE, results="asis"}
-PrintBibliography(myBib)
-```
+.font50[
+.footnote[
+Slides made with xaringan `r Cite(myBib, "xaringan")`,  xaringanExtra `r Cite(myBib, "xaringanExtra")`, xaringanthemer `r Cite(myBib, "xaringanthemer")` and RefManageR `r Cite(myBib, "RefManageR")` 
+
 ]
 
-.font70[
-.footnote[
-Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
-]
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)
+```
+
 ]
 ---
 

@@ -461,24 +461,16 @@ Peruse and book mark these:
 
 ---
 # References
-
-.font90[
-```{r refs1, echo=FALSE, results="asis"}
-PrintBibliography(myBib, start = 1, end = 4)
-```
-]
----
-# References
-.font90[
-```{r refs2, echo=FALSE, results="asis"}
-PrintBibliography(myBib, start = 5)
-```
-]
-
-.font70[
+.font50[
 .footnote[
-Slides made with with xaringan `r Cite(myBib, "xaringan")` and xaringanExtra `r Cite(myBib, "xaringanExtra")`
+Slides made with xaringan `r Cite(myBib, "xaringan")`,  xaringanExtra `r Cite(myBib, "xaringanExtra")`, xaringanthemer `r Cite(myBib, "xaringanthemer")` and RefManageR `r Cite(myBib, "RefManageR")` 
+
 ]
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)
+```
+
 ]
 ---
 

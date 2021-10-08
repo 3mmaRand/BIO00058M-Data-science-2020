@@ -49,7 +49,13 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 # Outline
 
-The aim of this topic is to introduce to good programming practices such as styling and organising your code and writing your own functions as well as the use of R Markdown  &lt;a name=cite-markdown1&gt;&lt;/a&gt;&lt;a name=cite-markdown2&gt;&lt;/a&gt;([Allaire Xie, et al., 2019a](#bib-markdown1); [Xie Allaire, et al., 2018a](#bib-markdown2)) for creating reproducible analyses. 
+The aim of this topic is show you more good programming practice:
+
+-  in code styling and organisation
+-  writing your own functions
+-  literate programming with R Markdown  (Allaire Xie, et al., 2021; Xie Allaire, et al., 2018; Xie Dervieux, et al., 2020). 
+
+These build on the ideas about project organisation to allow you to conduct reproducible analyses. 
 
 
 ---
@@ -60,33 +66,27 @@ class: inverse
 ---
 #  Good scientific practice
 
-Analysis workflows should conform to the same standards as lab projects and lab books&lt;sup&gt;1&lt;/sup&gt;: structured and documented pipelines. 
+Analysis workflows should be structured and documented pipelines. 
 
-* Important in research collaboration and mandatory in many industry settings.   
-* Will likely become mandatory for science publication and funding. 
-* Will ultimately make your life much easier.  
-* Requires time, diligence and practice.  
+-  Important in research collaboration and mandatory in many industry settings.   
+-  Will likely become mandatory for science publication and funding. 
+-  Will ultimately make your life much easier.  
+-  Requires time, diligence and practice.  
 
-.font70[
-.footnote[
-Higher standards IMO, it can be 100% reproducible so it should be. Publication should be contingent on the supply of complete analytical pipelines because science is funded by taxes and donations.
-]
-]
 
 ---
 # Reproducibility is a continuum
 
 Some is better than none!
 
-* Organise your project See [Topic 1 Project Organisation](01_project_organisation.html).  
-* Script **everything**.  
-* Organise code into sections.  
-* Code formatting and style.  
-* Code algorithmically / algebraically.
-* Document your project - code commenting, licenses, READMEs 
-* Modularise your code by writing functions. 
-* Use literate programming e.g., R Markdown
-* Version control, containerising
+-  Organise your project See [Topic 1 Project Organisation](01_project_organisation.html).  
+-  Script **everything**.  
+-  Format code and follow a consistent style.  
+-  Code algorithmically / algebraically.
+-  Modularise your code :organise into sections, scripts, functions, packages 
+-  Document your project - code commenting, licenses, READMEs 
+-  Use literate programming e.g., R Markdown
+-  Version control, continuous integration, environments, containers
 
 ---
 class: inverse
@@ -222,12 +222,21 @@ class: inverse
 
 👺 Hard coding numbers.
 
-Suppose we want to calculate `\(SS(x)\)` for the number of chicks in five nests. The formula is given by: `\(\sum (x_i- \bar{x})^2\)`  
+Suppose we want to calculate the sums of squares, `\(SS(x)\)`, for the number of eggs in five nests. 
+
+The formula is given by: `\(\sum (x_i- \bar{x})^2\)`  
+
+We could calculate the mean and copy it, and the individual numbers into the formula
+
+
+---
+#  Code 'algorithmically'
+
+👺 Hard coding numbers.
 
 
 ```r
-# calculating sum of squares for the number of 
-# chicks in nests
+# mean number of eggs per nest
 sum(3, 5, 6, 7, 8) / 5
 ```
 
@@ -236,6 +245,7 @@ sum(3, 5, 6, 7, 8) / 5
 ```
 
 ```r
+# ss(x) of number of eggs
 (3 - 5.8)^2 + (5 - 5.8)^2 + (6 - 5.8)^2 + (7 - 5.8)^2 + (8 - 5.8)^2
 ```
 
@@ -243,17 +253,18 @@ sum(3, 5, 6, 7, 8) / 5
 ## [1] 14.8
 ```
 
+--
+I am coding the calculation of the mean rather using the `mean()` function only to explain what 'coding algorithmically' means using a simple example.
 
 ---
 #  Code 'algorithmically'
 
 👺 Hard coding numbers
 
-
 * if any of the sample numbers must be altered, all the code needs changing
 * it is hard to tell that the output of the first line is a mean
-* its hard to tell that the second number in each bracket comes from the first command
-* it is hard to tell that 5 is just the number of values
+* its hard to recognise that the numbers in the mean calculation correspond to those in the next calculation
+* it is hard to tell that 5 is just the number of nests
 * no way of know if numbers are the same by coincidence or they refer to the same thing
 
 
@@ -265,11 +276,12 @@ sum(3, 5, 6, 7, 8) / 5
 
 
 ```r
-# calculating sum of squares for the number of 
-# chicks in nests
-offspring &lt;- c(3, 5, 6, 7, 8)
-mean_offspring &lt;- sum(offspring) / length(offspring)
-sum((offspring - mean_offspring)^2)
+# eggs per nest
+eggs &lt;- c(3, 5, 6, 7, 8)
+# mean eggs per nest
+mean_eggs &lt;- sum(eggs) / length(eggs)
+# ss(x) of number of eggs
+sum((eggs - mean_eggs)^2)
 ```
 
 ```
@@ -279,9 +291,10 @@ sum((offspring - mean_offspring)^2)
 #  Code 'algorithmically'
 
 😎 Better
-* the commenting is the same but it is easy to follow
+* the commenting is similar but it is easier to follow
 * if any of the sample numbers must be altered, only that number needs changing
-* assigning a value you will later use to a variable with a meaningful name allows us to understand the first and second calculations.
+* assigning a value you will later use to a variable with a meaningful name allows us to understand the first and second calculations
+* makes use of R's elementwise calculation which resembles the formula (i.e., is expressed as the general rule)
 
 ---
 #  Code 'algorithmically'
@@ -290,11 +303,12 @@ sum((offspring - mean_offspring)^2)
 
 
 ```r
-# calculating sum of squares for the number of 
-# chicks in nests
-offspring &lt;- c(3, 5, 6, 7, 8)
-mean_offspring &lt;- mean(offspring)
-sum((offspring - mean_offspring)^2)
+# eggs per nest
+eggs &lt;- c(3, 5, 6, 7, 8)
+# mean eggs per nest
+mean_eggs &lt;- mean(eggs)
+# ss(x) of number of eggs
+sum((eggs - mean_eggs)^2)
 ```
 
 ```
@@ -312,18 +326,25 @@ class: inverse
 
 Putting code that you will use more than once in a function is efficient and makes your code easier to read.
 
-Suppose we had two samples of the number of chicks in nests. We could do this:
+Suppose we had two samples of the number of eggs in nests. We could do this:
 
 
 ```r
-# calculating sum of squares for the number of 
-# chicks in nests
-offspring_1 &lt;- c(3, 5, 6, 7, 8)
-mean_offspring_1 &lt;- mean(offspring_1)
-ss_offspring_1 &lt;- sum((offspring - mean_offspring_1)^2)
-offspring_2 &lt;- c(4, 1, 6, 6, 3)
-mean_offspring_2 &lt;- mean(offspring_2)
-ss_offspring_2 &lt;- sum((offspring - mean_offspring_2)^2)
+####  Sample 1 ####
+# eggs per nest
+eggs_1 &lt;- c(3, 5, 6, 7, 8)
+# mean eggs per nest
+mean_eggs_1 &lt;- mean(eggs_1)
+# ss(x) of number of eggs
+ss_eggs_1 &lt;- sum((eggs - mean_eggs_1)^2)
+
+####  Sample 2 ####
+# eggs per nest
+eggs_2 &lt;- c(4, 1, 6, 6, 3)
+# mean eggs per nest
+mean_eggs_2 &lt;- mean(eggs_2)
+# ss(x) of number of eggs
+ss_eggs_2 &lt;- sum((eggs - mean_eggs_2)^2)
 ```
 
 ---
@@ -371,7 +392,7 @@ Our function take one argument. The expression describes what the function shoul
 
 When you run the code that defines the function, it will appear in your environment window.
 
-&lt;img src="../pics/env_window_function.png" title="the environment window" alt="the environment window" width="50%" /&gt;
+&lt;img src="../pics/env_window_function.png" title="the environment window" alt="the environment window" width="70%" /&gt;
 
 ---
 #  Writing functions
@@ -380,7 +401,7 @@ To call the function:
 
 
 ```r
-sum_sq(offspring_1)
+sum_sq(eggs_1)
 ```
 
 ```
@@ -388,7 +409,7 @@ sum_sq(offspring_1)
 ```
 
 ```r
-sum_sq(offspring_2)
+sum_sq(eggs_2)
 ```
 
 ```
@@ -402,26 +423,20 @@ You can put your functions in one of two places:
 
 1. at the beginning of your analysis in a section for defining functions.
 
-2. better: put the function in a file of its own then `source()` it before running it:
+2. better: put the function in a file of its own then `source()` it before calling it:
 
 ```r
 source("functions/sum_sq.R")
-sum_sq(offspring_1)
+sum_sq(eggs_1)
 ```
 
+Or in Rmarkdown:
+
+
+```r
+source("functions/sum_sq.R", local = knitr::knit_global())
+sum_sq(eggs_1)
 ```
-## [1] 14.8
-```
-
----
-#  Writing functions
-
-Save the function in a file with the same name as the function.
-
---
-
-Then put the `source()` command at the top of the script (like the package loading)
-
 
 ---
 class: inverse
@@ -462,7 +477,7 @@ background-size: 180px
 
 # Reproducible Reports: R Markdown
 
-The brilliance of R Markdown ([Allaire Xie, et al., 2019a](#bib-markdown1)) is that you can use a **single R Markdown file** to:
+The brilliance of R Markdown (Allaire Xie, et al., 2021) is that you can use a **single R Markdown file** to:
 
 * save and execute code  
 
@@ -476,7 +491,7 @@ The brilliance of R Markdown ([Allaire Xie, et al., 2019a](#bib-markdown1)) is t
 
 --
 
-This is known as literate programming &lt;a name=cite-Knuth1984-ly&gt;&lt;/a&gt;([Knuth, 1984](#bib-Knuth1984-ly)). 
+This is known as literate programming (Knuth, 1984). 
 
 
 😎
@@ -544,7 +559,7 @@ Create your own R markdown file
 
 # Reproducible Reports: R Markdown
 
-🎬 Edit the YAML. I recommend using the `bookdown` package &lt;a name=cite-bookdown&gt;&lt;/a&gt;([Xie, 2016](#bib-bookdown))  for output types which handle cross referencing well. We will do cross referencing in the next Topic.
+🎬 Edit the YAML. I recommend using the `bookdown` package (Xie, 2016)  for output types which handle cross referencing well. We will do cross referencing in the next Topic.
 
 ```
 ---
@@ -587,7 +602,12 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ## Organise code into sections.
 
-Have separate named code chunks for each process: set up, package loading, data import, data tidying (maybe several chunks), different analyses, figures etc.
+Separate code for each process: set up, package loading, data import, data tidying, different analyses, figures etc.
+
+-  separate code chunks
+-  separate files that you source
+-  a sensible combination of the the two
+
 
 The first two code chunks are usually for the default code chunk options (which I tend to call `setup`) and for package loading. 
 
@@ -621,7 +641,7 @@ library(tidyverse)
 * code chunk behaviour can be set 
 * `#` is a heading in the text
 * Use Ctrl+Shift+C for do context-specific comments
-* Formatting: `**bold**`, `*italics*`
+* Formatting: **\*\*bold\*\* **, * \*italics\* *
 * Organise code into sections
 * Use a consistent style particularly in terms of indentation, spacing and variable names
 * Modularise your code by writing functions
@@ -633,50 +653,63 @@ library(tidyverse)
 
 ## Strongly recommended
 
-* Good enough practices in scientific computing &lt;a name=cite-Wilson2017-cp&gt;&lt;/a&gt;([Wilson Bryan, et al., 2017](#bib-Wilson2017-cp))
-* The tidyverse style guide &lt;a name=cite-Wickham-style&gt;&lt;/a&gt;([Wickham, ](#bib-Wickham-style)) Chapter 2 Syntax
+* Good enough practices in scientific computing (Wilson Bryan, et al., 2017)
+* The tidyverse style guide (Wickham, b) Chapter 2 Syntax
 
 ---
 # References
+.font50[
+.footnote[
+Slides made with xaringan (Xie, 2021),  xaringanExtra (Aden-Buie, 2020), xaringanthemer (Aden-Buie, 2021) and RefManageR (McLean, 2017) 
 
-.font90[
-&lt;a name=bib-markdown1&gt;&lt;/a&gt;[Allaire, J, Y. Xie, et al.](#cite-markdown1)
-(2019a). _rmarkdown: Dynamic Documents for R_. R package version 1.16.
-URL:
+]
+
+Aden-Buie, G. (2020). _xaringanExtra: Extras And Extensions for
+Xaringan Slides_. R package version 0.2.3.9000. URL:
+[https://github.com/gadenbuie/xaringanExtra](https://github.com/gadenbuie/xaringanExtra).
+
+Aden-Buie, G. (2021). _xaringanthemer: Custom 'xaringan' CSS Themes_. R
+package version 0.4.0. URL:
+[https://CRAN.R-project.org/package=xaringanthemer](https://CRAN.R-project.org/package=xaringanthemer).
+
+Allaire, J., Y. Xie, et al. (2021). _rmarkdown: Dynamic Documents for
+R_. R package version 2.10. URL:
 [https://github.com/rstudio/rmarkdown](https://github.com/rstudio/rmarkdown).
 
-&lt;a name=bib-Knuth1984-ly&gt;&lt;/a&gt;[Knuth, D. E.](#cite-Knuth1984-ly) (1984).
-"Literate Programming". In: _Comput. J._ 27.2, pp. 97-111.
+Knuth, D. E. (1984). "Literate Programming". In: _Comput. J._ 27.2, pp.
+97-111.
 
-&lt;a name=bib-Wickham-style&gt;&lt;/a&gt;[Wickham, H.](#cite-Wickham-style) "The
-tidyverse style guide". . Accessed: 2020-10-30.
+McLean, M. W. (2017). "RefManageR: Import and Manage BibTeX and
+BibLaTeX References in R". In: _The Journal of Open Source Software_.
+DOI: [10.21105/joss.00338](https://doi.org/10.21105%2Fjoss.00338).
 
-&lt;a name=bib-Wilson2017-cp&gt;&lt;/a&gt;[Wilson, G, J. Bryan, et
-al.](#cite-Wilson2017-cp) (2017). "Good enough practices in scientific
-computing". En. In: _PLoS Comput. Biol._ 13.6, p. e1005510.
+Wickham, H. "The tidyverse style guide". . Accessed: 2020-10-30.
 
-&lt;a name=bib-bookdown&gt;&lt;/a&gt;[Xie, Y.](#cite-bookdown) (2016). _bookdown:
-Authoring Books and Technical Documents with R Markdown_. ISBN
-978-1138700109. Boca Raton, Florida: Chapman and Hall/CRC. URL:
+Wilson, G., J. Bryan, et al. (2017). "Good enough practices in
+scientific computing". En. In: _PLoS Comput. Biol._ 13.6, p. e1005510.
+
+Xie, Y. (2016). _bookdown: Authoring Books and Technical Documents with
+R Markdown_. ISBN 978-1138700109. Boca Raton, Florida: Chapman and
+Hall/CRC. URL:
 [https://github.com/rstudio/bookdown](https://github.com/rstudio/bookdown).
-]
----
-# References
-.font90[
-&lt;a name=bib-markdown2&gt;&lt;/a&gt;[Xie, Y, J. Allaire, et al.](#cite-markdown2)
-(2018a). _R Markdown: The Definitive Guide_. ISBN 9781138359338. Boca
-Raton, Florida: Chapman and Hall/CRC. URL:
+
+Xie, Y. (2021). _xaringan: Presentation Ninja_. R package version 0.22.
+URL:
+[https://CRAN.R-project.org/package=xaringan](https://CRAN.R-project.org/package=xaringan).
+
+Xie, Y., J. Allaire, et al. (2018). _R Markdown: The Definitive Guide_.
+ISBN 9781138359338. Boca Raton, Florida: Chapman and Hall/CRC. URL:
 [https://bookdown.org/yihui/rmarkdown](https://bookdown.org/yihui/rmarkdown).
-]
 
-.font70[
-.footnote[
-Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
-]
+Xie, Y., C. Dervieux, et al. (2020). _R Markdown Cookbook_. ISBN
+9780367563837. Boca Raton, Florida: Chapman and Hall/CRC. URL:
+[https://bookdown.org/yihui/rmarkdown-cookbook](https://bookdown.org/yihui/rmarkdown-cookbook).
+
 ]
 ---
 
-## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
 &lt;br&gt;
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
     </textarea>
