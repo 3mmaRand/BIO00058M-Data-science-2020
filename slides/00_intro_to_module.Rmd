@@ -103,8 +103,11 @@ For Data Science, the first objective means:
 
 **Produce a reproducible data analysis and report. **
 
-The analysis can emphasise data import, processing, statistical analysis, visualisation or any combination of these.
+The analysis can emphasise data processing, statistical analysis, visualisation or any combination of these.
 
+--
+
+You **must** use RStudio projects and rmarkdown (any, incl. Shiny), organise your analyses for reproducibility and follow good practice.
 
 ---
 class: inverse
@@ -272,7 +275,7 @@ One definition
 ---
 # Reproducibility is key!
 
-```{r turing-reprod-matrix, echo = FALSE, out.width="500px"}
+```{r turing-reprod-matrix, echo = FALSE, out.width="700px"}
 knitr::include_graphics("../pics/reproducible-matrix.jpg")
 ```
 
@@ -294,7 +297,7 @@ How the Turing Way `r Cite(myBib, "the_turing_way_community_2019_3233986")` defi
 ---
 # Open Science
 
-```{r foster-fig, echo = FALSE}
+```{r foster-fig, echo = FALSE, out.width="700px"}
 knitr::include_graphics("../pics/Foster.png")
 ```
 .font60[
@@ -328,7 +331,7 @@ Analysing and reporting them
 ---
 
 # Rationale for scripting analysis
-We ensure reproducibility of laboratory and field work by planning and recording in lab books and using standard protocols. 
+We ensure replicability of laboratory and field work by planning and recording in lab books and using standard protocols. 
 
 
 ```{r echo = FALSE, out.width="600px"}
@@ -346,7 +349,7 @@ knitr::include_graphics("../pics/rationale3.png")
 ```
 
 
-Workflows for computational projects and the data analysis and reporting of other work can, and should, be 100% reproducible! Scripting is the way to achieve this.
+Workflows for computational projects, and the data analysis and reporting of other work can, and should, be 100% reproducible! Scripting is the way to achieve this.
 
 ---
 
@@ -362,9 +365,6 @@ knitr::include_graphics("../pics/rationale5.png")
 
 From importing or collecting the data, processing it for analysis, building statistical models and communicating the methods and results.
 
---
-
-These are usually iterative and that process of iteration (the development of the analysis) should also be captured.
 
 ---
 class: inverse
@@ -382,7 +382,7 @@ Open source and free
   
 --
 
-R has reputation for catering to users who do not see themselves as programmers, and  allowing them to slide gradually into programming.
+R has reputation for catering to users who do not see themselves as programmers, and allowing them to slide gradually into programming.
 
 
 ```{r echo = FALSE, out.width="600px"}
@@ -474,8 +474,8 @@ We cover:
 -  Week 8: Topic 5 - An introduction to Machine Learning: Overview and Unsupervised methods
 -  Week 9: Topic 6 - An introduction to Machine Learning: Supervised Methods
 -  Week 10: Project work
--  Spring Weeks 1 - 5: Project work. Drop-ins TBC
-
+-  Spring Weeks 1 - 2: Project work. Drop-ins
+-  Spring Week 3: Assessment deadline Monday 1200 noon
 ]
 
 ---
@@ -490,7 +490,7 @@ Thus there is choice and flexibility in the assessment. Two highly scoring submi
 ---
 # The options
 
-1. Reproducible analysis related to your project/module work
+1. Reproducible analysis *related* to your project/module work
    * Analysis of existing or simulated data including images
    * Conversion of existing lab tools (eg excel files) to reproducible pipelines
    * Analysis of literature (text analysis)
