@@ -10,11 +10,11 @@ output:
       smooth_scroll: false
     theme: flatly
   word_document: default
-bibliography: "../refs.bib"
 ---
 
 
 ![](../pics/58M.png)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5442490.svg)](https://doi.org/10.5281/zenodo.5442490)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
@@ -24,104 +24,121 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ```{r pkg}
 library(tidyverse)
+library(RefManageR)
 ```
 
 
-# Introduction
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
 
-Work in pairs in BB Collaborate breakout to tackle the tasks.
 
-<font size = "4">
-`r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
-`r emo::ji("speech_balloon")` Communicate what you are doing and why  
-`r emo::ji("document")` Document and share your ideas and process   
-`r  emo::ji("team")` Consider having one person code and other documenting  
-`r emo::ji("heart")` Be kind, be understanding, be flexible   
-</font>
+# Week Overview
 
+## Aim
+The aim of this session is to introduce you to good programming practice and the use of R Markdown for creating reproducible analyses.
+
+## Objectives
+By the end of this week the successful student should be able to:
+
+-  organise and document code effectively
+-  follow good practice in code styling
+-  create user-defined functions and call them
+-  create simple R Markdown documents
+-  explain what R Markdown is
+-  appreciate the role of the YAML header
+-  set default code chunk behaviour and those for individual chunks
+-  use headings and simple text formatting
 
 # Task 1
 
-This task will give you an opportunity to use R Markdown but also to practice organising your analyses and using the tidyverse.
+This task will give you an opportunity to use R Markdown but also to continue practising organisation and tidying.
 
 In the workshop for [Topic 1: Project organisation](01_project_organisation.html) you worked with data in [chaff.txt](../data-raw/chaff.txt) which are the masses of male and female chaffinches.
 
-1. Do the New project, GitHub first workflow
-   * Make a new repo on GitHub called "chaff" and initialise with a README and license  
-   * Clone the repo into a RStudio Project on your own machine  
+`r emo::ji("clapper")` Open the RStudio Project you created for that exercise. The instructions were to call this `chaffinches`. If you cannot find your own, you can use my version: [BIO00058M-chaffinches-w01](https://github.com/3mmaRand/BIO00058M-chaffinches-w01)
 
-2. Paste the address of your GitHub repo to the chat.  `r emo::ji("speech_balloon")` This helps me see how you are getting on.
+`r emo::ji("clapper")` Create an R Markdown document for reporting on the data. I suggest calling it "main.Rmd". You may want to refer to the [slides](../slides/03_repro_and_intro_to_rmarkdown.html).
 
-3. Create a directory structure suitable for the analysis - you may wish to revise this later as you work.  
+   -  Delete everything except the YAML header and the first code chunk called `setup` 
+   -  Edit the YAML:
+      -  Add your name and a title  
+      -  Use the **`bookdown`** package `r Cite(myBib, "bookdown")`  for output types which handle cross referencing well. We will do cross referencing in the next Topic. 
 
-4. As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub
+`r emo::ji("clapper")` Set some **default** code chunk options. I recommend these:
+````
+```{r setup, include=FALSE}`r ''`
+knitr::opts_chunk$set(echo = FALSE, 
+                     warning = FALSE,
+                     message = FALSE,
+                     fig.retina = 3)
+```
+````
+`r emo::ji("clapper")` Insert a code chunk (Ctrl + Alt + I) for package loading:
+````
+```{r packages}`r ''`
+source("R/00-pkg.R")
+```
+````
 
-5. Create an R Markdown document for reporting on the data. I suggest calling it "main.Rmd". You may want to refer to the [slides](../slides/03_repro_and_intro_to_rmarkdown.html).
-   * Delete everything except the YAML header the first code chunk called `setup` 
-   * Add your name, and a title  
-   * Edit the YAML. I recommend using the **`bookdown`** package [@bookdown]  for output types which handle cross referencing well. We will do cross referencing in the next Topic. 
-6. Set some **default** code chunk options. I recommend these:
-
-     ````
-     ```{r setup, include=FALSE}`r ''`
-     knitr::opts_chunk$set(echo = FALSE, 
-                           warning = FALSE,
-                           message = FALSE,
-                           fig.retina = 3)
-     ```
-     ````
-7. Insert a code chuck for package loading:
-
-     ````
-     ```{r packages}`r ''`
-     library(tidyverse)
-     ```
-     ````
-8. Add headings for Introduction, Methods, Results and Discussion and add a sentence to each of the Introduction and Methods.
-
-9. Now add code chunks for importing and tidying the data. Make sure you follow the guidance in the [slides](../slides/03_repro_and_intro_to_rmarkdown.html) for organising and styling your code. 
+`r emo::ji("clapper")` Run the code chunk.
 
 
-10. Add a code chunk to create function for calculating the $SS(x)$ of all the mass values. You should be able to call it with `sum_sq(chaff$mass)`.  
+`r emo::ji("clapper")` Add headings for Introduction, Methods, Results and Discussion and add a sentence to each of the Introduction and Methods.
 
-     We can adapt that function so it can be used on a specifed column and allow tidyverse style syntax with a dataframe output using:  
-     
-     ```{r eval=FALSE, echo=TRUE}
-     sum_sq <- function(df, measure) {
-       df %>% summarise(ss = sum(({{measure}} - mean({{measure}}))^2))
-     }
-     
-     sum_sq(chaff, mass)
-     ```
-     
-     There are a couple of points to notice here. Firstly, I have defined the function with two arguments, a dataframe and the column in that dataframe for which the $SS(x)$ is desired. Secondly, in order the use that column name in a tidyverse pipeline we have to take account of the tidyverse's use of "tidy-evaluation", a particular form of "non-standard evaluation". It is tidy evaluation that allows you to use `col_name` and not `df$col_name` amongst other things. This makes data exploration quick but adds a challenge when you need to refer use a variable indirectly in a loop or function. The way we take account of tidy evaluation is to use the double braces around the variable name: `{{ variable }}`
-     The [Programming with dplyr](https://dplyr.tidyverse.org/articles/programming.html) section in **`dplyr`** documentation gives a little more info about tidy evaluation.
-     We can adapt our function to calculate the $SS(x)$ for each group like this:
-     
-     ```{r eval=FALSE, echo=TRUE}
-     sum_sq <- function(df, measure, group) {
-       df %>% group_by({{ group }}) %>% 
-         summarise(ss = sum(({{measure}} - mean({{measure}}))^2))
-     }
-     
-     sum_sq(chaff, mass, sex)
-     
-     ```
-     
+`r emo::ji("clapper")` Now add a code chunk for importing and tidying the data. Make sure you follow the guidance in the [slides](../slides/03_repro_and_intro_to_rmarkdown.html) for organising and styling your code. 
 
-11. Add a code chunk for summarising the masses by sex - include the mean, standard deviation, sample size and the standard error. You might find it useful to refer to [Topic 2 Task 1](02_tidying_data.html#Task_1) on the Human Development index for creating the summary.
+`r emo::ji("clapper")` Run the code chunk. You should have a dataframe of the chaffinch data, in a tidy format, in your environment.
 
-12. Can you create a function called `data_summary()` that carries out that summarising? You will need to use the double braces,`{{ }}`
+You are now going to write a function for calculating the $SS(x)$ of all the mass values. You will be able to call it with `sum_sq(chaff_tidy$mass)`.
+
+`r emo::ji("clapper")` First open a script called `sum_sq.R` for editing:
+```{r eval=FALSE, echo=TRUE}
+usethis::use_r("sum_sq")
+```
+
+`r emo::ji("clapper")` Now define the function. If you are not sure how to do that, don't worry, it was given in the [independent study slides](https://3mmarand.github.io/BIO00058M-Data-science-2020/slides/03_repro_and_intro_to_rmarkdown.html#32)
+
+
+`r emo::ji("clapper")` Check your function works sourcing it and then calling it.
+```{r eval=FALSE, echo=FALSE}
+sum_sq(chaff_tidy$mass)
+```
+
+`r emo::ji("clapper")` Adapt the `02-summarise.R` script so it sources and calls `sum_sq`. Then add a code chunk to `Main.Rmd` which sources `02-summarise.R`.
+
+`r emo::ji("clapper")` Add a code chunk to `Main.Rmd` that runs the plotting code.
 
 # Task 2
 Turn your work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines into an Rmd.  That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3).
 
 
 
-# The Rmd file
+# The code files
+These contain all the code needed in the workshop even where it is not visible on the webpage.
+[Rmd file](03_repro_and_intro_to_rmarkdown.Rmd) The Rmd file is the file I use to compile the practical. Rmd stands for R markdown. It allows R code and ordinary text to be interweaved to produce well-formatted reports including webpages. If you right-click on the link and choose Save-As, you will be able to open the Rmd file in RStudio. Alternatively, [View in Browser](https://github.com/3mmaRand/BIO00058M-Data-science-2020/blob/master/workshops/03_repro_and_intro_to_rmarkdown.Rmd).
 
-[Rmd file](03_repro_and_intro_to_rmarkdown.Rmd)
+
+Pages made with `rmarkdown` `r Cite(myBib, c("markdown1","markdown2", "markdown3"))`, `RefManageR``r Cite(myBib, "RefManageR")` 
+
+
+# References 
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)  
+```
+
+# Please cite as:
+
+Emma Rand. (2021). Data Science strand of BIO00058M (v1.0). Zenodo. https://doi.org/10.5281/zenodo.5442490
 
 ![](../pics/58Mend.png)
-
 
