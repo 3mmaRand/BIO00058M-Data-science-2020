@@ -15,6 +15,7 @@ bibliography: "../refs.bib"
 
 
 ![](../pics/58M.png)
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5442490.svg)](https://doi.org/10.5281/zenodo.5442490)
 
 ```{r setup, include=FALSE}
