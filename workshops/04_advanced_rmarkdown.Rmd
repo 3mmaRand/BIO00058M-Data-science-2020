@@ -15,6 +15,7 @@ bibliography: "../refs.bib"
 
 
 ![](../pics/58M.png)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5442490.svg)](https://doi.org/10.5281/zenodo.5442490)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
@@ -24,50 +25,84 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ```{r pkg}
 library(tidyverse)
+library(RefManageR)
 ```
 
 
-# Introduction
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
 
-Work in pairs in BB Collaborate breakout to tackle the tasks.
 
-<font size = "4">
-`r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.   
-`r emo::ji("speech_balloon")` Communicate what you are doing and why  
-`r emo::ji("document")` Document and share your ideas and process   
-`r  emo::ji("team")` Consider having one person code and other documenting  
-`r emo::ji("heart")` Be kind, be understanding, be flexible   
-</font>
+# Week Overview
+
+## Aim
+The aim of this session is to introduce you to more advanced features of R Markdown for creating reproducible analyses including special characters, inline code, referencing, tables and cross referencing sections, figures and tables.
+
+## Objectives
+By the end of this week the successful student should be able to:
+
+-  use inline code in an Rmd to report outputs of analysis
+-  insert special characters and mathematical expressions into an Rmd with LaTeX
+-  add automatically numbered and cross referenced figures to knitted outputs
+-  add citations and a reference list to knitted output
 
 
 # Task 1
 
 In [Topic 3: Reproducibility and an introduction to R Markdown, Task 1 ](03_repro_and_intro_to_rmarkdown.html#Task_1) you worked with data in [chaff.txt](../data-raw/chaff.txt) which are the masses of male and female chaffinches.
 
-1. Open that RStudio Project and the Rmd you made last topic. As you work, periodically knit your Rmd to html. If you did not previously create a separate version controlled RStudio Project for the chaffinch data analysis, do so now.
-2. For those that have not yet posted their GitHub page to the chat, please do that now.  
-3. As you work, stage and commit all the changes you have made using an appropriate commit message. Periodically pull (for developing a habit) and then push your changes to GitHub.  
-4. Search for one or two references that you could use in a short introduction. Obtain the references in BibTeX form, create a .bib file for your references and add it to your YAML header. Cite those references in the introduction and add a header `# References` to the end of your rmd.
-5. Add figures for photographs of male and female chaffinches that you reference in the introduction. Wikipedia is a good source of images. Ensure your figure is numbered and has a figure legend.
-6. Undertake an appropriate statistical analysis to determine if there is a significant difference between males and females in mass.
-7. Report summary information and test results in the knitted output.
-8. Add a figure to illustrate the results ensuring it is numbered and has a figure legend.
-9. Create your own ggplot theme. You can achieve this by:  
-    * examining the code for theme_gray() (the default) by typing `theme_gray` without the brackets  
-    * copying and saving the code theme_gray in its own script called, for example, theme_emma.R  
-    * changing theme elements as you wish  
-    * sourcing your theme script and applying in the same way as you would apply another ggplot theme. 
-10. Go through your Rmd checking your code is well-commented and formatted, and you have followed good practice from previous workshops.
-11. Great news, we've got data for another few individuals! They have been added to the data in [more_chaff.txt](../data-raw/more_chaff.txt). Update your output.
+`r emo::ji("clapper")` Open that RStudio Project and the Rmd you made last topic. As you work, periodically knit your Rmd to html. 
+
+`r emo::ji("clapper")` Search for one or two references that you could use in a short introduction. Obtain the references in BibTeX form, create a .bib file for your references and add it to your YAML header. Cite those references in the introduction and add a header `# References` to the end of your rmd.
+
+`r emo::ji("clapper")` Add figures for photographs of male and female chaffinches that you reference in the introduction. Wikipedia is a good source of images. Ensure your figure is numbered and has a figure legend.
+
+`r emo::ji("clapper")`  Undertake an appropriate statistical analysis to determine if there is a significant difference between males and females in mass.
+
+`r emo::ji("clapper")` Report summary information and test results in the knitted output.
+
+`r emo::ji("clapper")`  Add a figure to illustrate the results ensuring it is numbered and has a figure legend.
+
+`r emo::ji("clapper")` Create your own ggplot theme. You can achieve this by:
+
+-  examining the code for theme_gray() (the default) by typing `theme_gray` without the brackets  
+-  copying and saving the code theme_gray in its own script called, for example, theme_emma.R  
+-  changing theme elements as you wish  
+-  sourcing your theme script and applying in the same way as you would apply another ggplot theme. 
+
+`r emo::ji("clapper")` Go through your Rmd checking your code is well-commented and formatted, and you have followed good practice from previous workshops.
+
+`r emo::ji("clapper")` Great news, we've got data for another few individuals! They have been added to the data in [more_chaff.txt](../data-raw/more_chaff.txt). Update your output.
 
 # Task 2
 Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines.  That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3).
 
 
-# The Rmd file
+# The code files
+These contain all the code needed in the workshop even where it is not visible on the webpage.
+[Rmd file](04_advanced_rmarkdown.Rmd) The Rmd file is the file I use to compile the practical. Rmd stands for R markdown. It allows R code and ordinary text to be interweaved to produce well-formatted reports including webpages. If you right-click on the link and choose Save-As, you will be able to open the Rmd file in RStudio. Alternatively, [View in Browser](https://github.com/3mmaRand/BIO00058M-Data-science-2020/blob/master/workshops/04_advanced_rmarkdown.Rmd).
 
-[Rmd file](04_advanced_rmarkdown.Rmd)
+
+Pages made with `rmarkdown` `r Cite(myBib, c("markdown1","markdown2", "markdown3"))`, `RefManageR``r Cite(myBib, "RefManageR")` 
+
+
+# References 
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)  
+```
+
+# Please cite as:
+
+Emma Rand. (2021). Data Science strand of BIO00058M (v1.0). Zenodo. https://doi.org/10.5281/zenodo.5442490
 
 ![](../pics/58Mend.png)
-
-
