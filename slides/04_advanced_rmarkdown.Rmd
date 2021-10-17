@@ -46,7 +46,7 @@ BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
            cite.style = "authoryear",
            style = "markdown",
-           hyperlink = TRUE,
+           hyperlink = FALSE,
            dashed = FALSE,
            longnamesfirst = FALSE,
            max.names = 2)
@@ -60,7 +60,14 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 # Outline
 
-The aim of this topic is to introduce more advanced use of R Markdown  `r Cite(myBib, c("markdown1", "markdown2"))` such as including special characters, images, figures and tables along with citations, referencing and cross referencing (with autonumbering).
+The aim of this topic is to introduce more advanced use of R Markdown  `r Cite(myBib, c("markdown1", "markdown2"))` such as including:
+
+-  inline code
+-  images and links
+-  automagically numbered tables and figures
+-  special characters
+-  references and citations
+-  cross references to tables and figures
 
 ```{r echo=FALSE}
 file <- "../data-raw/chaff.txt"
@@ -87,26 +94,32 @@ class: inverse
 ---
 # Inline code
 
-Inline code is needed to place the output of R commands in a piece of text rather than in a separate section as the output of a code chunk.
+You need inline code when you want to place the output of an `R` command in a piece of text. This is useful to report aspects of your analysis.
 
-Inline code goes between ` `r` and ` ` ` within the text. 
+You have seen that the Rmd document recognises text to be code if it is between ` ```{r }` and ` ``` `
+
+Code can be included 'inline' in a piece of text by putting it between ` `r` and ` ` `  
+
+
+---
+# Inline code
 
 For example, by writing: 
 
-The square root of 2 is ` `r`  `sqrt(2)` ` ` ` in a text section of the Rmd....
+> The square root of 2 is ` `r`  `sqrt(2)` ` ` ` in a text section of the Rmd....
 
 --
 
 ....You will get: 
 
-> The square root of 2 is  `r sqrt(2)`
+The square root of 2 is  `r sqrt(2)`
 
 in the knitted output. The inline code executes and the result is placed in the text.
 
 ---
 # Inline code
 
-This is often needed to access and report analysis variables, such as a mean. 
+This is often needed to access, and report on, analysis variables such as a mean. 
 
 --
 
@@ -136,6 +149,8 @@ in the knitted output
 
 Long sections of inline code can make it difficult to read the Rmd text or understand what quantity is being calculated. 
 
+--
+
 To improve readability, I usually add code chunks to calculate or extract the values I want to report.
 
 .code80[
@@ -145,6 +160,8 @@ To improve readability, I usually add code chunks to calculate or extract the va
 highestmean <- max(chaff_sum$mean) 
 highestse <- chaff_sum$se[chaff_sum$mean == highestmean] 
 highestsex <- chaff_sum$sex[chaff_sum$mean == highestmean]
+
+# round for reporting
 highestmean <- round(highestmean, 2)
 highestse  <- round(highestse, 2)
 ```
@@ -165,6 +182,10 @@ To get:
 
 in the knitted output
 
+--
+
+`str_to_sentence()` is a handy **`stringr`** function which puts the string "males" in to sentence case, "Males"
+
 ---
 class: inverse
 
@@ -177,7 +198,7 @@ Links are created using the syntax `[text](link)`. For example:
 
 `[R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/)` in the Rmd gives you:
 
-[R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) in the knitted output.
+> [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) in the knitted output.
 
 
 The syntax for images is the same with an extra exclamation mark at the start: `![alt text or image title](path/to/image)`
@@ -187,13 +208,14 @@ The syntax for images is the same with an extra exclamation mark at the start: `
 ---
 #  Images and links
 
-So: `![R Markdown wizards by Allison Horst](../pics/rmarkdown_wizards.png)`.
+So:
+`![R Markdown wizards by Allison Horst](../pics/rmarkdown_wizards.png)`.
 
 Gives you
 
 ![R Markdown wizards by Allison Horst](../pics/rmarkdown_wizards.png)
 ---
-#  Images
+#  Images: alternative method
 
 My preferred way of including images is to use the **`knitr`** function `include_graphics` in a code chunk:
 
@@ -205,11 +227,14 @@ knitr::include_graphics("../pics/rmarkdown_wizards.png")
 ````
 ]
 
+which will give you:
+
 ```{r echo=FALSE, out.width="30%", fig.cap="R Markdown wizards by Allison Horst."}
 knitr::include_graphics("../pics/rmarkdown_wizards.png")
 ```
 
-This partly for better control of the size and captioning but also to more easily use cross referencing (see later).
+This allows better control of the size and captioning but also cross referencing (see later).
+
 ---
 class: inverse
 # Tables
@@ -217,12 +242,12 @@ class: inverse
 ---
 #  Tables
 
-There are several options for formatting tables. I tend to use
-`knitr::kable()` with the [**`kableExtra`**](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#table_styles) package `r Cite(myBib, "kableExtra")` which work well with the pipe. 
+There are several options for formatting tables. For html output, I use
+`knitr::kable()` with the [**`kableExtra`**](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#table_styles) package `r Cite(myBib, "kableExtra")`. 
 
 --
 
-The **`gt`** `r Cite(myBib, "gt")` and **`flextable`** packages `r Cite(myBib, "flextable")` are also good.
+The **`gt`** `r Cite(myBib, "gt")` and **`flextable`** `r Cite(myBib, "flextable")` packages are also good, especially for Word or Powerpoint outputs.
 
 ---
 #  Tables
@@ -245,7 +270,7 @@ chaff_sum %>%
 ---
 #  Tables
 
-[**`kableExtra`**](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#table_styles) package `r Cite(myBib, "kableExtra")` gives you more formatting options which you can pipe onto your basic `kable()` table:
+The **`kableExtra`** package `r Cite(myBib, "kableExtra")` gives you more formatting options which you can pipe onto your basic `kable()` table:
 
 .code60[
 ```{r chaff-table}
@@ -276,11 +301,23 @@ You can include special characters in a markdown document using LaTeX markup.
 
 --
 
-This has $ signs on the outside and uses backslashes and curly braces to indicate that what follows should be interpreted as a special character with special formatting.
+This has `$` signs at the start and end and uses backslashes and curly braces to indicate that what follows should be interpreted as a special character with special formatting.
 
 --
 
 For example, to get $\bar{x} \pm s.e.$ you write `$\bar{x} \pm s.e.$`
+
+---
+#  Special characters
+
+Some other examples:
+
+-  $\hat{x}$ is `$\hat{x}$`
+-  $\sigma$ is `$\sigma$`
+-  $\sum$ is `$\sum$`
+-  $\frac{a}{x}$ is `$\frac{a}{x}$`
+-  $\sum\frac{1}{x}$ is `$\sum\frac{1}{x}$`
+-  $\mu g^{-1}$ is `$\mu g^{-1}$`
 
 ---
 class: inverse
@@ -312,16 +349,21 @@ BibTeX files can be downloaded from most referencing software (e.g., PaperPile).
 #  References and citations
 
 Citations are added using:
-  *  blah blah blah `[@xaringan]` for blah blah blah `r Cite(myBib, "xaringan")`.    
-  *  Xie `[-@xaringan]` said blah blah blah for `r Cite(myBib, "xaringan",textual = TRUE)` said blah blah blah.  
+
+blah blah blah `[@xaringan]` to get
+
+> blah blah blah `r Cite(myBib, "xaringan")`
+
+and 
+
+Xie `[-@xaringan]` said blah blah blah to get
+
+> `r Cite(myBib, "xaringan",textual = TRUE)` said blah blah blah.  
+
 
 --
 
-If you have installed the `citr` package there is an Addin to help with this.
-
---
-
-Every citation used results in the reference being added to a list at the bottom of the output.
+Every citation used is added to a list at the end of the output. 
 
 
 ---
@@ -337,7 +379,9 @@ class: inverse
 ---
 #  Cross referencing
 
-You can automatically number figures and tables without having to update the numbers if you add or move a figure or table. The cross references to tables and figures such as "See Table 1" will also update without your intervention.
+You can automatically number figures and tables and cross references to them.
+
+For example, if you add or move a figure. The number of the table will change "automagically" and so will any cross references such as "See Table 1". 
 
 --
 
@@ -351,7 +395,7 @@ The general syntax for cross-referencing in the text part of an Rmd is `\@ref(la
 ---
 #  Cross referencing tables
 
-In order for tables to be automatically numbered, and to allow you to cross-reference them in the text, you need to ensure two things in the chunk that generates them:
+You need to ensure two things in the chunk that generates a table for the table and its cross references to be automatically numbered:
 
 1. the chunk must be labelled. I've used `chaff-table` on the next page 
 2. the table must have a caption as set by the `caption` argument
@@ -377,18 +421,19 @@ chaff_sum %>%
 ```
 ````
 
-To refer to this table in the text, we use: See Table `\@ref(tab:chaff-table)`
-
+Will give a table with the caption "Table 1. Summary statistics for Chaffinches"  
+To refer to this table in the text, we use: See Table `\@ref(tab:chaff-table)`  
+Which will give: See Table 1
 
 
 
 ---
 #  Cross referencing figures
 
-In order for figures to be automatically numbered, and to allow you to cross-reference them in the text, you need to ensure two things in the chunk:
+You need to ensure two things in the chunk that generates a figure for the figure and its cross references to be automatically numbered:
 
-1. the chunk must be labelled. I'll used `chaff-fig`  
-2. the figure must have a caption *but* this time it is set in the code chunk options using `fig.cap` 
+1. the chunk must be labelled. I've used `chaff-fig`  
+2. the figure must have a caption *but* it is set in the code chunk options using `fig.cap` 
 
 --
 
@@ -411,13 +456,13 @@ I have labelled the chunk `chaff-fig` and set the caption with `fig.cap`.
 To refer to this figure in the text, we use: See Figure `\@ref(fig:myo-fig)`
 
 ---
-#  Cross referencing figures
+#  Long figure legends
 
-Figure legends can be very long and include special characters which don't work well in within `{r chaff-fig, fig.cap="Mass of male and female Chaffinches"} `
+Figure legends with special characters don't work well in within `{r chaff-fig, fig.cap="Mass of male and female Chaffinches"} `
 
-Figures legends can instead be defined in the text part of the Rmd with: 
+Instead we can put them in the Rmd text with: 
 
-(ref:chaff-fig) Mass of male and female Chaffinches
+(ref:chaff-fig) Mass of adult chaffinches caught on the Stray. Error bars are `$\bar{x} \pm 1 s.e.$`  
 
 And then use use that reference for the `fig.cap` argument in the chunk options:
 
@@ -441,7 +486,7 @@ ggplot() +
 * references are held in a BibTeX file (.bib) given in the YAML header  
 * cross referencing relies on chunks being named and the use of captions  
   * table captions are given in the` knitr::kable()` command
-  * figure cpations are given in the code chunk options  
+  * figure captions are given in the code chunk options  
 * the general syntax for cross-referencing in the text part of an Rmd is `\@ref(label)`
 
 
@@ -458,7 +503,6 @@ Peruse and book mark these:
 
 * [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/) `r Cite(myBib, "bookdown")`
 
-
 ---
 # References
 .font50[
@@ -474,6 +518,7 @@ PrintBibliography(myBib)
 ]
 ---
 
-## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+<br>
 <br>
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Data Science strand of BIO00058M</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Emma Rand</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
