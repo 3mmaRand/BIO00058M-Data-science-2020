@@ -46,8 +46,10 @@ myBib <- ReadBib("../refs.bib", check = FALSE)
 
 ## Aim
 The aim of this week is to introduce you to RStudio Projects and good practices for organising work. 
+
 ## Objectives
 By the end of this week the successful student should be able to:
+
 -  Use an RStudio project with structured directories and documentation to organise their work
 -  develop a convention for naming files and directories which is machine and human readable
 
