@@ -62,23 +62,26 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 This slide show covers two commonly used unsupervised methods: Principal Components Analysis (PCA) and *t*-Distributed Stochastic Neighbour Embedding (*t*-SNE, pronounced tea-snee or tisne).
 
-You'll also get a little more practice with data filtering and tidying and meet the **`GGally`** package and some penguins.
+You'll also get a little more practice with data filtering and tidying and meet the **`GGally`** package and some penguins. `r emo::ji("penguin")` `r emo::ji("penguin")`
+
 --
 
-PCA and *t*-SNE are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations discernible.
+PCA and *t*-SNE are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations can be seen.
 
 ---
 # Outline: PCA
 
-PCA is used on continuous variables. It creates a new, smaller, set of variables - principal components - from linear combinations of the original variables. 
+PCA is used on **continuous variables**. It creates a new, smaller, set of variables - known as principal components - from linear combinations of the original variables. 
 
 --
 
-The first principal component, PC1, is chosen to capture the maximum variance in the data. The PC2 is orthogonal (uncorrelated) to PC1 and captures the maximum amount of the remaining variance.
+The first principal component, PC1, is chosen to capture the maximum variance in the data. The PC2 is orthogonal (uncorrelated) to PC1 and captures the maximum amount of the remaining variance. And so on.
 
 --
 
-PCA is a fast, linear, parametric method. It will not work well when there are polynomial relationships between variables.
+PCA is a fast, linear, parametric method. It is very widely used and often the first method applied.
+
+It works less well when when there are polynomial relationships between variables.
 
 --
 
@@ -92,7 +95,7 @@ Linear dimension reduction methods concentrate on putting dissimilar observation
 
 --
 
-It is a probabilistic method and is computational intensive.
+It is a probabilistic method and is computationally intensive.
 
 --
 
@@ -112,10 +115,10 @@ In these slides show you will apply:
 ---
 # Outline
 
-You should be able to code along with the examples. When you see the film clapper it is ..
+You should be able to code along with the examples. When you see the film clapper it is
 
 
-`r emo::ji("clapper")` .. an instruction to do something!!
+`r emo::ji("clapper")` an instruction to do something!!
 
 
 I suggest having a different RStudio Project for each dataset we use. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
@@ -127,16 +130,6 @@ Create directory structure for each RStudio Project, write your analysis in R Ma
 --
 
 Load the tidyverse for each RStudio Project.
-
-
----
-# Important!
-
-If you are using git and especially if you intend to push to GitHub, do **not** track the data files in second example.
-
-You prevent tracking by adding the file to a .gitignore. You can do this by right-clicking on the file in the git pane and choosing 'Ignore'
-
-![biologists](../pics/gitignore1.png)
 
 
 ---
@@ -152,7 +145,7 @@ background-size: 500px
 
 # Principal Components Analysis
 
-We will first use PCA on a dataset with relatively few dimensions available in the  **`palmerpenguins`** `r Cite(myBib, "palmerpenguins")` package which is based on data in `r Cite(myBib, "Gorman2014")`
+We will first use PCA on a dataset with relatively few dimensions. The data are available in the  **`palmerpenguins`** `r Cite(myBib, "palmerpenguins")` package which is based on data in `r Cite(myBib, "Gorman2014")`
 
 
 ---
@@ -212,18 +205,19 @@ penguin %>%
 
 --
 
-Notice we have selected three variables with the helper function `ends_with()`.
+Notice we have selected `body_mass_g` three other variables ending in `_mm` with the helper function `ends_with()`.
 
 ---
 # Tidy Penguins
 
-We have two missing values and can't unclude then in our analysis.
+We have two missing values and can't include then in our analysis.
 
 `r emo::ji("clapper")` Filter out the rows with missing values: 
 
 ```{r}
 penguin <- penguin %>% 
-  filter(!is.na(body_mass_g))
+  filter(!is.na(body_mass_g)) %>% 
+  filter(!is.na(sex))
 ```
 
 ---
@@ -232,12 +226,14 @@ penguin <- penguin %>%
 Our species variable contains the common name followed by the scientific name in brackets. This is quite long, and will make legends a bit big. I will split the column into two.
 
 `r emo::ji("clapper")` Split `species` into `common_name` and `scientific_name`: 
+.code80[
 ```{r}
 penguin <- penguin %>% 
   extract(species, 
           c("common_name", "scientific_name"),
           "([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)")
 ```
+]
 
 ---
 # Tidy Penguins
@@ -250,11 +246,24 @@ The two patterns we want to save are in brackets:
 `([a-zA-Z]+\\s[a-zA-Z]+)`  
 `([a-zA-Z]+\\s[a-zA-Z]+)`  
 
-They are the same pattern: one or more of (`+`) lower or uppercase letters (`[a-zA-Z]`) followed by a space (`\s`). The second `\` 'escapes' the first - meaning it is recognised to be part of the whitespace pattern. Then followed again by one or more lower or uppercase letters.
+The two patterns are the same and comprised of: 
 
 --
 
-The two patterns we don't want to save are a whitespace followed by an opening bracket (between the saved patterns) and a closing bracket (at the end.
+-  `+` one or more of
+-  `[a-zA-Z]` or lower or uppercase letters 
+-  `\s` a space 
+-  The second `\` 'escapes' the first - meaning it is recognised to be part of the whitespace pattern. 
+-  `[a-zA-Z]` or lower or uppercase letters
+
+---
+# Tidy Penguins
+
+`"([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)"` is made of 2 patterns to be saved and two patterns we don't want to save.
+
+The two patterns we don't want to save are not in brackets and comprised of:
+-  `\\s\\(` a whitespace followed by an opening bracket (between the patterns)
+-  `\\)` a closing bracket (at the end)
 
 ---
 #  Explore Penguins
@@ -273,7 +282,7 @@ library(GGally)
 #  Explore Penguins
 
 `r emo::ji("clapper")` Select variables of interest and pipe in to `ggpairs()`: 
-
+.code80[
 ```{r peng-pairs, fig.show='hide'}
 penguin %>%
   select(common_name, 
@@ -281,19 +290,33 @@ penguin %>%
          island,
          body_mass_g,
          ends_with("_mm")) %>%
-  ggpairs(aes(color = common_name)) 
+  ggpairs(aes(color = common_name), 
+          upper = list(continuous = wrap("cor", size = 1))) +
+  theme(text = element_text(size = 6))
 ```
+]
 
---
+`upper = list(continuous = wrap("cor", size = 1))` controls the size of the font on the graph, giving the correlations
 
-I have chosen the four variables that we will use in the PCA along with some categorical variables.
+`theme(text = element_text(size = 6))` controls the size of axis labels and text
+
+
 ---
 #  Explore Penguins
-```{r ref.label = 'peng-pairs', echo = FALSE, out.width="65%"} 
+```{r ref.label = 'peng-pairs', echo = FALSE, out.width="70%"} 
 ```
 
 
+---
+#  Explore Penguins
 
+-  each plot shows three variables - the vertical, the horizontal and the species by colour
+-  the leading diagonal is each variable 'against' itself
+   -  for continuous variables you get the distribution for each species in that variable.
+   -  for discrete variable you get the counts in each category
+-  for two continuous variables
+   -  you get scatter plots below the diagonal
+   -  and correlation coefficients for those catter plots above the diagonal
 
 ---
 # Principal Components Analysis
@@ -317,23 +340,34 @@ We have saved the result to a list object called `pca`
 ---
 # Principal Components Analysis
 
+The maximum number of PCs possible is the same as the number of variables included.
+
+But a useful PCA would capture much of the variation in the data in fewer PCs.
+
+--
+
 `r emo::ji("clapper")` See the variance accounted for by each component
+
+.code70[
+
 
 ```{r}
 summary(pca)
 ```
 
+]
 ```{r echo=FALSE}
 res <- summary(pca)[["importance"]]
 
 percent1 <- res["Cumulative Proportion","PC1"] * 100
 percent2 <- res["Cumulative Proportion","PC2"] * 100
+percent3 <- res["Cumulative Proportion","PC3"] * 100
 
 ```
 
 --
 
-`r percent1`% of the variation is captured in the first PC; `r percent2`% in the first 2 together.
+`r percent1`% of the variation is captured in the first PC; `r percent2`% in the first 2 together; and `r percent3`% in the first 2 together
 
 ---
 # Principal Components Analysis
@@ -361,7 +395,7 @@ This what we mean when we say the PCs are linear combinations of the original va
 ---
 # Principal Components Analysis
 
-To plot, we might want to use the scores on each of the new axes and colour them by species. The scores are in a variable called `$x`
+To plot, we might want to use the scores on each of the new axes (PCs) and colour them by species. The scores are in a variable called `$x`
 
 `r emo::ji("clapper")` Extract the scores into a dataframe with the species names: 
 ```{r}
@@ -423,6 +457,8 @@ The expression of `r dim(rna)[2]` genes has been measured for `r dim(rna)[1]` ce
 --
 
 You do **not** want to use GGally on this data!!
+
+In fact, it is difficult to get any sort of overview for so many rows and columns. This is why dimension reduction with PCA is useful.
 
 ---
 #  PCA on scRNAseq data
@@ -492,7 +528,7 @@ Any two will still only capture a small amount of variance but clusters may be s
 ```{r rna-pca-pairs, fig.show='hide'}
 dat %>%
   select(PC1:PC10) %>% 
-  ggpairs()
+  ggpairs(upper = list(continuous = wrap("cor", size = 1)))
 ```
 
 
@@ -548,13 +584,16 @@ dat <- data.frame(tsne$Y)
 `r emo::ji("clapper")` Plot the first *t*-SNE dimension against the second: 
 ```{r rna-tsne, fig.show='hide'}
 dat %>% ggplot(aes(x = X1, y = X2)) +
-  geom_point(size=0.5)
+  geom_point(size = 0.5)
 ```
+
+
+Yours will look a little different but if the cell type patterns are real, we would expect to see similar groupings.
 
 ---
 # *t*-SNE on scRNASeq data
 
-```{r ref.label = 'rna-tsne', echo = FALSE, out.width="800px", out.height="550px"} 
+```{r ref.label = 'rna-tsne', echo = FALSE, out.width="700px", out.height="550px"} 
 ```
 
 How many cell types do you think there are?
@@ -604,7 +643,7 @@ unique(meta$louvain)
 dat <- data.frame(dat, type = meta$louvain)
 ```
 
-`r emo::ji("clapper")` Replot the t*-SNE scores coloured by cell type: 
+`r emo::ji("clapper")` Replot the *t*-SNE scores coloured by cell type: 
 ```{r rna-tsne-cell, fig.show='hide'}
 dat %>% ggplot(aes(x = X1, y = X2, colour = type)) +
   geom_point(size = 0.5)
@@ -633,11 +672,7 @@ dat %>% ggplot(aes(x = X1, y = X2, colour = type)) +
 
 ## Strongly recommended
 
-* Identifying cell populations with scRNASeq `r Cite(myBib, "Andrews2018-cy")` A good overview of different experimental protocols for Single-cell RNASeq and the most popular methods for facilitating the computational analysis. The abstract, introduction and section 3 are essential reading
-
-## Further
-
-* Section 4, on clustering, is also worth reading.
+* Identifying cell populations with scRNASeq `r Cite(myBib, "Andrews2018-cy")` A good overview of different experimental protocols for Single-cell RNASeq and the most popular methods for facilitating the computational analysis. 
 
 
 ---
@@ -655,6 +690,7 @@ PrintBibliography(myBib)
 ]
 ---
 
-## Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+Emma Rand <br> [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) <br> Twitter: [@er13_r](https://twitter.com/er13_r) <br> GitHub: [3mmaRand](https://github.com/3mmaRand)  <br> blog: https://buzzrbeeline.blog/
+<br>
 <br>
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Data Science strand of BIO00058M</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Emma Rand</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.

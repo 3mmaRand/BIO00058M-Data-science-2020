@@ -50,23 +50,26 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 This slide show covers two commonly used unsupervised methods: Principal Components Analysis (PCA) and *t*-Distributed Stochastic Neighbour Embedding (*t*-SNE, pronounced tea-snee or tisne).
 
-You'll also get a little more practice with data filtering and tidying and meet the **`GGally`** package and some penguins.
+You'll also get a little more practice with data filtering and tidying and meet the **`GGally`** package and some penguins. 🐧 🐧
+
 --
 
-PCA and *t*-SNE are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations discernible.
+PCA and *t*-SNE are often used for 'dimension reduction' so that high dimensional data can be visualised more easily and clusters of observations can be seen.
 
 ---
 # Outline: PCA
 
-PCA is used on continuous variables. It creates a new, smaller, set of variables - principal components - from linear combinations of the original variables. 
+PCA is used on **continuous variables**. It creates a new, smaller, set of variables - known as principal components - from linear combinations of the original variables. 
 
 --
 
-The first principal component, PC1, is chosen to capture the maximum variance in the data. The PC2 is orthogonal (uncorrelated) to PC1 and captures the maximum amount of the remaining variance.
+The first principal component, PC1, is chosen to capture the maximum variance in the data. The PC2 is orthogonal (uncorrelated) to PC1 and captures the maximum amount of the remaining variance. And so on.
 
 --
 
-PCA is a fast, linear, parametric method. It will not work well when there are polynomial relationships between variables.
+PCA is a fast, linear, parametric method. It is very widely used and often the first method applied.
+
+It works less well when when there are polynomial relationships between variables.
 
 --
 
@@ -80,7 +83,7 @@ Linear dimension reduction methods concentrate on putting dissimilar observation
 
 --
 
-It is a probabilistic method and is computational intensive.
+It is a probabilistic method and is computationally intensive.
 
 --
 
@@ -100,10 +103,10 @@ In these slides show you will apply:
 ---
 # Outline
 
-You should be able to code along with the examples. When you see the film clapper it is ..
+You should be able to code along with the examples. When you see the film clapper it is
 
 
-🎬 .. an instruction to do something!!
+🎬 an instruction to do something!!
 
 
 I suggest having a different RStudio Project for each dataset we use. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
@@ -115,16 +118,6 @@ Create directory structure for each RStudio Project, write your analysis in R Ma
 --
 
 Load the tidyverse for each RStudio Project.
-
-
----
-# Important!
-
-If you are using git and especially if you intend to push to GitHub, do **not** track the data files in second example.
-
-You prevent tracking by adding the file to a .gitignore. You can do this by right-clicking on the file in the git pane and choosing 'Ignore'
-
-![biologists](../pics/gitignore1.png)
 
 
 ---
@@ -140,7 +133,7 @@ background-size: 500px
 
 # Principal Components Analysis
 
-We will first use PCA on a dataset with relatively few dimensions available in the  **`palmerpenguins`** &lt;a name=cite-palmerpenguins&gt;&lt;/a&gt;([Horst Hill, et al., 2020](#bib-palmerpenguins)) package which is based on data in &lt;a name=cite-Gorman2014&gt;&lt;/a&gt;([Gorman Williams, et al., 2014](#bib-Gorman2014))
+We will first use PCA on a dataset with relatively few dimensions. The data are available in the  **`palmerpenguins`** (Horst Hill, et al., 2020) package which is based on data in (Gorman Williams, et al., 2014)
 
 
 ---
@@ -214,19 +207,20 @@ penguin %&gt;%
 
 --
 
-Notice we have selected three variables with the helper function `ends_with()`.
+Notice we have selected `body_mass_g` three other variables ending in `_mm` with the helper function `ends_with()`.
 
 ---
 # Tidy Penguins
 
-We have two missing values and can't unclude then in our analysis.
+We have two missing values and can't include then in our analysis.
 
 🎬 Filter out the rows with missing values: 
 
 
 ```r
 penguin &lt;- penguin %&gt;% 
-  filter(!is.na(body_mass_g))
+  filter(!is.na(body_mass_g)) %&gt;% 
+  filter(!is.na(sex))
 ```
 
 ---
@@ -235,6 +229,7 @@ penguin &lt;- penguin %&gt;%
 Our species variable contains the common name followed by the scientific name in brackets. This is quite long, and will make legends a bit big. I will split the column into two.
 
 🎬 Split `species` into `common_name` and `scientific_name`: 
+.code80[
 
 ```r
 penguin &lt;- penguin %&gt;% 
@@ -242,6 +237,7 @@ penguin &lt;- penguin %&gt;%
           c("common_name", "scientific_name"),
           "([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)")
 ```
+]
 
 ---
 # Tidy Penguins
@@ -254,11 +250,24 @@ The two patterns we want to save are in brackets:
 `([a-zA-Z]+\\s[a-zA-Z]+)`  
 `([a-zA-Z]+\\s[a-zA-Z]+)`  
 
-They are the same pattern: one or more of (`+`) lower or uppercase letters (`[a-zA-Z]`) followed by a space (`\s`). The second `\` 'escapes' the first - meaning it is recognised to be part of the whitespace pattern. Then followed again by one or more lower or uppercase letters.
+The two patterns are the same and comprised of: 
 
 --
 
-The two patterns we don't want to save are a whitespace followed by an opening bracket (between the saved patterns) and a closing bracket (at the end.
+-  `+` one or more of
+-  `[a-zA-Z]` or lower or uppercase letters 
+-  `\s` a space 
+-  The second `\` 'escapes' the first - meaning it is recognised to be part of the whitespace pattern. 
+-  `[a-zA-Z]` or lower or uppercase letters
+
+---
+# Tidy Penguins
+
+`"([a-zA-Z]+\\s[a-zA-Z]+)\\s\\(([a-zA-Z]+\\s[a-zA-Z]+)\\)"` is made of 2 patterns to be saved and two patterns we don't want to save.
+
+The two patterns we don't want to save are not in brackets and comprised of:
+-  `\\s\\(` a whitespace followed by an opening bracket (between the patterns)
+-  `\\)` a closing bracket (at the end)
 
 ---
 #  Explore Penguins
@@ -278,7 +287,7 @@ library(GGally)
 #  Explore Penguins
 
 🎬 Select variables of interest and pipe in to `ggpairs()`: 
-
+.code80[
 
 ```r
 penguin %&gt;%
@@ -287,18 +296,32 @@ penguin %&gt;%
          island,
          body_mass_g,
          ends_with("_mm")) %&gt;%
-  ggpairs(aes(color = common_name)) 
+  ggpairs(aes(color = common_name), 
+          upper = list(continuous = wrap("cor", size = 1))) +
+  theme(text = element_text(size = 6))
 ```
+]
 
---
+`upper = list(continuous = wrap("cor", size = 1))` controls the size of the font on the graph, giving the correlations
 
-I have chosen the four variables that we will use in the PCA along with some categorical variables.
+`theme(text = element_text(size = 6))` controls the size of axis labels and text
+
+
 ---
 #  Explore Penguins
-&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-7-1.png" width="65%" /&gt;
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-7-1.png" width="70%" /&gt;
 
 
+---
+#  Explore Penguins
 
+-  each plot shows three variables - the vertical, the horizontal and the species by colour
+-  the leading diagonal is each variable 'against' itself
+   -  for continuous variables you get the distribution for each species in that variable.
+   -  for discrete variable you get the counts in each category
+-  for two continuous variables
+   -  you get scatter plots below the diagonal
+   -  and correlation coefficients for those catter plots above the diagonal
 
 ---
 # Principal Components Analysis
@@ -323,7 +346,16 @@ We have saved the result to a list object called `pca`
 ---
 # Principal Components Analysis
 
+The maximum number of PCs possible is the same as the number of variables included.
+
+But a useful PCA would capture much of the variation in the data in fewer PCs.
+
+--
+
 🎬 See the variance accounted for by each component
+
+.code70[
+
 
 
 ```r
@@ -333,16 +365,17 @@ summary(pca)
 ```
 ## Importance of components:
 ##                           PC1    PC2     PC3     PC4
-## Standard deviation     1.6594 0.8789 0.60435 0.32938
-## Proportion of Variance 0.6884 0.1931 0.09131 0.02712
-## Cumulative Proportion  0.6884 0.8816 0.97288 1.00000
+## Standard deviation     1.6569 0.8821 0.60716 0.32846
+## Proportion of Variance 0.6863 0.1945 0.09216 0.02697
+## Cumulative Proportion  0.6863 0.8809 0.97303 1.00000
 ```
 
+]
 
 
 --
 
-68.844% of the variation is captured in the first PC; 88.157% in the first 2 together.
+68.634% of the variation is captured in the first PC; 88.087% in the first 2 together; and 97.303% in the first 2 together
 
 ---
 # Principal Components Analysis
@@ -355,17 +388,17 @@ pca$rotation
 ```
 
 ```
-##                          PC1         PC2        PC3        PC4
-## body_mass_g        0.5483502 0.084362920 -0.5966001 -0.5798821
-## culmen_length_mm   0.4552503 0.597031143  0.6443012 -0.1455231
-## culmen_depth_mm   -0.4003347 0.797766572 -0.4184272  0.1679860
-## flipper_length_mm  0.5760133 0.002282201 -0.2320840  0.7837987
+##                          PC1        PC2        PC3        PC4
+## body_mass_g        0.5496747 0.07646366 -0.5917374 -0.5846861
+## culmen_length_mm   0.4537532 0.60019490  0.6424951 -0.1451695
+## culmen_depth_mm   -0.3990472 0.79616951 -0.4258004  0.1599044
+## flipper_length_mm  0.5768250 0.00578817 -0.2360952  0.7819837
 ```
 ]
 
 
 
-`\(PC1=\)` 0.5483502 `\(body\_mass\_g +\)` 0.4552503 `\(culmen\_length\_mm +\)` -0.4003347 `\(culmen\_depth\_mm +\)` 0.5760133 `\(flipper\_length\_mm\)`
+`\(PC1=\)` 0.5496747 `\(body\_mass\_g +\)` 0.4537532 `\(culmen\_length\_mm +\)` -0.3990472 `\(culmen\_depth\_mm +\)` 0.576825 `\(flipper\_length\_mm\)`
 
 --
 
@@ -374,7 +407,7 @@ This what we mean when we say the PCs are linear combinations of the original va
 ---
 # Principal Components Analysis
 
-To plot, we might want to use the scores on each of the new axes and colour them by species. The scores are in a variable called `$x`
+To plot, we might want to use the scores on each of the new axes (PCs) and colour them by species. The scores are in a variable called `$x`
 
 🎬 Extract the scores into a dataframe with the species names: 
 
@@ -437,6 +470,8 @@ The expression of 1838 genes has been measured for 2638 cells.
 --
 
 You do **not** want to use GGally on this data!!
+
+In fact, it is difficult to get any sort of overview for so many rows and columns. This is why dimension reduction with PCA is useful.
 
 ---
 #  PCA on scRNAseq data
@@ -518,7 +553,7 @@ Any two will still only capture a small amount of variance but clusters may be s
 ```r
 dat %&gt;%
   select(PC1:PC10) %&gt;% 
-  ggpairs()
+  ggpairs(upper = list(continuous = wrap("cor", size = 1)))
 ```
 
 
@@ -577,13 +612,16 @@ dat &lt;- data.frame(tsne$Y)
 
 ```r
 dat %&gt;% ggplot(aes(x = X1, y = X2)) +
-  geom_point(size=0.5)
+  geom_point(size = 0.5)
 ```
+
+
+Yours will look a little different but if the cell type patterns are real, we would expect to see similar groupings.
 
 ---
 # *t*-SNE on scRNASeq data
 
-&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-25-1.png" width="800px" height="550px" /&gt;
+&lt;img src="05_intro_to_ML_unsupervised_files/figure-html/unnamed-chunk-25-1.png" width="700px" height="550px" /&gt;
 
 How many cell types do you think there are?
 
@@ -641,7 +679,7 @@ unique(meta$louvain)
 dat &lt;- data.frame(dat, type = meta$louvain)
 ```
 
-🎬 Replot the t*-SNE scores coloured by cell type: 
+🎬 Replot the *t*-SNE scores coloured by cell type: 
 
 ```r
 dat %&gt;% ggplot(aes(x = X1, y = X2, colour = type)) +
@@ -669,50 +707,53 @@ dat %&gt;% ggplot(aes(x = X1, y = X2, colour = type)) +
 
 ## Strongly recommended
 
-* Identifying cell populations with scRNASeq &lt;a name=cite-Andrews2018-cy&gt;&lt;/a&gt;([Andrews and Hemberg, 2018](#bib-Andrews2018-cy)) A good overview of different experimental protocols for Single-cell RNASeq and the most popular methods for facilitating the computational analysis. The abstract, introduction and section 3 are essential reading
+* Identifying cell populations with scRNASeq (Andrews and Hemberg, 2018) A good overview of different experimental protocols for Single-cell RNASeq and the most popular methods for facilitating the computational analysis. 
 
-## Further
-
-* Section 4, on clustering, is also worth reading.
 
 ---
 # References
+.font50[
+.footnote[
+Slides made with xaringan (Xie, 2021),  xaringanExtra (Aden-Buie, 2020), xaringanthemer (Aden-Buie, 2021) and RefManageR (McLean, 2017) 
 
-.font90[
-&lt;a name=bib-Andrews2018-cy&gt;&lt;/a&gt;[Andrews, T. S. and M.
-Hemberg](#cite-Andrews2018-cy) (2018). "Identifying cell populations
+]
+
+Aden-Buie, G. (2020). _xaringanExtra: Extras And Extensions for
+Xaringan Slides_. R package version 0.2.3.9000. URL:
+[https://github.com/gadenbuie/xaringanExtra](https://github.com/gadenbuie/xaringanExtra).
+
+Aden-Buie, G. (2021). _xaringanthemer: Custom 'xaringan' CSS Themes_. R
+package version 0.4.0. URL:
+[https://CRAN.R-project.org/package=xaringanthemer](https://CRAN.R-project.org/package=xaringanthemer).
+
+Andrews, T. S. and M. Hemberg (2018). "Identifying cell populations
 with scRNASeq". En. In: _Mol. Aspects Med._ 59, pp. 114-122.
 
-&lt;a name=bib-Gorman2014&gt;&lt;/a&gt;[Gorman, K. B., T. D. Williams, et
-al.](#cite-Gorman2014) (2014). "Ecological Sexual Dimorphism and
-Environmental Variability within a Community of Antarctic Penguins
-(Genus Pygoscelis)". In: _PLOS ONE_ 9.3, pp. 1-14. DOI:
+Gorman, K. B., T. D. Williams, et al. (2014). "Ecological Sexual
+Dimorphism and Environmental Variability within a Community of
+Antarctic Penguins (Genus Pygoscelis)". In: _PLOS ONE_ 9.3, pp. 1-14.
+DOI:
 [10.1371/journal.pone.0090081](https://doi.org/10.1371%2Fjournal.pone.0090081).
 URL:
 [https://doi.org/10.1371/journal.pone.0090081](https://doi.org/10.1371/journal.pone.0090081).
 
-&lt;a name=bib-palmerpenguins&gt;&lt;/a&gt;[Horst, A. M., A. P. Hill, et
-al.](#cite-palmerpenguins) (2020). _palmerpenguins: Palmer Archipelago
-(Antarctica) penguin data_. R package version 0.1.0. URL:
+Horst, A. M., A. P. Hill, et al. (2020). _palmerpenguins: Palmer
+Archipelago (Antarctica) penguin data_. R package version 0.1.0. URL:
 [https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
-]
----
-# References
-.font90[
-&lt;a name=bib-palmerpenguins&gt;&lt;/a&gt;[Horst, A. M., A. P. Hill, et
-al.](#cite-palmerpenguins) (2020). _palmerpenguins: Palmer Archipelago
-(Antarctica) penguin data_. R package version 0.1.0. URL:
-[https://allisonhorst.github.io/palmerpenguins/](https://allisonhorst.github.io/palmerpenguins/).
-]
 
-.font70[
-.footnote[
-Slides made with with xaringan &lt;a name=cite-xaringan&gt;&lt;/a&gt;([Xie, 2019](#bib-xaringan)) and xaringanExtra &lt;a name=cite-xaringanExtra&gt;&lt;/a&gt;([Aden-Buie, 2020](#bib-xaringanExtra))
-]
+McLean, M. W. (2017). "RefManageR: Import and Manage BibTeX and
+BibLaTeX References in R". In: _The Journal of Open Source Software_.
+DOI: [10.21105/joss.00338](https://doi.org/10.21105%2Fjoss.00338).
+
+Xie, Y. (2021). _xaringan: Presentation Ninja_. R package version 0.22.
+URL:
+[https://CRAN.R-project.org/package=xaringan](https://CRAN.R-project.org/package=xaringan).
+
 ]
 ---
 
-## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+&lt;br&gt;
 &lt;br&gt;
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
     </textarea>

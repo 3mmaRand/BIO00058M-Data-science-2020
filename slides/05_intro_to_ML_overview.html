@@ -59,7 +59,9 @@ class: inverse
 ---
 # What is Machine Learning?
 
-Machine learning is just statistics for exploring, summarising and modelling data.
+Machine learning is just statistics!
+
+It is used to explore, summarise, visualise and model data.
 
 --
 
@@ -73,15 +75,15 @@ It can be used for:
 ---
 # What is Machine Learning?
 
-In Stage 1, we approached data analysis very much from a hypothesis testing perspective.
+In Stage 1 the type of data analysis we did was hypothesis testing. We typically have relatively few explanatory variables and usually a single response.
 
 --
 
-From this perspective, the goal is to explain a response and determine whether specific variables have a significant effect on the response. 
+From this perspective, the goals are to explain a response, and determine whether specific variables have a significant effect on the response. 
 
 --
 
-Penalties may be applied for complexity because the interpretability of the model matters.
+Being able to interpret the model is important so we favour the simplest model that explains a significant amount of variation in the response.
 
 --
 
@@ -90,15 +92,15 @@ Typically the entire dataset is modelled.
 ---
 # What is Machine Learning?
 
-In machine learning the analysis can be more exploratory.
+In machine learning the analysis is often exploratory. It might generate hypotheses rather than test one. It is also used to pre-processed data for hypothesis testing.
 
 --
 
-In predictive machine learning the goal is often the quality of the predictions - how predictions arise is less important.
+In predictive machine learning the goal is often the quality of the predictions - how the predictions arise is less important. 
 
 --
 
-Models often have many variables.
+Models often have many variables and we are less concerned with the significance of a single variable.
 
 --
 
@@ -113,24 +115,26 @@ class: inverse
 ---
 # Categories of ML methods
 
-ML methods can be characterised as supervised or unsupervised.
+ML methods can be characterised as **supervised** or **unsupervised**.
 
 --
 
-Supervised methods, like classical statistical learning, are used for prediction and classification. 
+Supervised methods are used for prediction and classification. 
 
 --
 
-With supervised learning both the inputs and the outputs are given to the algorithm and the goal is to find the rules to map the inputs to outputs.
+With supervised learning both the inputs and the outputs are given to the algorithm. The goal is to find the rules to map the inputs to outputs.
 
 --
 
-We train the model on 75% of the data and test it on the remaining 25%.
+We train the model (find the rules) on 75% of the data and test it on the remaining 25%.
 
 ---
 # Categories of ML methods
 
-Unsupervised methods are usually used for exploration, visualisation and data reduction (often needed for visualisation of high dimensional datasets).
+Unsupervised methods are usually used for exploration, visualisation and data reduction.
+
+Data reduction is often needed for high dimensional data. It means creating fewer new variables from the many original ones to make the data easier to analyse and visualise.
 
 --
 
@@ -160,7 +164,7 @@ Non-parametric - can be slow, can be stochastic
 ---
 class: inverse
 
-# Supervised methods
+# Unsupervised methods
 
 ---
 # Unsupervised methods
@@ -177,13 +181,37 @@ Non-parametric - can be slow, can be stochastic
 * Non-Metric Multidimensional scaling
 * *t*-distributed stochastic neighbour embedding
 
+---
+# References
+.font50[
+.footnote[
+Slides made with xaringan (Xie, 2021),  xaringanExtra (Aden-Buie, 2020), xaringanthemer (Aden-Buie, 2021) and RefManageR (McLean, 2017) 
 
+]
 
+Aden-Buie, G. (2020). _xaringanExtra: Extras And Extensions for
+Xaringan Slides_. R package version 0.2.3.9000. URL:
+[https://github.com/gadenbuie/xaringanExtra](https://github.com/gadenbuie/xaringanExtra).
+
+Aden-Buie, G. (2021). _xaringanthemer: Custom 'xaringan' CSS Themes_. R
+package version 0.4.0. URL:
+[https://CRAN.R-project.org/package=xaringanthemer](https://CRAN.R-project.org/package=xaringanthemer).
+
+McLean, M. W. (2017). "RefManageR: Import and Manage BibTeX and
+BibLaTeX References in R". In: _The Journal of Open Source Software_.
+DOI: [10.21105/joss.00338](https://doi.org/10.21105%2Fjoss.00338).
+
+Xie, Y. (2021). _xaringan: Presentation Ninja_. R package version 0.22.
+URL:
+[https://CRAN.R-project.org/package=xaringan](https://CRAN.R-project.org/package=xaringan).
+
+]
 ---
 
-## Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
+Emma Rand &lt;br&gt; [emma.rand@york.ac.uk](mailto:emma.rand@york.ac.uk) &lt;br&gt; Twitter: [@er13_r](https://twitter.com/er13_r) &lt;br&gt; GitHub: [3mmaRand](https://github.com/3mmaRand)  &lt;br&gt; blog: https://buzzrbeeline.blog/
 &lt;br&gt;
-&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+&lt;br&gt;
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;Data Science strand of BIO00058M&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Emma Rand&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.l
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
