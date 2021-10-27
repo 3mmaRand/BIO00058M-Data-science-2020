@@ -306,7 +306,7 @@ sol2 <- sol %>% pivot_longer(names_to = "lineage_rep",
 sol2 <- sol2 %>%
   extract(lineage_rep,
           c("line", "rep"),
-          "(y[0-9]{3,4})\\_([a-c])")
+          "(y[0-9]{3,4})_([a-c])")
 ```
 
 `r emo::ji("clapper")` Write `sol2` to file
