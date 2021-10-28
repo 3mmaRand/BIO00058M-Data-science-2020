@@ -87,7 +87,7 @@ cols <- c("area",
           "groove_length",
           "species")
 # import data
-seeds <- read_table2(file, col_names = cols)
+seeds <- read_table(file, col_names = cols)
 
 # The species is coded as 1, 2, and 3 and it would be useful to recode to the species names:
 seeds$species <- recode(seeds$species,
@@ -152,7 +152,7 @@ Import:
 
 ```{r echo=TRUE}
 file <- "../data-raw/sol.txt"
-sol <- read_table2(file)
+sol <- read_table(file)
 names(sol)
 ```
 

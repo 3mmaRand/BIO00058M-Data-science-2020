@@ -291,7 +291,7 @@ div.tocify {
 <p>Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines. That was covered here <a href="02_tidying_data.html#Task_3">Task 3 Topic 2</a>. So that you can focus on applying the methods from <em>this</em> week, a processed form of the data are in <a href="../data-raw/sol.txt">sol.txt</a>. Note that like the raw data file, these are organised with samples in columns and proteins in rows. In order use the genes as variables and the samples as observations, we will need to transpose the data.</p>
 <p>Import:</p>
 <pre class="r"><code>file &lt;- &quot;../data-raw/sol.txt&quot;
-sol &lt;- read_table2(file)
+sol &lt;- read_table(file)
 names(sol)</code></pre>
 <pre><code>##  [1] &quot;genename&quot; &quot;Y101_A&quot;   &quot;Y101_B&quot;   &quot;Y101_C&quot;   &quot;Y102_A&quot;   &quot;Y102_B&quot;  
 ##  [7] &quot;Y102_C&quot;   &quot;Y201_A&quot;   &quot;Y201_B&quot;   &quot;Y201_C&quot;   &quot;Y202_A&quot;   &quot;Y202_B&quot;  
