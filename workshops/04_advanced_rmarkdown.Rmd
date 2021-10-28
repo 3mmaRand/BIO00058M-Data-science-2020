@@ -10,7 +10,6 @@ output:
       smooth_scroll: false
     theme: flatly
   word_document: default
-bibliography: "../refs.bib"
 ---
 
 

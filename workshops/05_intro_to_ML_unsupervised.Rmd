@@ -10,10 +10,13 @@ output:
       smooth_scroll: false
     theme: flatly
   word_document: default
-bibliography: "../refs.bib"
 ---
 
+
+
 ![](../pics/58M.png)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5442490.svg)](https://doi.org/10.5281/zenodo.5442490)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
@@ -22,20 +25,36 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 ```{r pkg}
+library(RefManageR)
 library(tidyverse)
 library(Rtsne)
 ```
 
-# Introduction
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
 
-Work in pairs in BB Collaborate breakout to tackle the tasks.
 
-<font size = "4"> `r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.\
-`r emo::ji("speech_balloon")` Communicate what you are doing and why\
-`r emo::ji("document")` Document and share your ideas and process\
-`r  emo::ji("team")` Consider having one person code and other documenting\
-`r emo::ji("heart")` Be kind, be understanding, be flexible\
-</font>
+
+# Week Overview
+
+## Aim
+The aim of this topic is to introduce you to machine learning in general to to some unsupervised methods in particular. In the next topic we will consider some supervised methods.
+
+## Objectives
+By the end of this week the successful student should be able to:
+
+-  Describe what is meant by machine learning the primary way to classify ML methods
+-  List a few supervised and unsupervised methods
+-  to apply, visualise and interpret Principal Components Analysis and t-SNE
 
 I suggest having a different RStudio Project for each dataset used. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
 
@@ -127,7 +146,7 @@ dat %>% ggplot(aes(x = X1, y = X2, colour = species)) +
 
 # Task 2
 
-Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines. That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3). So that you can focus on applying the methods from this week, a processed form of the data are in [sol.txt](../data-raw/sol.txt). Note that like the raw data file, these are organised with samples in columns and proteins in rows. In order use the genes as variables and the samples as observations, we will need to transpose the data.
+Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines. That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3). So that you can focus on applying the methods from *this* week, a processed form of the data are in [sol.txt](../data-raw/sol.txt). Note that like the raw data file, these are organised with samples in columns and proteins in rows. In order use the genes as variables and the samples as observations, we will need to transpose the data.
 
 Import:
 
@@ -166,7 +185,7 @@ And process the sample name so we have the cell lineage in one column and the re
 tsol <- tsol %>% 
   extract(sample, 
           c("lineage","rep"),
-          "(Y[0-9]{3,4})\\_([A-C])")
+          "(Y[0-9]{3,4})_([A-C])")
 ```
 
 Now the data should be in a format to which you can apply the methods from this week.
@@ -206,8 +225,22 @@ dat %>% ggplot(aes(x = X1, y = X2, colour = lineage)) +
 
 Start working with your own assessment. Do continue to follow the practice covered in previous workshops with respect to project organisation, coding style and reproducibility.
 
-# The Rmd file
+# The code files
+These contain all the code needed in the workshop even where it is not visible on the webpage.
+[Rmd file](05_intro_to_ML_unsupervised.Rmd) The Rmd file is the file I use to compile the practical. Rmd stands for R markdown. It allows R code and ordinary text to be interweaved to produce well-formatted reports including webpages. If you right-click on the link and choose Save-As, you will be able to open the Rmd file in RStudio. Alternatively, [View in Browser](https://github.com/3mmaRand/BIO00058M-Data-science-2020/blob/master/workshops/05_intro_to_ML_unsupervised.Rmd).
 
-[Rmd file](05_intro_to_ML_unsupervised.Rmd)
+
+Pages made with `rmarkdown` `r Cite(myBib, c("markdown1","markdown2", "markdown3"))`, `RefManageR``r Cite(myBib, "RefManageR")` 
+
+
+# References 
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)  
+```
+
+# Please cite as:
+
+Emma Rand. (2021). Data Science strand of BIO00058M (v1.0). Zenodo. https://doi.org/10.5281/zenodo.5442490
 
 ![](../pics/58Mend.png)
