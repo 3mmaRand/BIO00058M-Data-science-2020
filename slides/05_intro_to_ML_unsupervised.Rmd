@@ -210,7 +210,7 @@ Notice we have selected `body_mass_g` three other variables ending in `_mm` with
 ---
 # Tidy Penguins
 
-We have two missing values and can't include then in our analysis.
+We have rows with missing values which we will exclude from our analysis.
 
 `r emo::ji("clapper")` Filter out the rows with missing values: 
 
@@ -219,6 +219,10 @@ penguin <- penguin %>%
   filter(!is.na(body_mass_g)) %>% 
   filter(!is.na(sex))
 ```
+
+--
+
+Dealing with missing data is a much discussed are in ML. Several data imputation methods exist
 
 ---
 # Tidy Penguins

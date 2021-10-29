@@ -60,7 +60,7 @@ div.grey { background-color:#d3d3d3; border-radius: 0px; padding: 0px;}
 
 # Outline
 
-In a previous topic you were introduced to machine learning. You learnt that ML is statistical methods for exploring, summarising and modelling data and that it can be used for:
+In a previous topic you were introduced to Machine Learning. You learnt that ML is statistics and can be used for:
 
 * visualisation of high dimensional data  
 * discovering patterns/clusters in variables or observations  
@@ -69,14 +69,21 @@ In a previous topic you were introduced to machine learning. You learnt that ML 
 
 --
 
-You also learnt that ML methods can be characterised as supervised or unsupervised and applied two unsupervised methods: Principal Component Analysis (PCA) and *t*-distributed Stochastic neighbour embedding (*t*-SNE)
+You also learnt that ML methods can be characterised as **supervised** or **unsupervised**.
+
+You learnt to apply two unsupervised methods: Principal Component Analysis (PCA) and *t*-distributed Stochastic neighbour embedding (*t*-SNE)
 
 ---
 # Outline
 
-The aim of this topic is to introduce you to a specific supervised learning method, Linear Discriminant Analysis, which will illustrate some general concepts in supervised learning such as overfitting, training and testing and confusion matrices. 
+The aim of this topic is to introduce you to a supervised learning method called Linear Discriminant Analysis.
 
+It will demonstrate concepts that also apply to other supervised methods: overfitting, training and testing and confusion matrices. 
 
+---
+class: inverse
+
+# Linear Discriminant Analysis
 
 ---
 # Linear Discriminant Analysis
@@ -85,27 +92,27 @@ Linear Discriminant Analysis (LDA) aims to find linear combination of variables 
 
 --
 
-It is supervised because we *label* observations by their class and determine the allocation rules based on these. 
+It is supervised because we *label* observations by their group.
 
 --
 
-A ‘discriminant’ is a linear combination of variables that best separates the groups. If there $n$ classes we have, at most, $n-1$ discriminants. 
+A 'linear discriminant' (LD) is a linear combination of variables that best separates the groups. If there are $n$ groups we have, at most, $n-1$ discriminants. 
 
 --
 
 The `lda()` function is in a package called **`MASS`** `r Cite(myBib, "venables_ripley")` which is part of the base R distribution so you do not need to install it. 
 
-`r emo::ji("exclamation")` Do not load the package!
+`r emo::ji("loudspeaker")` Do not load the package!
 
 
 ---
 # Training and testing
 
-When we a take a hypothesis testing perspective in which the goal is to explain a response and determine whether specific variables have a significant effect on the response, we  typically use all the data we have. 
+During hypothesis testing the goal is to explain a response and determine whether specific variables have a significant effect on the response. Typically, we use all our data. 
 
 --
 
-A problem with this approach is that we cannot be sure model we have fitted to our data is generalisable. That is, we do not know how well the model would predict the responses for a new data set.  This is known as *overfitting*.
+One problem with this approach is that we cannot be sure model we have fitted to our data is generalisable. That is, we do not know how well the model would predict the responses for a new data set.  This is known as *overfitting*.
 
 --
 
@@ -114,7 +121,7 @@ Overfitting is when your model fits the data you have very well but does not gen
 ---
 # Training and testing
 
-A key concept of using supervised ML methods build the model on approximately 75% of the data and test it on the remaining 25%. Building the model is known as 'training' the model.
+A key process in using supervised ML methods is to build - or train - the model on approximately 75% of the data and then test it on the remaining 25%. 
 
 --
 
@@ -128,7 +135,11 @@ The name comes from *C*lassification *A*nd *RE*gression *T*raining. Max Kuhn's w
 
 His most recent work is on tidymodels `r Cite(myBib, "Tidymodels")` a collection of packages for modelling and ML using the tidyverse paradigm.
 
-
+.footnote[
+.font50[
+We often use the word "class" rather than "group" in ML
+]
+]
 ---
 # Outline
 
@@ -174,15 +185,6 @@ library(GGally)
 
 Do not load **`MASS`**, we will access the `lda()` function with `MASS::lda()` instead.
 
----
-# Important!
-
-If you are using git and especially if you intend to push to GitHub, do **not** track the data files in second example.
-
-You prevent tracking by adding the file to a .gitignore. You can do this by right-clicking on the file in the git pane and choosing 'Ignore'
-
-![biologists](../pics/gitignore1.png)
-
 
 ---
 class: inverse
@@ -216,7 +218,8 @@ We repeat the simple filtering and tidying we did previously.
 
 ```{r}
 penguin <- penguin %>% 
-  filter(!is.na(body_mass_g))
+  filter(!is.na(body_mass_g)) %>% 
+  filter(!is.na(sex))
 ```
 
 `r emo::ji("clapper")` Split `species` into `common_name` and `scientific_name`: 
@@ -251,7 +254,9 @@ We have saved the result to a list object called `lda`
 
 This is a good example of when we definitely want to use `package::function()`. 
 
-**`MASS`** has a function called `select()` like **`dplyr`**, but it works differently (the function is defined differently).
+**`MASS`** has a function called `select()` and so does **`dplyr`**, but they work differently.
+
+If you load **`MASS`** after **`dplyr`** (or **`tidyverse`**) `MASS::select()` will be used rather than `dplyr::select()` 
 
 You can spend hours of your life wondering what is wrong with your code when it looks fine and worked before if you load both packages. I have done this with these particular functions too many times!
 
