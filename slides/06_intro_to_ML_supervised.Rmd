@@ -20,7 +20,8 @@ knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE,
                       fig.width = 4, 
                       fig.height = 4, 
-                      fig.retina = 3)
+                      fig.retina = 3,
+                      dpi = 300)
 options(htmltools.dir.version = FALSE, digits = 4)
 ```
 
@@ -112,16 +113,17 @@ During hypothesis testing the goal is to explain a response and determine whethe
 
 --
 
-One problem with this approach is that we cannot be sure model we have fitted to our data is generalisable. That is, we do not know how well the model would predict the responses for a new data set.  This is known as *overfitting*.
+One problem with this approach is not knowing how generalisable our model is. That is, we do not know how well the model would predict the responses for a new data set.  
 
 --
 
-Overfitting is when your model fits the data you have very well but does not generalise. You can think of it as fitting the random variation in the data in addition to the non-random variation.
+When a model fits the data you have very well but does not generalise, it is known as *overfitting*.
+You can think of it as fitting the random variation in the data in addition to the non-random variation.
 
 ---
 # Training and testing
 
-A key process in using supervised ML methods is to build - or train - the model on approximately 75% of the data and then test it on the remaining 25%. 
+To avoid overfitting in supervised ML methods we build - or train - the model on approximately 75% of the data and then test it on the remaining 25%. 
 
 --
 
@@ -129,27 +131,32 @@ The **`caret`** package `r Cite(myBib, "caret")` includes functions to facilitat
 
 --
 
-The name comes from *C*lassification *A*nd *RE*gression *T*raining. Max Kuhn's work on ML in R has been extremely influential. 
+The name comes from **C**lassification<sup>1</sup> **A**nd **RE**gression **T**raining. Max Kuhn's work on ML in R has been extremely influential. 
 
 --
 
 His most recent work is on tidymodels `r Cite(myBib, "Tidymodels")` a collection of packages for modelling and ML using the tidyverse paradigm.
 
 .footnote[
-.font50[
-We often use the word "class" rather than "group" in ML
+.font60[
+1. We often use the word "class" rather than "group" in ML
 ]
 ]
 ---
 # Outline
 
-In these slides show you will apply:
+In these slideshow you will apply:
 
 * LDA to the Penguin data *without* training and testing  
 * LDA to the Penguin data *with* training and testing  
 * LDA to the scRNASeq data *with* training and testing but we will consider how good the model is at predicting classes from the training set compared to the test set. 
 
 --
+
+These will help you understand *why* we do training and testing but note that we would *not* normally first do ML without training and testing and then do it with training and testing.
+
+---
+# Outline
 
 You should be able to code along with the examples. When you see the film clapper it is..
 
@@ -162,15 +169,12 @@ There is also demo on the scRNASeq data
 ---
 # Set up
 
-I suggest having a different RStudio Project for each dataset we use. You might want to reopen those you used for the Penguins data and the scRNASeq data respectively.
+I suggest having a different RStudio Project for each dataset. Consider using those you created for the unsupervised ML.
 
 --
 
 Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
 
---
-
-Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised. 
 
 ---
 # Set up
@@ -183,7 +187,7 @@ library(caret)
 library(GGally)
 ```
 
-Do not load **`MASS`**, we will access the `lda()` function with `MASS::lda()` instead.
+Do not load **`MASS`**. We will access the `lda()` function with `MASS::lda()` instead.
 
 
 ---
@@ -195,7 +199,7 @@ class: inverse
 ---
 # Penguin LDA
 
-We use the Palmer penguins again. You can read more about this dataset in [Introduction to palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html).
+You can read more about the Palmer penguins dataset in [Introduction to palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html).
 
 
 `r emo::ji("clapper")` Load the package to get the data: 
@@ -236,7 +240,7 @@ penguin <- penguin %>%
 
 Now to run the LDA. 
 
-`r emo::ji("clapper")` Select the four variables and pipe into the `MASS::lda()` function which does the PCA:
+`r emo::ji("clapper")` Select the four variables and pipe into the `MASS::lda()` function which does the LDA:
 
 ```{r}
 lda <- penguin %>% 
@@ -252,13 +256,13 @@ We have saved the result to a list object called `lda`
 ---
 # Penguin LDA: build model
 
-This is a good example of when we definitely want to use `package::function()`. 
+We definitely want to use `package::function()`. 
 
 **`MASS`** has a function called `select()` and so does **`dplyr`**, but they work differently.
 
-If you load **`MASS`** after **`dplyr`** (or **`tidyverse`**) `MASS::select()` will be used rather than `dplyr::select()` 
+If you load **`MASS`** after **`dplyr`** (or after **`tidyverse`**) `MASS::select()` will be used rather than `dplyr::select()` 
 
-You can spend hours of your life wondering what is wrong with your code when it looks fine and worked before if you load both packages. I have done this with these particular functions too many times!
+You can spend hours of your life wondering what is wrong with your code when it looks fine and worked before you loaded both packages. I have done this with these particular functions too many times!
 
 ---
 # Penguin LDA: examine model
@@ -281,16 +285,15 @@ d <- lda$scaling["flipper_length_mm", "LD1"]
 ---
 # Penguin LDA: examine model
 
-$LD1=$ `r a` $body\_mass\_g +$ `r b` $culmen\_length\_mm +$ `r c` $culmen\_depth\_mm +$ `r d` $flipper\_length\_mm$
+$LD1=$ `r a` $body\_mass\_g +$  `r b` $culmen\_length\_mm +$ `r c` $culmen\_depth\_mm +$ `r d` $flipper\_length\_mm$
 
-You might want to compare to the [loadings for PCA](05_intro_to_ML_unsupervised.html#41)
+You might want to compare to the [loadings for PCA](05_intro_to_ML_unsupervised.html#43)
 
 ---
 # Penguin LDA: predict classes
 
-The generic function `predict()` is used to give the species predicted by the model for each observation.
-
-`r emo::ji("clapper")` Select the variables from `Penguin` that are in the model and predict the species from the `lda` model object:
+To find what species is predicted by the model for each observation (row) we can use `predict()`. 
+`r emo::ji("clapper")` Select the model variables from `Penguin` and predict the species from the `lda` model object:
 
 ```{r}
 plda <- penguin %>% 
@@ -302,11 +305,8 @@ plda <- penguin %>%
 ---
 # Penguin LDA: Confusion matrix
 
-**`caret`** provides us with a useful function to examine the *confusion matrix*. 
+A **confusion matrix** is a table that tells us about the performance of a classification model.
 
---
-
-A confusion matrix is a table that tells us about the performance of a classification model. 
 --
 
 The table gives the number of:
@@ -315,20 +315,25 @@ The table gives the number of:
 * incorrect predictions: the species predicted does not match the observed species.
 for each species.  
 
+--
+
+**`caret`** provides us with a useful function to examine the confusion matrix. 
+
 ---
 # Penguin LDA: Confusion matrix
 
 The `confusionMatrix()` function also outputs:
 
-* Accuracy - No. correct predictions / No. of observations 
-* 95% CI - 95 percent confidence interval on the accuracy (using `binom.test()`)  
-* No Information Rate - No. observations in the largest class / Number of observations   
-* P-Value [Acc > NIR] - Is the model significantly better than than you could do by always predicting the most common class (again using `binom.test()`).  
+-  Accuracy - Number of correct predictions / Number of observations 
+-  95% CI - 95 percent confidence interval on the accuracy (using `binom.test()`)  
+-  No Information Rate - Number of observations in the largest class / Total number of observations. If you had no other information, the best prediction would be the commonest class. In other words, the NIR is the best you could do by chance.   
+-  P-Value [Acc > NIR] - Is the model significantly better than than you could do by always predicting the most common class (again using `binom.test()`).  
 
 ---
 # Penguin LDA: Confusion matrix
 
 `r emo::ji("clapper")` Examining the confusion matrix:
+
 
 .scroll-output-height[
 ```{r}
@@ -342,7 +347,7 @@ confusionMatrix(plda$class, factor(penguin$common_name))
 
 ```{r echo=FALSE}
 res <- confusionMatrix(plda$class, factor(penguin$common_name))
-accuracy <- res$overall["Accuracy"]*100
+accuracy <- round(res$overall["Accuracy"]*100, 2)
 
 adelie_num <- sum(res$table[,"Adelie Penguin"])
 adelie_wrong <- res$table["Chinstrap penguin","Adelie Penguin"] + res$table["Gentoo penguin","Adelie Penguin"] 
@@ -354,12 +359,15 @@ gentoo_num <- sum(res$table[,"Gentoo penguin"])
 gentoo_wrong <- res$table["Chinstrap penguin","Gentoo penguin"] + res$table["Adelie Penguin","Gentoo penguin"] 
 ```
 
-The model had an accuracy of `r accuracy`%. There were `r adelie_num` Adelie Penguins of which `r adelie_wrong` were predicted incorrectly; `r chin_num` Chinstrap Penguins of which `r chin_wrong` were predicted incorrectly; and `r gentoo_num` Gentoo Penguins of which `r gentoo_wrong` were predicted incorrectly.
+-  The model had an accuracy of `r accuracy`%.  
+-  there were `r adelie_num` Adelie Penguins of which `r adelie_wrong` were predicted incorrectly.  
+-  `r chin_num` Chinstrap Penguins of which `r chin_wrong` were predicted incorrectly.  
+-  and `r gentoo_num` Gentoo Penguins of which `r gentoo_wrong` were predicted incorrectly.
 
 ---
 # Penguin LDA: plot
 
-To plot, we might want to use the scores on each of the new axes and colour them by species. The scores are in a variable called `$x` in `plda`
+We can plot the scores on each of the new axes and colour them by species. The scores are in a variable called `$x` in `plda`
 
 `r emo::ji("clapper")` Extract the scores into a dataframe with the species names: 
 ```{r}
@@ -413,12 +421,13 @@ ids <- createDataPartition(y = penguin$common_name,
 
 `p` is the proportion of rows to sample.
 
-`list = FALSE` gives me a vector of numbers rather than a one item list.
+`list = FALSE` gives me a vector of numbers rather than a one-item list.
 
 You might want to examine the `ids` variable.
 
 ---
 # Penguin LDA: Create training set
+
 Now we use those row numbers to select the rows from `penguin` to create the training and test datasets. We use the `dplyr` function slice which works like the filter function but filters rows on their index rather than a match to a condition.
 
 `r emo::ji("clapper")` Create the training set:
@@ -443,9 +452,9 @@ You might want to examine the two dataframes, `train` and `test`, we just made.
 ---
 # Penguin LDA: train model
 
-The process of the using `lda()` and `predict()` is the same as previously but the input data differ.
+The process of using `lda()` and `predict()` is the same as previously but we use different input data.
 
-`r emo::ji("clapper")` Perform the LDA on the training data:
+`r emo::ji("clapper")` Perform the LDA on the **training data**:
 ```{r}
 lda <- train %>% #<<
   select(body_mass_g,
@@ -456,7 +465,7 @@ lda <- train %>% #<<
 ---
 # Penguin LDA: test model
 
-`r emo::ji("clapper")` And predict classes of the test data based on lda model:
+`r emo::ji("clapper")` And predict classes of the **test data**:
 
 
 ```{r}
@@ -477,11 +486,11 @@ confusionMatrix(plda$class,factor(test$common_name))
 ]
 ```{r echo=FALSE}
 res <- confusionMatrix(plda$class, factor(test$common_name))
-accuracy <- res$overall["Accuracy"]*100
+accuracy <- round(res$overall["Accuracy"]*100, 2)
 
 ```
 
-The model had an accuracy of `r accuracy`%. You may have had greater or fewer because the training and testing sets were random selections.
+The model had an accuracy of `r accuracy`%. You may have greater or fewer because the training and testing sets were random selections.
 
 ---
 class: inverse
@@ -550,8 +559,9 @@ lda <- train %>%
 
 ---
 # scRNASeq LDA: Performance
+Now we will compare how well our model performs on the training data campare to the test data.
 
-How well does our model perform on the training set data.
+How well does our model perform on the training data?
 
 `r emo::ji("clapper")` Predict on the training data:
 
@@ -573,7 +583,7 @@ confusionMatrix(plda_train$class,factor(train$cell))
 ]
 ```{r echo=FALSE}
 res <- confusionMatrix(plda_train$class,factor(train$cell))
-accuracy <- res$overall["Accuracy"]*100
+accuracy <- round(res$overall["Accuracy"]*100, 2)
 
 ```
 
@@ -603,7 +613,7 @@ confusionMatrix(plda_test$class, factor(test$cell))
 ]
 ```{r echo=FALSE}
 res <- confusionMatrix(plda_test$class,factor(test$cell))
-accuracy <- res$overall["Accuracy"]*100
+accuracy <- round(res$overall["Accuracy"]*100, 2)
 
 ```
 
