@@ -10,10 +10,11 @@ output:
       smooth_scroll: false
     theme: flatly
   word_document: default
-bibliography: "../refs.bib"
 ---
 
 ![](../pics/58M.png)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5442490.svg)](https://doi.org/10.5281/zenodo.5442490)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
@@ -22,29 +23,48 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 ```{r pkg}
+library(RefManageR)
 library(tidyverse)
-library(Rtsne)
 library(caret)
 ```
 
-# Introduction
+```{r, load-refs, include=FALSE, cache=FALSE}
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE,
+           longnamesfirst = FALSE,
+           max.names = 2)
+myBib <- ReadBib("../refs.bib", check = FALSE)
+```
 
-Work in pairs in BB Collaborate breakout to tackle the tasks.
 
-<font size = "4"> `r  emo::ji("team")` Work together to complete the task. Take it in turns to share your screens.\
-`r emo::ji("speech_balloon")` Communicate what you are doing and why  
-`r emo::ji("document")` Document and share your ideas and process  
-`r  emo::ji("team")` Consider having one person code and other documenting  
-`r emo::ji("heart")` Be kind, be understanding, be flexible  
-</font>
+
+# Week Overview
+
+## Aim
+The aim of this topic is to introduce you to a specific supervised learning method, Linear Discriminant Analysis (LDA), which will illustrate some general concepts in supervised learning such as overfitting, training and testing and confusion matrices.
+
+## Objectives
+By the end of this week the successful student should be able to:
+
+-  explain the difference between unsupervised and supervised learning
+-  explain what is meant by overfitting and identify the key way it is avoided
+-  partition a dataset into training and tests sets
+-  apply LDA to a training set and make predictions based on the training set and on a testing set
+-  evaluate the performance of a classification model
+-  visualise the results of LDA
 
 I suggest having a different RStudio Project for each dataset used. Note that you can have multiple instances of RStudio running to allow you to work on more than one RStudio Project.
 
 Create directory structure for each RStudio Project, write your analysis in R Markdown with named chunks which are well organised.
 
+
 # Task 1
 
-Evaluate yourself and determine which of the tasks 2 - 5 will benefit you. Bounce your thoughts off your partner, see where you coincide and make a plan for using the workshop time and potentially additional time.
+Evaluate yourself and determine which of the tasks 2 - 5 will benefit you. Discuss with your neighbour. Are there tasks you both want to do? 
 
 # Task 2
 If you carried out the [workshop last week](05_intro_to_ML_unsupervised.html) you will be familiar with the [Wheat Seeds Dataset](../data-raw/seeds_dataset.txt). You can apply LDA to this dataset to determine how well you can predict the species from the seed metrics and how robust or generalisable your predictions are.
@@ -65,7 +85,7 @@ cols <- c("area",
           "groove_length",
           "species")
 # import data
-seeds <- read_table2(file, col_names = cols)
+seeds <- read_table(file, col_names = cols)
 
 ```
 
@@ -112,7 +132,7 @@ You can apply LDA to this dataset to determine how well you can predict the subt
 
 I recommend reading the data in from the web address without first saving it. 
 
-LDA will take 10 - 15 mins or so to run on this data set. You might want have start a conversation with your partner about Task 4 while you wait. Expect to get a warning about collinear variables.
+LDA will take 10 - 15 mins or so to run on this data set. You might want have start a conversation with your neighbour about Task 4 while you wait. Expect to get a warning about collinear variables.
 
 If you feel confident with LDA following the independent study you may wish to skip this task.
 
@@ -236,8 +256,22 @@ If you do, carry it out. The data will need to be in the same format as for PCA 
 
 Start working with your own assessment. Do continue to follow the practice covered in previous workshops with respect to project organisation, coding style and reproducibility.
 
-# The Rmd file
+# The code files
+These contain all the code needed in the workshop even where it is not visible on the webpage.
+[Rmd file](06_intro_to_ML_supervised.Rmd) The Rmd file is the file I use to compile the practical. Rmd stands for R markdown. It allows R code and ordinary text to be interweaved to produce well-formatted reports including webpages. If you right-click on the link and choose Save-As, you will be able to open the Rmd file in RStudio. Alternatively, [View in Browser](https://github.com/3mmaRand/BIO00058M-Data-science-2020/blob/master/workshops/06_intro_to_ML_supervised.Rmd).
 
-[Rmd file](06_intro_to_ML_supervised.Rmd)
+
+Pages made with `rmarkdown` `r Cite(myBib, c("markdown1","markdown2", "markdown3"))`, `RefManageR``r Cite(myBib, "RefManageR")` 
+
+
+# References 
+
+```{r refs, echo=FALSE, results="asis"}
+PrintBibliography(myBib)  
+```
+
+# Please cite as:
+
+Emma Rand. (2021). Data Science strand of BIO00058M (v1.0). Zenodo. https://doi.org/10.5281/zenodo.5442490
 
 ![](../pics/58Mend.png)
