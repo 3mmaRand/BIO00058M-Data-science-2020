@@ -318,7 +318,7 @@ class: inverse
 Putting code that you will use more than once in a function is efficient and makes your code easier to read.
 
 Suppose we had two samples of the number of eggs in nests. We could do this:
-
+.code60[
 ```{r}
 ####  Sample 1 ####
 # eggs per nest
@@ -336,7 +336,7 @@ mean_eggs_2 <- mean(eggs_2)
 # ss(x) of number of eggs
 ss_eggs_2 <- sum((eggs - mean_eggs_2)^2)
 ```
-
+]
 ---
 #  Writing functions
 
