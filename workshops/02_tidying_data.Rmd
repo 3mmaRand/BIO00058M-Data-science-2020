@@ -78,11 +78,16 @@ file <- "../data-raw/Human-development-index.csv"
 hdi <- read_csv(file) %>% 
   janitor::clean_names()
 
-# I have used janitor::clean_names() to ensure the column names are lowercase without spaces and that the year columns have an x in front of them. both these mean I will not need to use backticks around column names such as hdi$`HDI Rank (2018)` and hdi$`1990`  
+# I have used janitor::clean_names() to ensure the column names are 
+# lowercase without spaces and that the year columns have an x 
+# in front of them. both these mean I will not need to use backticks 
+# around column names such as hdi$`HDI Rank (2018)` and hdi$`1990`  
 ```
 
 ```{r task-1-tidy}
-# the format of the data would be improved by having a single observation (i.e., index) per row with other columns giving the country, year and 2018 rank.
+# the format of the data would be improved by having a single 
+# observation (i.e., index) per row with other columns giving the country, 
+# year and 2018 rank.
 # this can be done using pivot_longer()  
 hdi <- hdi %>%
   pivot_longer(names_to = "year", 
@@ -204,7 +209,7 @@ readLines(file, n = 3)
 
 `readLines()` just shows what the first three (in this case) line of the file look like, it doesn't try to put it in a data structure such as a dataframe. This means it does not throw errors.
 
-In the buoy data, the first line gives the column name, the second line gives units and the data themselves begin on line 3. In other words, the column names are over two lines. The best approach is to import the data without the column names then process the first two line to create comnplete column names.
+In the buoy data, the first line gives the column name, the second line gives units and the data themselves begin on line 3. In other words, the column names are over two lines. The best approach is to import the data without the column names then process the first two line to create complete column names.
 
 Import the data without names:
 

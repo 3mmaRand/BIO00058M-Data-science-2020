@@ -51,7 +51,7 @@ BibOptions(check.entries = FALSE,
            dashed = FALSE,
            longnamesfirst = FALSE,
            max.names = 2)
-myBib <- ReadBib("../refs.bib", check = FALSE)
+myBib <- ReadBib(file = "../refs.bib", check = FALSE)
 ```
 
 ```{r fonts, include=FALSE}
@@ -120,7 +120,7 @@ class: inverse
 # gs4_auth() run interactively
 file <- "https://docs.google.com/spreadsheets/d/10t1gewbugw45l39WzFk6B_hHdI8o6R7G5MHO50yBCio/edit#gid=495644289"
 survey <- read_sheet(file) %>% 
-  filter(Timestamp > "2021-09-01")
+  filter(Timestamp > "2022-09-01")
 
 
 ```
