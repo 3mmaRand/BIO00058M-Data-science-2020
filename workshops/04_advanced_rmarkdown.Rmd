@@ -83,6 +83,8 @@ In [Topic 3: Reproducibility and an introduction to R Markdown, Task 1 ](03_repr
 
 `r emo::ji("clapper")` Great news, we've got data for another few individuals! They have been added to the data in [more_chaff.txt](../data-raw/more_chaff.txt). Update your output.
 
+`r emo::ji("clapper")` Have a look at my version of [chaffinches](https://github.com/3mmaRand/BIO00058M-chaffinches-w03)
+
 # Task 2
 Continue to work on the Case study of the proteomic data from five immortalised mesenchymal stromal cell (MSC) lines.  That was covered here [Task 3 Topic 2](02_tidying_data.html#Task_3).
 
